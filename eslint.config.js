@@ -4,6 +4,8 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 import globals from 'globals';
 
 export default tseslint.config(
@@ -15,7 +17,8 @@ export default tseslint.config(
     ],
     plugins: {
       react,
-      'react-hooks': reactHooks
+      'react-hooks': reactHooks,
+      prettier: prettierPlugin,
     },
     languageOptions: {
       parserOptions: {
@@ -32,6 +35,14 @@ export default tseslint.config(
       },
     },
     rules: {
+      // Prettier integration
+      ...prettierConfig.rules,
+      'prettier/prettier': 'error',
+      
+      // React rules
+      'react/react-in-jsx-scope': 0, // Not needed in React 17+
+      
+      // TypeScript rules (as warnings for template compatibility)
       '@typescript-eslint/no-unused-expressions': 0,
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unsafe-assignment': 'warn',
