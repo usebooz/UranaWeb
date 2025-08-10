@@ -20,11 +20,13 @@ export function Page({
   useEffect(() => {
     if (back) {
       showBackButton();
-      return onBackButtonClick(() => {
+      const cleanup = onBackButtonClick(() => {
         navigate(-1);
       });
+      return cleanup;
+    } else {
+      hideBackButton();
     }
-    hideBackButton();
   }, [back]);
 
   return <>{children}</>;

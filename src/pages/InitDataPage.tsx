@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useMemo, type ReactNode } from 'react';
 import {
   initDataRaw as _initDataRaw,
   initDataState as _initDataState,
@@ -14,7 +14,12 @@ import {
 import { Page } from '@/components/Page.tsx';
 
 function getUserRows(user: User): DisplayDataRow[] {
-  return Object.entries(user).map(([title, value]) => ({ title, value }));
+  return (Object.entries(user) as Array<[string, unknown]>).map(
+    ([title, value]) => ({
+      title,
+      value: value as ReactNode,
+    })
+  );
 }
 
 export const InitDataPage: FC = () => {
@@ -32,7 +37,7 @@ export const InitDataPage: FC = () => {
           if (value instanceof Date) {
             acc.push({ title, value: value.toISOString() });
           } else if (!value || typeof value !== 'object') {
-            acc.push({ title, value });
+            acc.push({ title, value: value as ReactNode });
           }
           return acc;
         },
@@ -42,13 +47,11 @@ export const InitDataPage: FC = () => {
   }, [initDataState, initDataRaw]);
 
   const userRows = useMemo<DisplayDataRow[] | undefined>(() => {
-    return initDataState && initDataState.user
-      ? getUserRows(initDataState.user)
-      : undefined;
+    return initDataState?.user ? getUserRows(initDataState.user) : undefined;
   }, [initDataState]);
 
   const receiverRows = useMemo<DisplayDataRow[] | undefined>(() => {
-    return initDataState && initDataState.receiver
+    return initDataState?.receiver
       ? getUserRows(initDataState.receiver)
       : undefined;
   }, [initDataState]);
@@ -58,7 +61,7 @@ export const InitDataPage: FC = () => {
       ? undefined
       : Object.entries(initDataState.chat).map(([title, value]) => ({
           title,
-          value,
+          value: value as ReactNode,
         }));
   }, [initDataState]);
 
