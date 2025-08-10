@@ -14,28 +14,19 @@ interface LoadingStateProps {
  * Универсальный компонент для отображения состояния загрузки
  * Показывает только спиннер без текстовых сообщений
  */
-export const LoadingPage: FC<LoadingStateProps> = ({
-  size = 'l',
-  children,
-  withPage = true,
-  style = {},
-}) => {
-  const containerStyle: CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '200px',
-    gap: '16px',
-    ...style,
-  };
-
+export const LoadingPage: FC<LoadingStateProps> = () => {
   const content = (
-    <div style={containerStyle}>
-      <Spinner size={size} />
-      {children}
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        width: '100vw',
+      }}
+    >
+      <Spinner size={'l'} />
     </div>
   );
-
-  return withPage ? <Page>{content}</Page> : content;
+  return <Page>{content}</Page>;
 };
