@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "description": "Telegram Mini App for UranaBot - Fantasy Football Tournament Display",
-  "homepage": "https://usebooz.github.io/uranaweb",
+  "homepage": "https://usebooz.github.io/UranaWeb",
   "scripts": {
     "deploy": "gh-pages -d dist",
     "dev": "vite",
