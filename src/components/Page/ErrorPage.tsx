@@ -5,8 +5,17 @@ import {
   isRGB,
 } from '@telegram-apps/sdk-react';
 import { useMemo } from 'react';
+import type { FC } from 'react';
 
-export function EnvUnsupported() {
+interface ErrorPageProps {
+  error: unknown;
+}
+
+/**
+ * Универсальная страница ошибки на основе Telegram UI Placeholder
+ * Используется для всех ошибок: проверка платформы, переменные окружения, загрузка данных, "не найдено"
+ */
+export const ErrorPage: FC<ErrorPageProps> = ({ error }) => {
   const [platform, isDark] = useMemo(() => {
     try {
       const lp = retrieveLaunchParams();
@@ -20,15 +29,21 @@ export function EnvUnsupported() {
     }
   }, []);
 
+  let errorMessage: string;
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  } else if (typeof error === 'string') {
+    errorMessage = error;
+  } else {
+    errorMessage = JSON.stringify(error);
+  }
+
   return (
     <AppRoot
       appearance={isDark ? 'dark' : 'light'}
       platform={['macos', 'ios'].includes(platform) ? 'ios' : 'base'}
     >
-      <Placeholder
-        header="Oops"
-        description="You are using too old Telegram client to run this application"
-      >
+      <Placeholder header="Oops" description={errorMessage}>
         <img
           alt="Telegram sticker"
           src="https://xelene.me/telegram.gif"
@@ -37,4 +52,4 @@ export function EnvUnsupported() {
       </Placeholder>
     </AppRoot>
   );
-}
+};
