@@ -74,40 +74,54 @@ npm run dev:https
 After this, you will see a similar message in your terminal:
 
 ```bash
-VITE v5.2.12  ready in 237 ms
+VITE v6.2.4  ready in 237 ms
 
-➜  Local:   https://localhost:5173/reactjs-template
-➜  Network: https://172.18.16.1:5173/reactjs-template
-➜  Network: https://172.19.32.1:5173/reactjs-template
-➜  Network: https://192.168.0.171:5173/reactjs-template
+➜  Local:   https://localhost:5173/
+➜  Network: https://172.18.16.1:5173/
+➜  Network: https://172.19.32.1:5173/
+➜  Network: https://192.168.0.171:5173/
 ➜  press h + enter to show help
 ```
 
-Here, you can see the `Local` link, available locally, and `Network` links
-accessible to all devices in the same network with the current device.
+Для просмотра приложения откройте `Local` ссылку
+(`https://localhost:5173/` в этом примере) в браузере.
 
-To view the application, you need to open the `Local`
-link (`https://localhost:5173/reactjs-template` in this example) in your
-browser:
+Важно отметить, что некоторые библиотеки в этом проекте, такие как
+`@telegram-apps/sdk`, предназначены для использования только в Telegram.
 
-![Application](assets/application.png)
-
-It is important to note that some libraries in this template, such as
-`@telegram-apps/sdk`, are not intended for use outside of Telegram.
-
-Nevertheless, they appear to function properly. This is because the
-`src/mockEnv.ts` file, which is imported in the application's entry point (
-`src/index.ts`), employs the `mockTelegramEnv` function to simulate the Telegram
-environment. This trick convinces the application that it is running in a
-Telegram-based environment. Therefore, be cautious not to use this function in
-production mode unless you fully understand its implications.
+Тем не менее, они работают корректно в браузере благодаря файлу
+`src/mockEnv.ts`, который импортируется в точке входа приложения
+(`src/index.ts`) и использует функцию `mockTelegramEnv` для симуляции
+Telegram окружения. Этот трюк убеждает приложение, что оно работает в
+Telegram среде. Поэтому будьте осторожны и не используйте эту функцию
+в production режиме без полного понимания её последствий.
 
 > [!WARNING]
-> Because we are using self-signed SSL certificates, the Android and iOS
-> Telegram applications will not be able to display the application. These
-> operating systems enforce stricter security measures, preventing the Mini App
-> from loading. To address this issue, refer to
-> [this guide](https://docs.telegram-mini-apps.com/platform/getting-app-link#remote).
+> Поскольку мы используем самоподписанные SSL сертификаты, Android и iOS
+> приложения Telegram не смогут отобразить приложение. Эти операционные
+> системы применяют более строгие меры безопасности, препятствующие загрузке
+> Mini App. Для решения этой проблемы обратитесь к
+> [этому руководству](https://docs.telegram-mini-apps.com/platform/getting-app-link#remote).
+
+Для просмотра приложения откройте `Local` ссылку 
+(`https://localhost:5173/` в этом примере) в браузере.
+
+Важно отметить, что некоторые библиотеки в этом проекте, такие как
+`@telegram-apps/sdk`, предназначены для использования только в Telegram.
+
+Тем не менее, они работают корректно в браузере благодаря файлу
+`src/mockEnv.ts`, который импортируется в точке входа приложения 
+(`src/index.ts`) и использует функцию `mockTelegramEnv` для симуляции 
+Telegram окружения. Этот трюк убеждает приложение, что оно работает в 
+Telegram среде. Поэтому будьте осторожны и не используйте эту функцию 
+в production режиме без полного понимания её последствий.
+
+> [!WARNING]
+> Поскольку мы используем самоподписанные SSL сертификаты, Android и iOS 
+> приложения Telegram не смогут отобразить приложение. Эти операционные 
+> системы применяют более строгие меры безопасности, препятствующие загрузке 
+> Mini App. Для решения этой проблемы обратитесь к 
+> [этому руководству](https://docs.telegram-mini-apps.com/platform/getting-app-link#remote).
 
 ## Deploy
 
