@@ -16,12 +16,18 @@ import {
 
 /**
  * Initializes the application and configures its dependencies.
+ * @throws {Error} If required environment variables are missing
  */
 export function init(options: {
   debug: boolean;
   eruda: boolean;
   mockForMacOS: boolean;
 }): void {
+  // Проверяем наличие обязательных переменных окружения
+  if (!import.meta.env.VITE_SPORTS_API_URL) {
+    throw new Error('VITE_SPORTS_API_URL environment variable is required');
+  }
+
   // Set @telegram-apps/sdk-react debug mode and initialize it.
   setDebug(options.debug);
   initSDK();

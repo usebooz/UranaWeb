@@ -11,7 +11,7 @@ import {
   DisplayData,
   type DisplayDataRow,
 } from '@/components/DisplayData/DisplayData';
-import { Page } from '@/components/Page';
+import { Page } from '@/components/Page/Page';
 
 function getUserRows(user: User): DisplayDataRow[] {
   return (Object.entries(user) as Array<[string, unknown]>).map(
