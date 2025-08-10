@@ -21,7 +21,7 @@ export function Page({
     if (back) {
       showBackButton();
       const cleanup = onBackButtonClick(() => {
-        navigate(-1);
+        void navigate(-1);
       });
       return cleanup;
     } else {
