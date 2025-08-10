@@ -7,7 +7,7 @@ import {
 } from '@telegram-apps/sdk-react';
 import { AppRoot } from '@telegram-apps/telegram-ui';
 
-import { routes } from '@/navigation/routes.tsx';
+import { routes } from '@/navigation/routes';
 
 export function App() {
   const lp = useMemo(() => retrieveLaunchParams(), []);

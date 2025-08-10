@@ -1,29 +1,65 @@
 # UranawWeb - Telegram Mini App
 
-Telegram Mini App для отображения информации о фэнтези турнирах РПЛ от бота UranaBot.
+Modern Telegram Mini App для работы с фэнтези турнирами от Sports.ru через GraphQL API.
 
 ## 🚀 Технологии
 
+### Frontend Stack
 - [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - [@telegram-apps SDK](https://docs.telegram-mini-apps.com/packages/telegram-apps-sdk/2-x)
 - [Telegram UI](https://github.com/Telegram-Mini-Apps/TelegramUI)
-- [Vite 7](https://vitejs.dev/)
+- [Vite 7](https://vitejs.dev/) + [SWC](https://swc.rs/)
 - [React Router DOM 7](https://reactrouter.com/)
 
-## 📋 Описание проекта
+### GraphQL & Data Management
+- [Apollo Client v3](https://www.apollographql.com/docs/react/)
+- [GraphQL Code Generator](https://the-guild.dev/graphql/codegen) с TypeScript client preset
+- Sports.ru GraphQL API интеграция
+- Fragment masking для type safety
 
-UranawWeb - это веб-интерфейс для Telegram Mini App, который обеспечивает красивое отображение:
+### Code Quality & Development
+- [ESLint](https://eslint.org/) с flat config и строгими правилами
+- [Prettier](https://prettier.io/) для форматирования
+- [clsx](https://github.com/lukeed/clsx) + [bem-cn](https://github.com/albburtsev/bem-cn) для CSS utilities
+- Полная TypeScript типизация
 
-- Информации о турнирах РПЛ
-- Статистики фэнтези лиги  
-- Данных об игроках и командах
-- Результатов матчей
+## 🏗 Архитектура
 
-Интегрируется с основным ботом [UranaBot](https://github.com/usebooz/UranaBot) для получения данных через Sports.ru API.
+Проект использует **Services Pattern** с разделением на слои:
+
+```
+src/
+├── hooks/                    # React hooks для API
+│   ├── useSportsru.ts       # Базовый хук с Apollo Client
+│   ├── fantasy/             # Fantasy Sports hooks
+│   └── other/               # Заготовка для других API
+├── services/                # Бизнес-логика и утилиты
+├── components/              # UI компоненты
+├── gql/                     # GraphQL queries и сгенерированные типы
+│   ├── queries/
+│   └── generated/
+├── pages/                   # Страницы приложения
+└── navigation/              # Роутинг
+```
+
+### Ключевые особенности архитектуры
+
+- **Инкапсуляция API**: Apollo Client скрыт внутри хуков
+- **Type Safety**: Полная типизация от GraphQL схемы до UI
+- **Services Layer**: Бизнес-логика отделена от компонентов
+- **Модульность**: Готов к добавлению новых API
+- **Alias Imports**: Использование `@/` для внутренних модулей
+
+## � Описание проекта
+
+UranawWeb - современное веб-приложение для работы с фэнтези турнирами:
+
+- 🏆 Информация о турнирах РПЛ
+- 📊 Статистика и аналитика
+- ⚽ Данные об игроках и командах
+- 🔄 Real-time обновления через GraphQL
 
 ## 🛠 Установка
-
-Клонируйте проект и установите зависимости:
 
 ```bash
 git clone https://github.com/usebooz/UranaWeb.git
@@ -31,14 +67,43 @@ cd UranaWeb
 npm install
 ```
 
+### Настройка окружения
+
+Создайте `.env` файл:
+
+```bash
+cp .env.example .env
+```
+
+Настройте переменные окружения:
+
+```env
+# Обязательно - GraphQL API endpoint
+VITE_SPORTS_API_URL=https://www.sports.ru/gql/graphql/
+
+# Опционально - параметры турнира
+VITE_SPORTS_TOURNAMENT_RPL=russia
+```
+
 ## 🎯 Доступные скрипты
 
+### Разработка
 - `npm run dev` - Запуск в режиме разработки
-- `npm run dev:https` - Запуск с HTTPS (требуется для Telegram)
-- `npm run build` - Сборка для production
-- `npm run lint` - Проверка кода ESLint
+- `npm run dev:https` - Запуск с HTTPS (для Telegram)
+
+### GraphQL
+- `npm run codegen` - Генерация TypeScript типов из GraphQL схемы
+- `npm run codegen:watch` - Watch режим для кодогенерации
+
+### Качество кода
+- `npm run lint` - Проверка ESLint (0 warnings policy)
 - `npm run lint:fix` - Автоисправление ESLint
-- `npm run format` - Форматирование кода Prettier
+- `npm run format` - Форматирование Prettier
+- `npm run format:check` - Проверка форматирования
+
+### Сборка и деплой
+- `npm run build` - Production сборка
+- `npm run preview` - Предпросмотр production сборки
 - `npm run deploy` - Деплой на GitHub Pages
 
 ## 🔧 Разработка
@@ -51,64 +116,89 @@ npm install
 npm run dev:https
 ```
 
-После запуска вы увидите:
-
-```bash
-VITE v7.1.1  ready in 331 ms
-
-➜  Local:   https://localhost:5173/UranaWeb/
-➜  Network: https://192.168.1.100:5173/UranaWeb/
-```
-
-Откройте `Local` ссылку в браузере.
+После запуска откройте: `https://localhost:5173/UranaWeb/`
 
 ### Важные особенности
 
-- **Mock Environment**: Файл `src/mockEnv.ts` симулирует Telegram окружение для разработки в браузере
-- **SSL Сертификаты**: При первом запуске `dev:https` может потребоваться пароль администратора для создания локальных SSL сертификатов
-- **Mobile Testing**: Android/iOS могут не доверять самоподписанным сертификатам
+- **Mock Environment**: `src/mockEnv.ts` симулирует Telegram окружение
+- **Type Safety**: Полная типизация от GraphQL до UI
+- **Hot Reload**: Мгновенные обновления при разработке
+- **Environment Variables**: Проверка обязательных переменных при запуске
+
+### GraphQL разработка
+
+1. Обновите схему: поместите новую схему в `schemas/sports-ru.json`
+2. Добавьте queries в `src/gql/queries/`
+3. Запустите кодогенерацию: `npm run codegen`
+4. Создайте хуки в `src/hooks/fantasy/`
+5. Добавьте бизнес-логику в `src/services/`
 
 ## 🚀 Деплой
 
 ### GitHub Pages (Автоматический)
 
-Проект автоматически деплоится на GitHub Pages при push в ветку `main` через [GitHub Actions](.github/workflows/github-pages-deploy.yml).
+Проект автоматически деплоится при push в `main`:
 
-URL приложения: <https://usebooz.github.io/UranaWeb>
+- URL: <https://usebooz.github.io/UranaWeb>
+- Конфигурация: [`.github/workflows/github-pages-deploy.yml`](.github/workflows/github-pages-deploy.yml)
 
 ### Ручной деплой
-
-Для ручного деплоя выполните:
 
 ```bash
 npm run build
 npm run deploy
 ```
 
-### Настройка деплоя
+### Настройка для форка
 
-Если вы форкаете проект:
+1. Измените `homepage` в `package.json`
+2. Обновите `base` в `vite.config.ts`
+3. Настройте GitHub Pages в настройках репозитория
 
-1. Измените `homepage` в `package.json`:
+## 📐 Стандарты кода
 
-```json
-{
-  "homepage": "https://your-username.github.io/your-repo-name"
-}
+### ESLint конфигурация
+
+- **Zero warnings policy** - любые предупреждения блокируют CI
+- **Flat config** - современная конфигурация ESLint 9+
+- **TypeScript strict mode** - максимальная типизация
+- **React 19 rules** - правила для новой версии React
+
+### Импорты
+
+```typescript
+// Внешние библиотеки
+import { useQuery } from '@apollo/client';
+
+// Внутренние модули (через @ алиас, без расширений)
+import { useTournament } from '@/hooks/fantasy';
+import { TournamentService } from '@/services';
 ```
 
-1. Измените `base` в `vite.config.ts`:
+### Архитектурные принципы
 
-```ts
-export default defineConfig({
-  base: '/your-repo-name/',
-  // ...
-});
+- **Services Pattern**: бизнес-логика в services, UI в components
+- **Hook-first**: Apollo Client инкапсулирован в хуках
+- **Type-driven**: типы определяют контракты между слоями
+- **Модульность**: готовность к добавлению новых API
+
+## 🧪 Тестирование
+
+```bash
+# В разработке
+npm run test
+npm run test:watch
+npm run test:coverage
 ```
 
 ## 📚 Полезные ссылки
 
 - [Telegram Mini Apps Platform](https://docs.telegram-mini-apps.com/)
-- [@telegram-apps/sdk-react](https://docs.telegram-mini-apps.com/packages/telegram-apps-sdk-react)
-- [Telegram Developers Chat](https://t.me/devs)
+- [Apollo Client Docs](https://www.apollographql.com/docs/react/)
+- [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)
+- [Sports.ru GraphQL Playground](https://www.sports.ru/gql/graphql/)
 - [UranaBot Repository](https://github.com/usebooz/UranaBot)
+
+## 📄 Лицензия
+
+MIT
