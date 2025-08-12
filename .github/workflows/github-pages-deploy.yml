@@ -39,8 +39,8 @@ jobs:
 
       - name: Build
         env:
-          VITE_SPORTS_API_URL: ${{ vars.VITE_SPORTS_API_URL }}
-          VITE_SPORTS_TOURNAMENT_RPL: ${{ vars.VITE_SPORTS_TOURNAMENT_RPL }}
+          VITE_SPORTS_API_URL: ${{ vars.SPORTS_API_URL }}
+          VITE_SPORTS_TOURNAMENT_RPL: ${{ vars.SPORTS_TOURNAMENT_RPL }}
         run: npm run build
 
       - name: Setup Pages
