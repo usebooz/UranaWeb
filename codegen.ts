@@ -4,8 +4,8 @@ const codegenConfig: CodegenConfig = {
   overwrite: true,
   generates: {
     './src/gql/generated/': {
-      schema: './schemas/sports-ru.json',
-      documents: ['./src/gql/queries/*.ts'],
+      schema: './schemas/sports.json',
+      documents: './src/gql/queries/*.ts',
       preset: 'client',
       presetConfig: {
         fragmentMasking: false,

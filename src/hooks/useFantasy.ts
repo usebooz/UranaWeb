@@ -1,6 +1,6 @@
 import type { QueryHookOptions } from '@apollo/client';
 import { TOURNAMENT_QUERY } from '@/gql/queries/tournament.query';
-import { useSportsQuery } from '@/hooks/useSportsru';
+import { useSportsQuery } from '@/hooks/useSports';
 import {
   FantasyIdSource,
   type TournamentQuery,

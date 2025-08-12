@@ -29,8 +29,8 @@ Modern Telegram Mini App для работы с фэнтези турнирам�
 
 ```
 src/
-├── hooks/                    # React hooks для API
-│   ├── useSportsru.ts       # Базовый хук с Apollo Client
+├── hooks/                   # React hooks для API
+│   ├── useSports.ts         # Базовый хук с Apollo Client
 │   ├── fantasy/             # Fantasy Sports hooks
 │   └── other/               # Заготовка для других API
 ├── services/                # Бизнес-логика и утилиты
@@ -127,7 +127,7 @@ npm run dev:https
 
 ### GraphQL разработка
 
-1. Обновите схему: поместите новую схему в `schemas/sports-ru.json`
+1. Обновите схему: поместите новую схему в `schemas/sports.json`
 2. Добавьте queries в `src/gql/queries/`
 3. Запустите кодогенерацию: `npm run codegen`
 4. Создайте хуки в `src/hooks/fantasy/`
