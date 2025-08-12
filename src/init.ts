@@ -27,6 +27,11 @@ export function init(options: {
   if (!import.meta.env.VITE_SPORTS_API_URL) {
     throw new Error('VITE_SPORTS_API_URL environment variable is required');
   }
+  if (!import.meta.env.VITE_SPORTS_TOURNAMENT_RPL) {
+    throw new Error(
+      'VITE_SPORTS_TOURNAMENT_RPL environment variable is required'
+    );
+  }
 
   // Set @telegram-apps/sdk-react debug mode and initialize it.
   setDebug(options.debug);

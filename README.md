@@ -79,10 +79,10 @@ cp .env.example .env
 
 ```env
 # Обязательно - GraphQL API endpoint
-VITE_SPORTS_API_URL=https://www.sports.ru/gql/graphql/
+VITE_SPORTS_API_URL=sports_api_url
 
 # Опционально - параметры турнира
-VITE_SPORTS_TOURNAMENT_RPL=russia
+VITE_SPORTS_TOURNAMENT_RPL=sports_tournament_rpl
 ```
 
 ## 🎯 Доступные скрипты
