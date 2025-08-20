@@ -1,34 +1,101 @@
 import type { QueryHookOptions } from '@apollo/client';
-import { TOURNAMENT_QUERY } from '@/gql/queries/tournament.query';
 import { useSportsQuery } from '@/hooks/useSports';
 import {
-  FantasyIdSource,
-  type TournamentQuery,
-  type TournamentQueryVariables,
+  Scalars,
+  type GetLeagueQuery,
+  type GetLeagueQueryVariables,
+  GetLeagueDocument,
+  GetTourDocument,
+  GetTourQuery,
+  GetTourQueryVariables,
+  GetLeagueSquadsDocument,
+  GetLeagueSquadsQuery,
+  GetLeagueSquadsQueryVariables,
+  FantasyRatingEntityType,
 } from '@/gql/generated/graphql';
+import type { League, LeagueSquads, Tour } from '@/gql';
 
 /**
- * Hook для получения турнира с автоматическим определением source
- * @param webname Webname турнира
- * @param options Дополнительные опции Apollo Query
+ * Хук для получения лиги по ID
+ * @param id - ID лиги
+ * @param options - дополнительные опции для Apollo Client
  */
-export const useTournamentByWebname = (
-  webname: string,
+export const useLeagueById = (
+  id: Scalars['ID']['input'],
   options?: Omit<
-    QueryHookOptions<TournamentQuery, TournamentQueryVariables>,
+    QueryHookOptions<GetLeagueQuery, GetLeagueQueryVariables>,
     'variables'
   >
-) => {
-  const variables = {
-    source: FantasyIdSource.Hru,
-    id: webname,
-  };
+): Omit<
+  ReturnType<typeof useSportsQuery<GetLeagueQuery, GetLeagueQueryVariables>>,
+  'data'
+> & {
+  data?: League;
+} => {
+  const result = useSportsQuery(GetLeagueDocument, {
+    ...options,
+    variables: {
+      id,
+    },
+  });
 
-  return useSportsQuery<TournamentQuery, TournamentQueryVariables>(
-    TOURNAMENT_QUERY,
-    {
-      variables,
-      ...options,
-    }
-  );
+  return {
+    ...result,
+    data: result.data?.fantasyQueries?.league || null,
+  };
+};
+
+export const useTourById = (
+  id: Scalars['ID']['input'],
+  options?: Omit<
+    QueryHookOptions<GetTourQuery, GetTourQueryVariables>,
+    'variables'
+  >
+): Omit<
+  ReturnType<typeof useSportsQuery<GetTourQuery, GetTourQueryVariables>>,
+  'data'
+> & {
+  data?: Tour;
+} => {
+  const result = useSportsQuery(GetTourDocument, {
+    ...options,
+    variables: {
+      id,
+    },
+  });
+
+  return {
+    ...result,
+    data: result.data?.fantasyQueries?.tour || null,
+  };
+};
+
+export const useLeagueSquadsWithTourRating = (
+  leagueId: Scalars['ID']['input'],
+  tourId: Scalars['ID']['input'],
+  options?: Omit<
+    QueryHookOptions<GetLeagueSquadsQuery, GetLeagueSquadsQueryVariables>,
+    'variables'
+  >
+): Omit<
+  ReturnType<
+    typeof useSportsQuery<GetLeagueSquadsQuery, GetLeagueSquadsQueryVariables>
+  >,
+  'data'
+> & {
+  data?: LeagueSquads;
+} => {
+  const result = useSportsQuery(GetLeagueSquadsDocument, {
+    ...options,
+    variables: {
+      leagueId,
+      entityType: FantasyRatingEntityType.Tour,
+      entityId: tourId,
+    },
+  });
+
+  return {
+    ...result,
+    data: result.data?.fantasyQueries?.rating?.squads?.list || [],
+  };
 };

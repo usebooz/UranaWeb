@@ -4,3 +4,4 @@
 
 // Fantasy Sports hooks (используют useSportsQuery)
 export * from './useFantasy';
+export * from './useSports';

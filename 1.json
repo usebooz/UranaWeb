@@ -1,0 +1,95 @@
+                                "currentTourInfo": {
+                                    "totalPrice": 99.5,
+                                    "currentBalance": 0.5,
+                                    "transfersLeft": 3,
+                                    "transfersDone": 0,
+                                    "isNotLimit": false,
+                                    "tour": {
+                                        "name": "5 тур",
+                                        "id": "1776"
+                                    },
+                                    "scoreInfo": null,
+                                    "players": [
+                                        {
+                                            "isCaptain": false,
+                                            "isViceCaptain": true,
+                                            "isStarting": true,
+                                            "substitutePriority": null,
+                                            "points": 4,
+                                            "playedMatches": 4,
+                                            "score": 4,
+                                            "isPointsCount": true,
+                                            "statDetails": [
+                                                {
+                                                    "score": 1,
+                                                    "reason": "Выход на поле"
+                                                },
+                                                {
+                                                    "score": 1,
+                                                    "reason": "60+ мин. на поле"
+                                                },
+                                                {
+                                                    "score": 1,
+                                                    "reason": "Сухой матч"
+                                                },
+                                                {
+                                                    "score": 1,
+                                                    "reason": "Возвраты владения"
+                                                }
+                                            ],
+                                            "playedMatchesTour": 0,
+                                            "tourScore": {
+                                                "place": 0,
+                                                "score": 0,
+                                                "totalPlaces": 557,
+                                                "averageScore": 0,
+                                                "placeDiff": 0,
+                                                "scoreForLastTour": 0,
+                                                "topPercent": null,
+                                                "topColor": null,
+                                                "placeAfterTour": 0,
+                                                "pointsAfterTour": 0,
+                                                "placeAfterTourDiff": 0
+                                            },
+                                            "tourPoints": {
+                                                "place": 0,
+                                                "score": 0,
+                                                "totalPlaces": 557,
+                                                "averageScore": 0,
+                                                "placeDiff": 0,
+                                                "scoreForLastTour": 0,
+                                                "topPercent": null,
+                                                "topColor": null,
+                                                "placeAfterTour": 0,
+                                                "pointsAfterTour": 0,
+                                                "placeAfterTourDiff": 0
+                                            },
+                                            "seasonPlayer": {
+                                                "name": "Эдуард Сперцян",
+                                                "price": 11,
+                                                "id": "54138",
+                                                "role": "MIDFIELDER",
+                                                "status": {
+                                                    "shape": 30
+                                                },
+                                                "team": {
+                                                    "statObject": {
+                                                        "name": "Краснодар",
+                                                        "id": "fc_krasnodar"
+                                                    },
+                                                    "svgKit": {
+                                                        "url": "https://pictures.cdn.sports.ru/uTVn1WfJ4VYCrc8j6qVRyeZPAT0dncAavuHjm3hoG5A/fill/72/67/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL0ZBTlRBU1lfS0lUL2ZjX2tyYXNub2Rhcl9uZXcuc3Zn.svg"
+                                                    }
+                                                },
+                                                "statObject": {
+                                                    "name": "Эдуард Сперцян",
+                                                    "lastName": "Сперцян",
+                                                    "firstName": "Эдуард",
+                                                    "coalesceName": "Eduard Spertsyan",
+                                                    "activeInjury": null,
+                                                    "jerseyNumber": 10
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }

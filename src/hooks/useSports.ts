@@ -7,6 +7,7 @@ import {
   type DocumentNode,
   type OperationVariables,
 } from '@apollo/client';
+import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 // Apollo Client для Sports.ru API (инкапсулирован в хуке)
 const httpLink = createHttpLink({
@@ -42,7 +43,7 @@ export const useSportsQuery = <
   TData = unknown,
   TVariables extends OperationVariables = OperationVariables,
 >(
-  query: DocumentNode,
+  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: QueryHookOptions<TData, TVariables>
 ) => {
   return useQuery<TData, TVariables>(query, {
