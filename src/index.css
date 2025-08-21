@@ -4,11 +4,10 @@ body {
   margin: 0;
 }
 
-.cell h6 {
-  color: var(--tgui--destructive_text_color, red);
+.sub-cell div:nth-child(2) {
+  padding: 8px 0;
 }
 
-/*
---tgui--accent_text_color
---tgui--destructive_text_color
-*/
+.double-cell {
+  padding: 8px 0;
+}

@@ -12,8 +12,20 @@ import {
   GetLeagueSquadsQuery,
   GetLeagueSquadsQueryVariables,
   FantasyRatingEntityType,
+  GetLeagueSquadsCurrentPlayersQuery,
+  GetLeagueSquadsCurrentPlayersQueryVariables,
+  GetLeagueSquadsCurrentPlayersDocument,
+  GetTourMatchesQuery,
+  GetTourMatchesDocument,
+  GetTourMatchesQueryVariables,
 } from '@/gql/generated/graphql';
-import type { League, LeagueSquads, Tour } from '@/gql';
+import type {
+  League,
+  LeagueSquads,
+  LeagueSquadsPlayers,
+  Tour,
+  TourMatches,
+} from '@/gql';
 
 /**
  * Хук для получения лиги по ID
@@ -70,6 +82,33 @@ export const useTourById = (
   };
 };
 
+export const useTourMatches = (
+  id: Scalars['ID']['input'],
+  options?: Omit<
+    QueryHookOptions<GetTourMatchesQuery, GetTourMatchesQueryVariables>,
+    'variables'
+  >
+): Omit<
+  ReturnType<
+    typeof useSportsQuery<GetTourMatchesQuery, GetTourMatchesQueryVariables>
+  >,
+  'data'
+> & {
+  data?: TourMatches;
+} => {
+  const result = useSportsQuery(GetTourMatchesDocument, {
+    ...options,
+    variables: {
+      id,
+    },
+  });
+
+  return {
+    ...result,
+    data: result.data?.fantasyQueries?.tour?.matches || [],
+  };
+};
+
 export const useLeagueSquadsWithTourRating = (
   leagueId: Scalars['ID']['input'],
   tourId: Scalars['ID']['input'],
@@ -91,6 +130,76 @@ export const useLeagueSquadsWithTourRating = (
       leagueId,
       entityType: FantasyRatingEntityType.Tour,
       entityId: tourId,
+    },
+  });
+
+  return {
+    ...result,
+    data:
+      result.data?.fantasyQueries?.rating?.squads?.list
+        ?.slice()
+        .sort(
+          (a, b) => a.scoreInfo.placeAfterTour - b.scoreInfo.placeAfterTour
+        ) || [],
+  };
+};
+
+export const useLeagueSquadsWithSeasonRating = (
+  leagueId: Scalars['ID']['input'],
+  seasonId: Scalars['ID']['input'],
+  options?: Omit<
+    QueryHookOptions<GetLeagueSquadsQuery, GetLeagueSquadsQueryVariables>,
+    'variables'
+  >
+): Omit<
+  ReturnType<
+    typeof useSportsQuery<GetLeagueSquadsQuery, GetLeagueSquadsQueryVariables>
+  >,
+  'data'
+> & {
+  data?: LeagueSquads;
+} => {
+  const result = useSportsQuery(GetLeagueSquadsDocument, {
+    ...options,
+    variables: {
+      leagueId,
+      entityType: FantasyRatingEntityType.Season,
+      entityId: seasonId,
+    },
+  });
+
+  return {
+    ...result,
+    data: result.data?.fantasyQueries?.rating?.squads?.list || [],
+  };
+};
+
+export const useLeagueSquadsCurrentPlayers = (
+  leagueId: Scalars['ID']['input'],
+  seasonId: Scalars['ID']['input'],
+  options?: Omit<
+    QueryHookOptions<
+      GetLeagueSquadsCurrentPlayersQuery,
+      GetLeagueSquadsCurrentPlayersQueryVariables
+    >,
+    'variables'
+  >
+): Omit<
+  ReturnType<
+    typeof useSportsQuery<
+      GetLeagueSquadsCurrentPlayersQuery,
+      GetLeagueSquadsCurrentPlayersQueryVariables
+    >
+  >,
+  'data'
+> & {
+  data?: LeagueSquadsPlayers;
+} => {
+  const result = useSportsQuery(GetLeagueSquadsCurrentPlayersDocument, {
+    ...options,
+    variables: {
+      leagueId,
+      seasonId,
     },
   });
 

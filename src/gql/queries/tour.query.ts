@@ -3,7 +3,7 @@ import { graphql } from '@/gql/generated';
 /**
  * Query to get tour
  */
-export const TOUR_QUERY = graphql(`
+graphql(`
   query GetTour($id: ID!) {
     fantasyQueries {
       tour(id: $id) {
@@ -14,11 +14,51 @@ export const TOUR_QUERY = graphql(`
         finishedAt
         transfersStartedAt
         transfersFinishedAt
+      }
+    }
+  }
+`);
+
+/**
+ * Query to get tour matches
+ */
+graphql(`
+  query GetTourMatches($id: ID!) {
+    fantasyQueries {
+      tour(id: $id) {
         matches {
           id
-          status
           matchStatus
           scheduledAt
+          currentTime
+          home {
+            score
+            team {
+              name
+              logo {
+                main
+              }
+            }
+          }
+          away {
+            score
+            team {
+              name
+              logo {
+                main
+              }
+            }
+          }
+          prediction {
+            yellowCards
+            goals
+          }
+          bettingOdds(iso2Country: "", placementType: FANTASY_MATCH) {
+            line1x2 {
+              h
+              a
+            }
+          }
         }
       }
     }

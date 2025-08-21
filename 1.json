@@ -1,24 +1,6 @@
                                 "currentTourInfo": {
-                                    "totalPrice": 99.5,
-                                    "currentBalance": 0.5,
-                                    "transfersLeft": 3,
-                                    "transfersDone": 0,
-                                    "isNotLimit": false,
-                                    "tour": {
-                                        "name": "5 тур",
-                                        "id": "1776"
-                                    },
-                                    "scoreInfo": null,
                                     "players": [
                                         {
-                                            "isCaptain": false,
-                                            "isViceCaptain": true,
-                                            "isStarting": true,
-                                            "substitutePriority": null,
-                                            "points": 4,
-                                            "playedMatches": 4,
-                                            "score": 4,
-                                            "isPointsCount": true,
                                             "statDetails": [
                                                 {
                                                     "score": 1,
@@ -37,7 +19,6 @@
                                                     "reason": "Возвраты владения"
                                                 }
                                             ],
-                                            "playedMatchesTour": 0,
                                             "tourScore": {
                                                 "place": 0,
                                                 "score": 0,
