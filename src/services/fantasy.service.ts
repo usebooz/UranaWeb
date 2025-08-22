@@ -12,6 +12,9 @@ import { BadgeProps } from '@telegram-apps/telegram-ui';
  * Сервис для работы с fantasy данными
  */
 export class FantasyService {
+  static readonly rplWebname = import.meta.env
+    .VITE_SPORTS_TOURNAMENT_RPL as string;
+
   /**
    * Определяет текущий активный тур из лиги
    * @param league - данные лиги
@@ -19,6 +22,28 @@ export class FantasyService {
    */
   static getCurrentTourId(league: League): string | undefined {
     return league?.season?.currentTour?.id;
+  }
+
+  /**
+   *
+   * @param league
+   * @returns
+   */
+  static isLeagueFromActiveRplSeason(league: League): boolean {
+    return !!(
+      league?.season.isActive &&
+      league.season.tournament.webName === this.rplWebname
+    );
+  }
+
+  /**
+   *
+   * @param league
+   * @param tour
+   * @returns
+   */
+  static isTourFromLeague(league: League, tour: Tour): boolean {
+    return league?.season?.tours?.some(t => t.id === tour?.id) || false;
   }
 
   /**
@@ -64,12 +89,21 @@ export class FantasyService {
    */
   static getAvailableToursCount(league: League): number {
     return (
-      league?.season.tours.filter(
-        tour =>
-          tour.status === FantasyTourStatus.Finished ||
-          tour.status === FantasyTourStatus.InProgress ||
-          tour.status === FantasyTourStatus.Opened
-      ).length || 0
+      league?.season.tours.filter(tour => this.isTourAvailable(tour)).length ||
+      0
+    );
+  }
+
+  /**
+   *
+   * @param tour
+   * @returns
+   */
+  static isTourAvailable(tour: Tour): boolean {
+    return (
+      tour?.status === FantasyTourStatus.Finished ||
+      tour?.status === FantasyTourStatus.InProgress ||
+      tour?.status === FantasyTourStatus.Opened
     );
   }
 

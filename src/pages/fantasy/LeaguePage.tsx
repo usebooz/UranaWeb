@@ -43,6 +43,14 @@ export const LeaguePage: FC = () => {
   } = useLeagueById(leagueId!, {
     skip: !leagueId,
   });
+  const currentTourId = useMemo(
+    () => FantasyService.getCurrentTourId(league),
+    [league?.season.currentTour?.id]
+  );
+  const isLeagueFromActiveRplSeason = useMemo(
+    () => FantasyService.isLeagueFromActiveRplSeason(league),
+    [league?.season]
+  );
 
   // Tour
   const tourId = searchParams.get('tourId');
@@ -53,10 +61,13 @@ export const LeaguePage: FC = () => {
   } = useTourById(tourId!, {
     skip: !tourId,
   });
-
-  const seasonId = useMemo(
-    () => FantasyService.getSeasonId(league),
-    [league?.season?.id]
+  const isTourFromLeague = useMemo(
+    () => FantasyService.isTourFromLeague(league, tour),
+    [league?.season.tours.length, tour?.id]
+  );
+  const isTourAvailable = useMemo(
+    () => FantasyService.isTourAvailable(tour),
+    [tour?.status]
   );
 
   // Matches
@@ -64,25 +75,22 @@ export const LeaguePage: FC = () => {
     () => FantasyService.isTourInProgress(tour),
     [tour?.status]
   );
-
-  // Логирование условий skip для matches
   const matchesSkip = !tourId || !shouldLoadMatches;
-
   const { data: matches, loading: matchesLoading } = useTourMatches(tourId!, {
     skip: matchesSkip,
-    fetchPolicy: 'no-cache', // Полностью отключаем кеш для matches
   });
 
   // Squads
+  const seasonId = useMemo(
+    () => FantasyService.getSeasonId(league),
+    [league?.season?.id]
+  );
   const isTourOpened = useMemo(
     () => FantasyService.isTourOpened(tour),
     [tour?.status]
   );
-
-  // Логирование условий skip для squads
   const seasonRatingSkip = !seasonId || !leagueId || !isTourOpened;
   const tourRatingSkip = !leagueId || !tourId || isTourOpened;
-
   const seasonRatingResult = useLeagueSquadsWithSeasonRating(
     leagueId!,
     seasonId!,
@@ -107,35 +115,36 @@ export const LeaguePage: FC = () => {
       skip: !leagueId || !seasonId || !isTourCurrent,
     });
 
-  //Tour set
+  //Set Current Tour
   useEffect(() => {
-    if (tourId || !league) {
-      return;
-    }
-    const currentTourId = FantasyService.getCurrentTourId(league);
-    if (!currentTourId) {
+    if (tourId || !currentTourId) {
       return;
     }
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('tourId', currentTourId);
     setSearchParams(newSearchParams);
-  }, [tourId, league, setSearchParams]); // Убрали searchParams из зависимостей
+  }, [tourId, currentTourId, setSearchParams]);
 
-  //Tour init
+  //Change Tour
   useEffect(() => {
     setExpandedSquads(new Set());
-    setIsTourExpanded(false); // Сворачиваем аккордеон тура при смене
-    setShouldLoadMatches(false); // Сбрасываем триггер загрузки матчей
+    setIsTourExpanded(false);
+    setShouldLoadMatches(false);
   }, [tourId]);
 
-  //Matches load
+  //Start Load Matches
   useEffect(() => {
     if (isTourInProgress) {
       setShouldLoadMatches(true);
     }
   }, [isTourInProgress]);
 
-  // Обработчик изменения состояния аккордеона
+  // //Logs
+  // useEffect(() => {
+  //   console.log('matchesSkeletonVisible:', matchesSkeletonVisible);
+  // }, [matchesSkeletonVisible]);
+
+  //
   const handleSquadExpand = (squadId: string, isExpanded: boolean) => {
     setExpandedSquads(prev => {
       const newSet = new Set(prev);
@@ -156,7 +165,7 @@ export const LeaguePage: FC = () => {
     }
   };
 
-  // Обработчик изменения тура в пагинации
+  //
   const handleTourChange = (_event: unknown, page: number): void => {
     const selectedTour = FantasyService.getTourByPage(league, page);
 
@@ -185,58 +194,64 @@ export const LeaguePage: FC = () => {
   );
   const currentTourNumber = useMemo(
     () => FantasyService.getTourNumber(tour),
-    [tour?.name] // Изменено с tour?.id на tour?.name
+    [tour?.name]
   );
   const tourStatusHint = useMemo(
     () => FantasyService.getTourStatusHint(tour),
-    [tour?.status] // Убрали tour?.id
+    [tour?.status]
   );
   const shouldShowTourBadge = useMemo(
     () => FantasyService.isTourInProgress(tour),
-    [tour?.status] // Убрали tour?.id
+    [tour?.status]
   );
   const averageSubtitle = useMemo(
     () => FantasyService.getAverageSubtitle(tour),
-    [tour?.status] // Убрали tour?.id
+    [tour?.status]
   );
   const squadsHeader = useMemo(
     () => FantasyService.getSquadsHeader(squads),
-    [squads?.[0]?.scoreInfo.totalPlaces] // Убрали tour?.id
+    [squads?.[0]?.scoreInfo.totalPlaces]
   );
   const tourSubtitle = useMemo(
     () => FantasyService.getTourSubtitle(tour, matches, squads),
-    [tour?.status, tour?.startedAt, squads?.length, matches?.length] // Убрали tour?.id
+    [tour?.status, tour?.startedAt, squads?.length, matches?.length]
   );
 
   const averageScore = useMemo(
     () => FantasyService.getAverageScore(tour, squads),
-    [tour?.status, squads?.[0]?.scoreInfo.averageScore] // Убрали tour?.id
+    [tour?.status, squads?.[0]?.scoreInfo.averageScore]
   );
 
-  if (leagueLoading) {
-    return <LoadingPage />;
-  }
+  //League routing
   if (leagueError) {
     return <ErrorPage error={leagueError} />;
   }
-  if (!league) {
+  if (leagueLoading) {
+    return <LoadingPage />;
+  }
+  if (!league || !isLeagueFromActiveRplSeason) {
     return <ErrorPage error={new Error('League not found')} />;
   }
 
+  //Tour routing
   if (tourError) {
     return <ErrorPage error={tourError} />;
   }
-  if (!tourLoading && !tour) {
+  //Устанавливается тур в параметры
+  if (!tourLoading && !tour && !tourId && currentTourId) {
+    return <LoadingPage />;
+  }
+  if (
+    (!tour && !tourLoading) ||
+    (tour && (!isTourFromLeague || !isTourAvailable))
+  ) {
     return <ErrorPage error={new Error('Tour not found')} />;
   }
 
-  if (!squadsLoading && !squads) {
-    return <ErrorPage error={new Error('Squads not found')} />;
-  }
-
+  //Для открытого тура не ждем составы для отображения тура
   const tourSkeletonVisible = tourLoading || (squadsLoading && !isTourOpened);
-  const squadsSkeletonVisible = tourLoading || squadsLoading || playersLoading;
   const matchesSkeletonVisible = matchesLoading;
+  const squadsSkeletonVisible = tourLoading || squadsLoading || playersLoading;
 
   return (
     <Page back={false}>
@@ -275,46 +290,51 @@ export const LeaguePage: FC = () => {
               <AccordionContent>
                 <Skeleton visible={matchesSkeletonVisible}>
                   <Section>
-                    <Cell
-                      className="double-cell"
-                      before={
-                        <div>
-                          <Cell
-                            readOnly
-                            subtitle={'Краснодар'}
-                            className="sub-cell"
-                            hovered={false}
-                            before={
-                              <Avatar
-                                size={24}
-                                src="https://pictures.cdn.sports.ru/f_Dc699MLn_9HLAgalsId2XWKqlvx550N7GRv4prPMA/fill/600/600/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL1RFQU0vbWFpbi9mY19rcmFzbm9kYXJfMTc1MzAxNzA2Mi5wbmc.png"
+                    {matches?.map(match => {
+                      return (
+                        <Cell
+                          key={match.id}
+                          className="double-cell"
+                          before={
+                            <div>
+                              <Cell
+                                readOnly
+                                subtitle={'Краснодар'}
+                                className="sub-cell"
+                                hovered={false}
+                                before={
+                                  <Avatar
+                                    size={24}
+                                    src="https://pictures.cdn.sports.ru/f_Dc699MLn_9HLAgalsId2XWKqlvx550N7GRv4prPMA/fill/600/600/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL1RFQU0vbWFpbi9mY19rcmFzbm9kYXJfMTc1MzAxNzA2Mi5wbmc.png"
+                                  />
+                                }
+                                after={
+                                  <Badge type="number" mode="gray">
+                                    9.234
+                                  </Badge>
+                                }
                               />
-                            }
-                            after={
-                              <Badge type="number" mode="gray">
-                                9.234
-                              </Badge>
-                            }
-                          />
-                          <Cell
-                            readOnly
-                            subtitle={'Крылья Советов'}
-                            hovered={false}
-                            className="sub-cell"
-                            before={
-                              <Avatar
-                                size={24}
-                                src="https://pictures.cdn.sports.ru/e1-JgbyFaaVrzkNT97jp40a6T-v_FGpMCG2sMr7KWqY/fill/120/120/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL1RFQU0vbWFpbi9mY19rcnlsaXlhX3NvdmV0b3Zfc2FtYXJhLnBuZw.png"
+                              <Cell
+                                readOnly
+                                subtitle={'Крылья Советов'}
+                                hovered={false}
+                                className="sub-cell"
+                                before={
+                                  <Avatar
+                                    size={24}
+                                    src="https://pictures.cdn.sports.ru/e1-JgbyFaaVrzkNT97jp40a6T-v_FGpMCG2sMr7KWqY/fill/120/120/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL1RFQU0vbWFpbi9mY19rcnlsaXlhX3NvdmV0b3Zfc2FtYXJhLnBuZw.png"
+                                  />
+                                }
+                                after={<Badge type="number">1</Badge>}
                               />
-                            }
-                            after={<Badge type="number">1</Badge>}
-                          />
-                        </div>
-                      }
-                      hint="идет"
-                      titleBadge={<Badge type="number">90+5'</Badge>}
-                      description={'dddd'}
-                    />
+                            </div>
+                          }
+                          hint="идет"
+                          titleBadge={<Badge type="number">90+5'</Badge>}
+                          description={'dddd'}
+                        />
+                      );
+                    })}
                   </Section>
                 </Skeleton>
               </AccordionContent>

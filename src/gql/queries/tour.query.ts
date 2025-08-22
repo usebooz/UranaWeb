@@ -26,6 +26,7 @@ graphql(`
   query GetTourMatches($id: ID!) {
     fantasyQueries {
       tour(id: $id) {
+        id
         matches {
           id
           matchStatus

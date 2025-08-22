@@ -20,7 +20,16 @@ const sportsClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          // Здесь можно настроить кеширование для конкретных типов
+          fantasyQueries: {
+            // Custom merge функция для безопасного объединения FantasyQueries
+            merge(existing, incoming) {
+              // Объединяем поля из existing и incoming
+              return {
+                ...existing,
+                ...incoming,
+              };
+            },
+          },
         },
       },
     },
