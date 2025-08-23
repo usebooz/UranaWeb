@@ -32,6 +32,8 @@ graphql(`
           matchStatus
           scheduledAt
           currentTime
+          winner
+          periodId
           home {
             score
             team {

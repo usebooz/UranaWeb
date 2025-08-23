@@ -3,7 +3,6 @@ import {
   Accordion,
   Badge,
   Cell,
-  Divider,
   Info,
   List,
   Pagination,
@@ -11,6 +10,8 @@ import {
   Select,
   Skeleton,
   Avatar,
+  Spinner,
+  Placeholder,
 } from '@telegram-apps/telegram-ui';
 import { useEffect, useState, useMemo, type FC } from 'react';
 
@@ -139,12 +140,27 @@ export const LeaguePage: FC = () => {
     }
   }, [isTourInProgress]);
 
-  // //Logs
-  // useEffect(() => {
-  //   console.log('matchesSkeletonVisible:', matchesSkeletonVisible);
-  // }, [matchesSkeletonVisible]);
+  //Switch Tour
+  const handleTourChange = (_event: unknown, page: number): void => {
+    const selectedTour = FantasyService.getTourByPage(league, page);
 
-  //
+    if (selectedTour) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('tourId', selectedTour.id);
+      setSearchParams(newSearchParams);
+    }
+  };
+
+  //Expand Tour
+  const handleTourExpand = (isExpanded: boolean) => {
+    setIsTourExpanded(isExpanded);
+    // При первом разворачивании аккордеона загружаем матчи (если не IN_PROGRESS)
+    if (isExpanded && !shouldLoadMatches) {
+      setShouldLoadMatches(true);
+    }
+  };
+
+  //Expand Squad
   const handleSquadExpand = (squadId: string, isExpanded: boolean) => {
     setExpandedSquads(prev => {
       const newSet = new Set(prev);
@@ -157,72 +173,7 @@ export const LeaguePage: FC = () => {
     });
   };
 
-  const handleTourExpand = (isExpanded: boolean) => {
-    setIsTourExpanded(isExpanded);
-    // При первом разворачивании аккордеона загружаем матчи (если не IN_PROGRESS)
-    if (isExpanded && !shouldLoadMatches) {
-      setShouldLoadMatches(true);
-    }
-  };
-
-  //
-  const handleTourChange = (_event: unknown, page: number): void => {
-    const selectedTour = FantasyService.getTourByPage(league, page);
-
-    if (selectedTour) {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('tourId', selectedTour.id);
-      setSearchParams(newSearchParams);
-    }
-  };
-
-  const availableToursCount = useMemo(
-    () => FantasyService.getAvailableToursCount(league),
-    [
-      league?.id,
-      league?.season.currentTour?.id,
-      league?.season.currentTour?.status,
-    ]
-  );
-  const toursHeader = useMemo(
-    () => FantasyService.getToursHeader(league),
-    [
-      league?.id,
-      league?.season.currentTour?.id,
-      league?.season.currentTour?.status,
-    ]
-  );
-  const currentTourNumber = useMemo(
-    () => FantasyService.getTourNumber(tour),
-    [tour?.name]
-  );
-  const tourStatusHint = useMemo(
-    () => FantasyService.getTourStatusHint(tour),
-    [tour?.status]
-  );
-  const shouldShowTourBadge = useMemo(
-    () => FantasyService.isTourInProgress(tour),
-    [tour?.status]
-  );
-  const averageSubtitle = useMemo(
-    () => FantasyService.getAverageSubtitle(tour),
-    [tour?.status]
-  );
-  const squadsHeader = useMemo(
-    () => FantasyService.getSquadsHeader(squads),
-    [squads?.[0]?.scoreInfo.totalPlaces]
-  );
-  const tourSubtitle = useMemo(
-    () => FantasyService.getTourSubtitle(tour, matches, squads),
-    [tour?.status, tour?.startedAt, squads?.length, matches?.length]
-  );
-
-  const averageScore = useMemo(
-    () => FantasyService.getAverageScore(tour, squads),
-    [tour?.status, squads?.[0]?.scoreInfo.averageScore]
-  );
-
-  //League routing
+  //League Section
   if (leagueError) {
     return <ErrorPage error={leagueError} />;
   }
@@ -232,8 +183,15 @@ export const LeaguePage: FC = () => {
   if (!league || !isLeagueFromActiveRplSeason) {
     return <ErrorPage error={new Error('League not found')} />;
   }
+  const renderLeagueSection = () => (
+    <Section>
+      <Select header="Лига" disabled>
+        <option>{league.name}</option>
+      </Select>
+    </Section>
+  );
 
-  //Tour routing
+  //Tour Section
   if (tourError) {
     return <ErrorPage error={tourError} />;
   }
@@ -247,157 +205,244 @@ export const LeaguePage: FC = () => {
   ) {
     return <ErrorPage error={new Error('Tour not found')} />;
   }
+  const renderTourSection = () => {
+    const availableToursCount = FantasyService.getAvailableToursCount(league);
+    const currentTourNumber = FantasyService.getTourNumber(tour);
+    const tourHint = FantasyService.getTourStatusText(tour);
+    const tourBadge = FantasyService.isTourInProgress(tour) ? (
+      <Badge type="number">
+        {FantasyService.getPlayedMatchesCount(matches)}
+      </Badge>
+    ) : undefined;
 
-  //Для открытого тура не ждем составы для отображения тура
-  const tourSkeletonVisible = tourLoading || (squadsLoading && !isTourOpened);
-  const matchesSkeletonVisible = matchesLoading;
-  const squadsSkeletonVisible = tourLoading || squadsLoading || playersLoading;
+    return (
+      <Section>
+        <Pagination
+          hideNextButton
+          hidePrevButton
+          boundaryCount={1}
+          count={availableToursCount}
+          siblingCount={1}
+          page={currentTourNumber}
+          onChange={handleTourChange}
+        />
+        <Skeleton visible={tourLoading}>
+          <Accordion expanded={isTourExpanded} onChange={handleTourExpand}>
+            <Accordion.Summary hint={tourHint} titleBadge={tourBadge}>
+              {tour?.name}
+            </Accordion.Summary>
+            {isTourExpanded && matchesLoading && (
+              <AccordionContent>
+                <Placeholder>
+                  <Spinner size="m" />
+                </Placeholder>
+              </AccordionContent>
+            )}
+            {isTourExpanded && !matchesLoading && (
+              <AccordionContent>
+                <Section>{renderMatches()}</Section>
+              </AccordionContent>
+            )}
+          </Accordion>
+        </Skeleton>
+      </Section>
+    );
+  };
+
+  //Matches Content
+  const renderMatches = () => {
+    if (!matches || matches.length === 0) {
+      return <Placeholder header="Matches not found" />;
+    }
+
+    return matches.map(match => {
+      let teamWinner, teamBefore, teamAfter;
+      if (FantasyService.isMatctHomeWinner(match)) {
+        teamWinner = match.home?.team?.name;
+        teamAfter = match.away?.team?.name;
+      } else if (FantasyService.isMatctAwayWinner(match)) {
+        teamBefore = match.home?.team?.name;
+        teamWinner = match.away?.team?.name;
+      } else {
+        teamBefore = match.home?.team?.name;
+        teamAfter = match.away?.team?.name;
+      }
+
+      let homeBet, awayBet, homeScore, awayScore;
+      if (FantasyService.isMatchNotStarted(match)) {
+        homeBet = match.bettingOdds[0]?.line1x2?.h?.toString();
+        awayBet = match.bettingOdds[0]?.line1x2?.a?.toString();
+      } else {
+        homeScore = match.home?.score.toString();
+        awayScore = match.away?.score.toString();
+      }
+      let scoreColor;
+      if (FantasyService.isMatchInProgress(match)) {
+        scoreColor = 'var(--tg-theme-accent-text-color)';
+      } else {
+        scoreColor = 'var(--tg-theme-text-color)';
+      }
+
+      const matchCurrentTime = FantasyService.getMatchCurrentTime(match);
+      const matchScheduledAt = FantasyService.formatMatchScheduledAt(match);
+      let matchInfo;
+      if (FantasyService.isMatchInProgress(match)) {
+        matchInfo = <Badge type="number">{matchCurrentTime}</Badge>;
+      }
+      if (FantasyService.isMatchNotStarted(match))
+        matchInfo = <Info type="text" subtitle={matchScheduledAt}></Info>;
+
+      return (
+        <Cell
+          Component={'div'}
+          className="match-cell"
+          key={match.id}
+          before={
+            <div className="match-logos">
+              <Avatar
+                size={20}
+                src={match.home?.team?.logo.main}
+                style={{ backgroundColor: 'white' }}
+              />
+              <Avatar
+                size={20}
+                src={match.away?.team?.logo.main}
+                style={{ backgroundColor: 'white' }}
+              />
+            </div>
+          }
+          subhead={teamBefore}
+          subtitle={teamAfter}
+          after={
+            <Info type="avatarStack" avatarStack={matchInfo}>
+              <div className="match-scores">
+                <Info
+                  type="text"
+                  subtitle={homeBet}
+                  style={{ color: scoreColor }}
+                >
+                  {homeScore}
+                </Info>
+                <Info
+                  type="text"
+                  subtitle={awayBet}
+                  className={scoreColor}
+                  style={{
+                    color: scoreColor,
+                    fontWeight: 'var(--tgui--font_weight--accent3)',
+                  }}
+                >
+                  {awayScore}
+                </Info>
+              </div>
+            </Info>
+          }
+        >
+          {teamWinner}
+        </Cell>
+      );
+    });
+  };
+
+  //Squads Section
+  const renderSquadsSection = () => {
+    if (tourLoading || squadsLoading || playersLoading) {
+      return (
+        <Section>
+          <Placeholder>
+            <Spinner size="m" />
+          </Placeholder>
+        </Section>
+      );
+    }
+
+    const columnPlace = '🔝';
+    const columnSquad = `Команда (${FantasyService.getSquadsCount(squads)})`;
+
+    let columnScore, squadsHeader;
+    if (FantasyService.isTourScoreAvailable(tour)) {
+      squadsHeader = FantasyService.getTourWinner(tour, squads);
+      columnScore = `Всего/Тур (${FantasyService.getTourAverageScore(squads)})`;
+    } else {
+      columnScore = 'Всего/В среднем';
+    }
+
+    return (
+      <Section header={squadsHeader}>
+        <Cell
+          readOnly
+          className="table-header"
+          before={<Info type="text" subtitle={columnPlace} />}
+          subtitle={columnSquad}
+          after={<Info type="text" subtitle={columnScore} />}
+        />
+        {renderSquads()};
+      </Section>
+    );
+  };
+
+  //Squads content
+  const renderSquads = () => {
+    if (!squads || squads.length === 0) {
+      return <Placeholder header="Squads not found" />;
+    }
+
+    return squads?.map(squad => {
+      const players = squadsPlayers?.find(
+        squadPlayers => squadPlayers.squad.id === squad.squad.id
+      );
+
+      const place = FantasyService.getSquadPlace(tour, squad);
+      const tourScore = FantasyService.getTourScore(tour, squad);
+      const seasonScore = FantasyService.getSeasonScore(tour, squad);
+      const squadBadge = FantasyService.getSquadBadge(tour, squad);
+      const squadBadgeMode = FantasyService.getSquadBadgeMode(tour, squad);
+      const squadDescription = FantasyService.getSquadDescription(players);
+      const squadSubtitle = FantasyService.getSquadSubtitle(players);
+
+      return (
+        <Accordion
+          key={squad.squad.id}
+          expanded={expandedSquads.has(squad.squad.id)}
+          onChange={(isExpanded: boolean) =>
+            handleSquadExpand(squad.squad.id, isExpanded)
+          }
+        >
+          <Accordion.Summary
+            titleBadge={
+              squadBadge ? (
+                <Badge type="number" mode={squadBadgeMode}>
+                  {squadBadge}
+                </Badge>
+              ) : undefined
+            }
+            subhead={squad.squad.user.nick}
+            subtitle={squadSubtitle}
+            description={squadDescription}
+            before={
+              <Info type="text">
+                <span dangerouslySetInnerHTML={{ __html: place }} />
+              </Info>
+            }
+            after={
+              <Info type="text" subtitle={tourScore}>
+                {seasonScore}
+              </Info>
+            }
+          >
+            {squad.squad.name}
+          </Accordion.Summary>
+        </Accordion>
+      );
+    });
+  };
 
   return (
     <Page back={false}>
       <List>
-        <Section>
-          <Select header="Лига" disabled>
-            <option>{league.name}</option>
-          </Select>
-        </Section>
-        <Section header={toursHeader}>
-          <Pagination
-            hideNextButton
-            hidePrevButton
-            boundaryCount={1}
-            count={availableToursCount}
-            siblingCount={1}
-            page={currentTourNumber}
-            onChange={handleTourChange}
-          />
-          <Skeleton visible={tourSkeletonVisible}>
-            <Accordion expanded={isTourExpanded} onChange={handleTourExpand}>
-              <Accordion.Summary
-                hint={tourStatusHint}
-                titleBadge={
-                  shouldShowTourBadge ? <Badge type="dot" /> : undefined
-                }
-                subtitle={tourSubtitle}
-                after={
-                  <Info type="text" subtitle={averageSubtitle}>
-                    {averageScore}
-                  </Info>
-                }
-              >
-                {tour?.name}
-              </Accordion.Summary>
-              <AccordionContent>
-                <Skeleton visible={matchesSkeletonVisible}>
-                  <Section>
-                    {matches?.map(match => {
-                      return (
-                        <Cell
-                          key={match.id}
-                          className="double-cell"
-                          before={
-                            <div>
-                              <Cell
-                                readOnly
-                                subtitle={'Краснодар'}
-                                className="sub-cell"
-                                hovered={false}
-                                before={
-                                  <Avatar
-                                    size={24}
-                                    src="https://pictures.cdn.sports.ru/f_Dc699MLn_9HLAgalsId2XWKqlvx550N7GRv4prPMA/fill/600/600/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL1RFQU0vbWFpbi9mY19rcmFzbm9kYXJfMTc1MzAxNzA2Mi5wbmc.png"
-                                  />
-                                }
-                                after={
-                                  <Badge type="number" mode="gray">
-                                    9.234
-                                  </Badge>
-                                }
-                              />
-                              <Cell
-                                readOnly
-                                subtitle={'Крылья Советов'}
-                                hovered={false}
-                                className="sub-cell"
-                                before={
-                                  <Avatar
-                                    size={24}
-                                    src="https://pictures.cdn.sports.ru/e1-JgbyFaaVrzkNT97jp40a6T-v_FGpMCG2sMr7KWqY/fill/120/120/no/1/czM6Ly9zcG9ydHMtYmFja2VuZC1zdGF0LXBpY3R1cmVzLXh3enltd3NyL1RFQU0vbWFpbi9mY19rcnlsaXlhX3NvdmV0b3Zfc2FtYXJhLnBuZw.png"
-                                  />
-                                }
-                                after={<Badge type="number">1</Badge>}
-                              />
-                            </div>
-                          }
-                          hint="идет"
-                          titleBadge={<Badge type="number">90+5'</Badge>}
-                          description={'dddd'}
-                        />
-                      );
-                    })}
-                  </Section>
-                </Skeleton>
-              </AccordionContent>
-            </Accordion>
-          </Skeleton>
-        </Section>
-        <Skeleton visible={squadsSkeletonVisible}>
-          <Section header={<Section.Header>{squadsHeader}</Section.Header>}>
-            <Divider />
-            {squads?.map(squad => {
-              const players = squadsPlayers?.find(
-                squadPlayers => squadPlayers.squad.id === squad.squad.id
-              );
-
-              const place = FantasyService.getSquadPlace(tour, squad);
-              const tourScore = FantasyService.getTourScore(tour, squad);
-              const seasonScore = FantasyService.getSeasonScore(tour, squad);
-              const squadBadge = FantasyService.getSquadBadge(tour, squad);
-              const squadBadgeMode = FantasyService.getSquadBadgeMode(
-                tour,
-                squad
-              );
-              const squadDescription =
-                FantasyService.getSquadDescription(players);
-              const squadSubtitle = FantasyService.getSquadSubtitle(players);
-
-              return (
-                <Accordion
-                  key={squad.squad.id}
-                  expanded={expandedSquads.has(squad.squad.id)}
-                  onChange={(isExpanded: boolean) =>
-                    handleSquadExpand(squad.squad.id, isExpanded)
-                  }
-                >
-                  <Accordion.Summary
-                    titleBadge={
-                      squadBadge ? (
-                        <Badge type="number" mode={squadBadgeMode}>
-                          {squadBadge}
-                        </Badge>
-                      ) : undefined
-                    }
-                    subhead={squad.squad.user.nick}
-                    subtitle={squadSubtitle}
-                    description={squadDescription}
-                    before={
-                      <Info type="text">
-                        <span dangerouslySetInnerHTML={{ __html: place }} />
-                      </Info>
-                    }
-                    after={
-                      <Info type="text" subtitle={tourScore}>
-                        {seasonScore}
-                      </Info>
-                    }
-                  >
-                    {squad.squad.name}
-                  </Accordion.Summary>
-                </Accordion>
-              );
-            })}
-          </Section>
-        </Skeleton>
+        {renderLeagueSection()}
+        {renderTourSection()}
+        {renderSquadsSection()}
       </List>
     </Page>
   );

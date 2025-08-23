@@ -4,10 +4,23 @@ body {
   margin: 0;
 }
 
-.sub-cell div:nth-child(2) {
-  padding: 8px 0;
+.match-logos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.double-cell {
-  padding: 8px 0;
+.match-scores {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.table-header > div {
+  padding-top: 16px;
+  padding-bottom: 4px;
+}
+
+.tgui-d0251b46536ac046 {
+  padding-top: 16px;
 }

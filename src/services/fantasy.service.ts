@@ -5,7 +5,12 @@ import type {
   LeagueSquadsPlayers,
   TourMatches,
 } from '@/gql';
-import { FantasyTourStatus, MatchStatus } from '@/gql/generated/graphql';
+import {
+  FantasyTourStatus,
+  MatchStatus,
+  StatPeriodId,
+  StatWinner,
+} from '@/gql/generated/graphql';
 import { BadgeProps } from '@telegram-apps/telegram-ui';
 
 /**
@@ -14,6 +19,7 @@ import { BadgeProps } from '@telegram-apps/telegram-ui';
 export class FantasyService {
   static readonly rplWebname = import.meta.env
     .VITE_SPORTS_TOURNAMENT_RPL as string;
+  static readonly skeletonText = '░░░░░░░░░░';
 
   /**
    * Определяет текущий активный тур из лиги
@@ -66,23 +72,6 @@ export class FantasyService {
   }
 
   /**
-   * Подсчитывает количество завершенных туров
-   * @param league - данные лиги
-   * @returns количество завершенных туров
-   */
-  static getToursHeader(league: League): string | undefined {
-    if (!league) {
-      return undefined;
-    }
-
-    const toursCount = league?.season.tours.filter(
-      tour => tour.status === FantasyTourStatus.Finished
-    ).length;
-
-    return `Туров завершено: ${toursCount}`;
-  }
-
-  /**
    * Подсчитывает количество туров для пагинации (завершенные + текущий)
    * @param league - данные лиги
    * @returns количество туров для отображения в пагинации
@@ -105,6 +94,68 @@ export class FantasyService {
       tour?.status === FantasyTourStatus.InProgress ||
       tour?.status === FantasyTourStatus.Opened
     );
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static isMatchInProgress(match: TourMatches[0]): boolean {
+    return match?.matchStatus === MatchStatus.Live;
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static isMatchNotStarted(match: TourMatches[0]): boolean {
+    return (
+      match?.matchStatus === MatchStatus.NotStarted ||
+      match?.matchStatus === MatchStatus.StartDelayed ||
+      match?.matchStatus === MatchStatus.Postponed
+    );
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static isMatchFinished(match: TourMatches[0]): boolean {
+    return (
+      match?.matchStatus === MatchStatus.Closed ||
+      match?.matchStatus === MatchStatus.Ended
+    );
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static getMatchCurrentTime(match: TourMatches[0]): string | undefined {
+    if (match.periodId === StatPeriodId.HalfTime) return 'перерыв';
+    return `${match.currentTime}'`;
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static isMatctHomeWinner(match: TourMatches[0]): boolean {
+    return this.isMatchFinished(match) && match.winner === StatWinner.Home;
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static isMatctAwayWinner(match: TourMatches[0]): boolean {
+    return this.isMatchFinished(match) && match.winner === StatWinner.Away;
   }
 
   /**
@@ -148,24 +199,6 @@ export class FantasyService {
   }
 
   /**
-   * Переводит статус тура в читаемый формат
-   * @param tour
-   * @returns читаемое описание статуса
-   */
-  static getTourStatusHint(tour: Tour): string | undefined {
-    switch (tour?.status) {
-      case FantasyTourStatus.Finished:
-        return 'закончен';
-      case FantasyTourStatus.InProgress:
-        return 'идет';
-      case FantasyTourStatus.Opened:
-        return 'не начат';
-      default:
-        return undefined;
-    }
-  }
-
-  /**
    *
    * @param tour
    * @returns
@@ -185,45 +218,67 @@ export class FantasyService {
 
   /**
    *
+   * @param tour
+   * @returns
+   */
+  static isTourFinished(tour: Tour): boolean {
+    return tour?.status === FantasyTourStatus.Finished;
+  }
+
+  /**
+   *
    * @param tourMatches
    * @returns
    */
-  static getPlayedMatchesCount(tourMatches?: TourMatches): string | undefined {
+  static getPlayedMatchesCount(tourMatches?: TourMatches): string {
     if (!tourMatches) {
-      return undefined;
+      return this.skeletonText;
     }
 
     const totalMatches = tourMatches.length;
-    const playedMatches = tourMatches.filter(
-      match =>
-        match.matchStatus === MatchStatus.Closed ||
-        match.matchStatus === MatchStatus.Ended
+    const playedMatches = tourMatches.filter(match =>
+      this.isMatchFinished(match)
     ).length;
 
-    return `сыграно матчей ${playedMatches}/${totalMatches}`;
+    return `${playedMatches}/${totalMatches}`;
   }
 
   /**
-   * Получает информацию о победителе тура
-   * @param leagueSquads - рейтинг команд лиги
-   * @returns строка с информацией о победителе или undefined
+   *
+   * @param tour
+   * @returns
    */
-  static getTourWinner(leagueSquads?: LeagueSquads): string | undefined {
-    const winner = leagueSquads?.find(squad => squad.scoreInfo.place === 1);
-    if (!winner) {
+  static isTourScoreAvailable(tour: Tour): boolean {
+    return this.isTourFinished(tour) || this.isTourInProgress(tour);
+  }
+
+  /**
+   *
+   * @param tour
+   * @param leagueSquads
+   * @returns
+   */
+  static getTourWinner(
+    tour: Tour,
+    leagueSquads?: LeagueSquads
+  ): string | undefined {
+    const tourWinner = leagueSquads?.find(squad => squad.scoreInfo.place === 1);
+    if (!tourWinner) {
       return undefined;
     }
-    return `👑 ${winner.squad.user.nick}`;
+
+    const winnerName = `${tourWinner.squad.name} (${tourWinner.scoreInfo.score})`;
+    return this.isTourFinished(tour) ? `👑 ${winnerName}` : winnerName;
   }
 
   /**
-   * Форматирует дату и время старта тура
-   * @param tour - данные тура
-   * @returns отформатированная строка с датой старта или undefined
+   *
+   * @param tour
+   * @returns
    */
-  static formatTourStartDate(tour: Tour): string | undefined {
+  static formatTourStartDate(tour: Tour): string {
     if (!tour?.startedAt || typeof tour.startedAt !== 'string') {
-      return undefined;
+      return this.skeletonText;
     }
 
     const startDate = new Date(tour.startedAt);
@@ -233,7 +288,26 @@ export class FantasyService {
       hour: '2-digit',
       minute: '2-digit',
     });
-    return `стартует ${formatter.format(startDate)}`;
+    return formatter.format(startDate);
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static formatMatchScheduledAt(match: TourMatches[0]): string | undefined {
+    if (!match?.scheduledAt || typeof match.scheduledAt !== 'string') {
+      return undefined;
+    }
+
+    const scheduledAt = new Date(match.scheduledAt);
+    const formatter = new Intl.DateTimeFormat('ru-RU', {
+      weekday: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    return formatter.format(scheduledAt);
   }
 
   /**
@@ -241,27 +315,9 @@ export class FantasyService {
    * @param leagueSquads - данные команд лиги
    * @returns
    */
-  static getAverageScore(
-    tour: Tour,
-    leagueSquads?: LeagueSquads
-  ): string | undefined {
-    if (FantasyService.isTourOpened(tour)) {
-      return 'Очки';
-    }
-    if (!leagueSquads) {
-      return '0';
-    }
-    const firstSquad = leagueSquads[0];
+  static getTourAverageScore(leagueSquads?: LeagueSquads): string {
+    const firstSquad = leagueSquads?.[0];
     return '∅' + (firstSquad?.scoreInfo?.averageScore ?? '0');
-  }
-
-  /**
-   *
-   * @param tour
-   * @returns
-   */
-  static getAverageSubtitle(tour: Tour): string {
-    return FantasyService.isTourOpened(tour) ? 'за сезон' : 'за тур';
   }
 
   /**
@@ -269,10 +325,10 @@ export class FantasyService {
    * @param leagueSquads - данные команд лиги
    * @returns общее количество команд или 0
    */
-  static getSquadsHeader(leagueSquads?: LeagueSquads): string | undefined {
+  static getSquadsCount(leagueSquads?: LeagueSquads): string | undefined {
     const firstSquad = leagueSquads?.[0];
     const squadsCount = firstSquad?.scoreInfo?.totalPlaces ?? 0;
-    return `Команд участвует: ${squadsCount}`;
+    return squadsCount.toString();
   }
 
   /**
@@ -302,7 +358,7 @@ export class FantasyService {
    * @returns место команды с ведущими &nbsp; для одинаковой ширины
    */
   static getSquadPlace(tour: Tour, leagueSquad: LeagueSquads[0]): string {
-    const place = FantasyService.isTourOpened(tour)
+    const place = this.isTourOpened(tour)
       ? leagueSquad.scoreInfo.place.toString()
       : leagueSquad.scoreInfo.placeAfterTour.toString();
     const totalPlaces = leagueSquad.scoreInfo.totalPlaces.toString();
@@ -329,7 +385,7 @@ export class FantasyService {
     tour: Tour,
     leagueSquad: LeagueSquads[0]
   ): BadgeProps['mode'] {
-    if (FantasyService.isTourOpened(tour)) return 'secondary';
+    if (this.isTourOpened(tour)) return 'secondary';
     return this.isSquadPlaceDiffNegative(leagueSquad) ? 'critical' : 'primary';
   }
 
@@ -343,9 +399,9 @@ export class FantasyService {
     tour: Tour,
     leagueSquad: LeagueSquads[0]
   ): string | undefined {
-    return FantasyService.isTourOpened(tour)
-      ? FantasyService.getTopPercent(leagueSquad)
-      : FantasyService.getSquadPlaceDiff(leagueSquad);
+    return this.isTourOpened(tour)
+      ? this.getTopPercent(leagueSquad)
+      : this.getSquadPlaceDiff(leagueSquad);
   }
 
   /**
@@ -391,11 +447,30 @@ export class FantasyService {
    * @returns
    */
   static getTourScore(tour: Tour, leagueSquad: LeagueSquads[0]): string {
-    if (!FantasyService.isTourOpened(tour)) {
+    if (!this.isTourOpened(tour)) {
       return leagueSquad.scoreInfo.score.toString();
     }
 
     return '∅' + (leagueSquad.scoreInfo.averageScore?.toString() ?? '0');
+  }
+
+  /**
+   *
+   * @param tour
+   * @returns
+   */
+  static getTourStatusText(tour: Tour): string {
+    switch (tour?.status) {
+      case FantasyTourStatus.Finished:
+        return 'закончен';
+      case FantasyTourStatus.InProgress:
+        return 'идет';
+      case FantasyTourStatus.Opened:
+      case FantasyTourStatus.NotStarted:
+        return `стартует ${FantasyService.formatTourStartDate(tour)}`;
+      default:
+        return FantasyService.skeletonText;
+    }
   }
 
   /**
@@ -405,39 +480,10 @@ export class FantasyService {
    * @returns
    */
   static getSeasonScore(tour: Tour, leagueSquad: LeagueSquads[0]): string {
-    if (FantasyService.isTourOpened(tour)) {
+    if (this.isTourOpened(tour)) {
       return leagueSquad.scoreInfo.score.toString();
     }
 
     return leagueSquad.scoreInfo.pointsAfterTour.toString();
-  }
-
-  /**
-   * Получает subtitle для аккордеона тура в зависимости от статуса
-   * @param tour - данные тура
-   * @param leagueSquads - рейтинг команд (для определения победителя)
-   * @returns текст для subtitle
-   */
-  static getTourSubtitle(
-    tour: Tour,
-    tourMathes?: TourMatches,
-    leagueSquads?: LeagueSquads
-  ): string | undefined {
-    if (!tour) return undefined;
-
-    switch (tour.status) {
-      case FantasyTourStatus.Finished: {
-        return this.getTourWinner(leagueSquads);
-      }
-      case FantasyTourStatus.InProgress: {
-        return this.getPlayedMatchesCount(tourMathes);
-      }
-      case FantasyTourStatus.Opened: {
-        return this.formatTourStartDate(tour);
-      }
-      default: {
-        return undefined;
-      }
-    }
   }
 }
