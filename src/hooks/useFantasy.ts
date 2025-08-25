@@ -12,19 +12,19 @@ import {
   GetLeagueSquadsQuery,
   GetLeagueSquadsQueryVariables,
   FantasyRatingEntityType,
-  GetLeagueSquadsCurrentPlayersQuery,
-  GetLeagueSquadsCurrentPlayersQueryVariables,
-  GetLeagueSquadsCurrentPlayersDocument,
+  GetLeagueSquadsCurrentTourInfoQuery,
+  GetLeagueSquadsCurrentTourInfoQueryVariables,
+  GetLeagueSquadsCurrentTourInfoDocument,
   GetTourMatchesQuery,
   GetTourMatchesDocument,
   GetTourMatchesQueryVariables,
 } from '@/gql/generated/graphql';
 import type {
   League,
-  LeagueSquads,
-  LeagueSquadsPlayers,
+  LeagueSquad,
+  LeagueSquadCurrentTourInfo,
   Tour,
-  TourMatches,
+  TourMatch,
 } from '@/gql';
 
 /**
@@ -94,7 +94,7 @@ export const useTourMatches = (
   >,
   'data'
 > & {
-  data?: TourMatches;
+  data?: TourMatch[];
 } => {
   const result = useSportsQuery(GetTourMatchesDocument, {
     ...options,
@@ -122,7 +122,7 @@ export const useLeagueSquadsWithTourRating = (
   >,
   'data'
 > & {
-  data?: LeagueSquads;
+  data?: LeagueSquad[];
 } => {
   const result = useSportsQuery(GetLeagueSquadsDocument, {
     ...options,
@@ -157,7 +157,7 @@ export const useLeagueSquadsWithSeasonRating = (
   >,
   'data'
 > & {
-  data?: LeagueSquads;
+  data?: LeagueSquad[];
 } => {
   const result = useSportsQuery(GetLeagueSquadsDocument, {
     ...options,
@@ -179,23 +179,23 @@ export const useLeagueSquadsCurrentPlayers = (
   seasonId: Scalars['ID']['input'],
   options?: Omit<
     QueryHookOptions<
-      GetLeagueSquadsCurrentPlayersQuery,
-      GetLeagueSquadsCurrentPlayersQueryVariables
+      GetLeagueSquadsCurrentTourInfoQuery,
+      GetLeagueSquadsCurrentTourInfoQueryVariables
     >,
     'variables'
   >
 ): Omit<
   ReturnType<
     typeof useSportsQuery<
-      GetLeagueSquadsCurrentPlayersQuery,
-      GetLeagueSquadsCurrentPlayersQueryVariables
+      GetLeagueSquadsCurrentTourInfoQuery,
+      GetLeagueSquadsCurrentTourInfoQueryVariables
     >
   >,
   'data'
 > & {
-  data?: LeagueSquadsPlayers;
+  data?: LeagueSquadCurrentTourInfo[];
 } => {
-  const result = useSportsQuery(GetLeagueSquadsCurrentPlayersDocument, {
+  const result = useSportsQuery(GetLeagueSquadsCurrentTourInfoDocument, {
     ...options,
     variables: {
       leagueId,

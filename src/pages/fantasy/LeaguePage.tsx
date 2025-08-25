@@ -63,7 +63,7 @@ export const LeaguePage: FC = () => {
     skip: !tourId,
   });
   const isTourFromLeague = useMemo(
-    () => FantasyService.isTourFromLeague(league, tour),
+    () => FantasyService.isTourFromLeague(tour, league?.season.tours),
     [league?.season.tours.length, tour?.id]
   );
   const isTourAvailable = useMemo(
@@ -86,12 +86,12 @@ export const LeaguePage: FC = () => {
     () => FantasyService.getSeasonId(league),
     [league?.season?.id]
   );
-  const isTourOpened = useMemo(
-    () => FantasyService.isTourOpened(tour),
+  const isTourScoreAvailable = useMemo(
+    () => FantasyService.isTourScoreAvailable(tour),
     [tour?.status]
   );
-  const seasonRatingSkip = !seasonId || !leagueId || !isTourOpened;
-  const tourRatingSkip = !leagueId || !tourId || isTourOpened;
+  const seasonRatingSkip = !seasonId || !leagueId || isTourScoreAvailable;
+  const tourRatingSkip = !leagueId || !tourId || !isTourScoreAvailable;
   const seasonRatingResult = useLeagueSquadsWithSeasonRating(
     leagueId!,
     seasonId!,
@@ -102,16 +102,16 @@ export const LeaguePage: FC = () => {
   const tourRatingResult = useLeagueSquadsWithTourRating(leagueId!, tourId!, {
     skip: tourRatingSkip,
   });
-  const { data: squads, loading: squadsLoading } = isTourOpened
-    ? seasonRatingResult
-    : tourRatingResult;
+  const { data: squads, loading: squadsLoading } = isTourScoreAvailable
+    ? tourRatingResult
+    : seasonRatingResult;
 
-  // Players
+  // Squads with Players for Current Tour
   const isTourCurrent = useMemo(
-    () => FantasyService.isTourCurrent(league, tour),
-    [league?.season?.currentTour?.id, tour?.id]
+    () => tour?.id === currentTourId,
+    [tour?.id, currentTourId]
   );
-  const { data: squadsPlayers, loading: playersLoading } =
+  const { data: squadsCurrentTourInfo, loading: currentTourInfoLoading } =
     useLeagueSquadsCurrentPlayers(leagueId!, seasonId!, {
       skip: !leagueId || !seasonId || !isTourCurrent,
     });
@@ -139,6 +139,16 @@ export const LeaguePage: FC = () => {
       setShouldLoadMatches(true);
     }
   }, [isTourInProgress]);
+
+  //Logging (DO NOT DELETE)
+  // useEffect(() => {
+  //   console.log('leagueId:', leagueId);
+  //   console.log('isTourCurrent:', isTourCurrent);
+  //   console.log('currentTourId:', currentTourId);
+  //   console.log('currentTourInfoLoading:', currentTourInfoLoading);
+  //   console.log('squadsCurrentTourInfo', squadsCurrentTourInfo);
+  //   console.log('qwerty', qwerty);
+  // }, [isTourCurrent, currentTourInfoLoading, leagueId, currentTourId]);
 
   //Switch Tour
   const handleTourChange = (_event: unknown, page: number): void => {
@@ -206,14 +216,15 @@ export const LeaguePage: FC = () => {
     return <ErrorPage error={new Error('Tour not found')} />;
   }
   const renderTourSection = () => {
+    const tourSkeletonVisible =
+      tourLoading || (isTourInProgress && matchesLoading);
     const availableToursCount = FantasyService.getAvailableToursCount(league);
     const currentTourNumber = FantasyService.getTourNumber(tour);
     const tourHint = FantasyService.getTourStatusText(tour);
-    const tourBadge = FantasyService.isTourInProgress(tour) ? (
-      <Badge type="number">
-        {FantasyService.getPlayedMatchesCount(matches)}
-      </Badge>
-    ) : undefined;
+    let matchesStartedCount;
+    if (isTourInProgress) {
+      matchesStartedCount = FantasyService.getMatchesStartedCount(matches);
+    }
 
     return (
       <Section>
@@ -226,9 +237,16 @@ export const LeaguePage: FC = () => {
           page={currentTourNumber}
           onChange={handleTourChange}
         />
-        <Skeleton visible={tourLoading}>
+        <Skeleton visible={tourSkeletonVisible}>
           <Accordion expanded={isTourExpanded} onChange={handleTourExpand}>
-            <Accordion.Summary hint={tourHint} titleBadge={tourBadge}>
+            <Accordion.Summary
+              hint={tourHint}
+              titleBadge={
+                matchesStartedCount ? (
+                  <Badge type="number">matchesStartedCount</Badge>
+                ) : undefined
+              }
+            >
               {tour?.name}
             </Accordion.Summary>
             {isTourExpanded && matchesLoading && (
@@ -276,11 +294,11 @@ export const LeaguePage: FC = () => {
         homeScore = match.home?.score.toString();
         awayScore = match.away?.score.toString();
       }
-      let scoreColor;
+      let scoreClass;
       if (FantasyService.isMatchInProgress(match)) {
-        scoreColor = 'var(--tg-theme-accent-text-color)';
+        scoreClass = 'info-accent-text-color';
       } else {
-        scoreColor = 'var(--tg-theme-text-color)';
+        scoreClass = 'info-text-color';
       }
 
       const matchCurrentTime = FantasyService.getMatchCurrentTime(match);
@@ -294,7 +312,6 @@ export const LeaguePage: FC = () => {
 
       return (
         <Cell
-          Component={'div'}
           className="match-cell"
           key={match.id}
           before={
@@ -316,22 +333,10 @@ export const LeaguePage: FC = () => {
           after={
             <Info type="avatarStack" avatarStack={matchInfo}>
               <div className="match-scores">
-                <Info
-                  type="text"
-                  subtitle={homeBet}
-                  style={{ color: scoreColor }}
-                >
+                <Info type="text" subtitle={homeBet} className={scoreClass}>
                   {homeScore}
                 </Info>
-                <Info
-                  type="text"
-                  subtitle={awayBet}
-                  className={scoreColor}
-                  style={{
-                    color: scoreColor,
-                    fontWeight: 'var(--tgui--font_weight--accent3)',
-                  }}
-                >
+                <Info type="text" subtitle={awayBet} className={scoreClass}>
                   {awayScore}
                 </Info>
               </div>
@@ -346,7 +351,7 @@ export const LeaguePage: FC = () => {
 
   //Squads Section
   const renderSquadsSection = () => {
-    if (tourLoading || squadsLoading || playersLoading) {
+    if (tourLoading || squadsLoading || currentTourInfoLoading) {
       return (
         <Section>
           <Placeholder>
@@ -356,27 +361,45 @@ export const LeaguePage: FC = () => {
       );
     }
 
+    const squadsCount = FantasyService.getSquadsCount(squads);
+    const columnPlaceWidth = squadsCount?.length;
     const columnPlace = '🔝';
-    const columnSquad = `Команда (${FantasyService.getSquadsCount(squads)})`;
+    const columnSquad = `Команда (${squadsCount})`;
 
     let columnScore, squadsHeader;
-    if (FantasyService.isTourScoreAvailable(tour)) {
-      squadsHeader = FantasyService.getTourWinner(tour, squads);
+    if (isTourScoreAvailable) {
+      const winnerSquad = FantasyService.getTourWinner(squads);
+      const winnerName =
+        winnerSquad &&
+        `${winnerSquad.squad.name} (${winnerSquad.scoreInfo.score})`;
+      squadsHeader =
+        !!winnerName && FantasyService.isTourFinished(tour)
+          ? `👑 ${winnerName}`
+          : `1️⃣ ${winnerName}`;
       columnScore = `Всего/Тур (${FantasyService.getTourAverageScore(squads)})`;
     } else {
       columnScore = 'Всего/В среднем';
     }
 
     return (
-      <Section header={squadsHeader}>
+      <Section header={squadsHeader} className="table-title">
         <Cell
           readOnly
-          className="table-header"
-          before={<Info type="text" subtitle={columnPlace} />}
+          className="table-headers"
+          before={
+            <Info
+              type="text"
+              className="table-column-before"
+              style={{
+                '--table-column-before--number': columnPlaceWidth,
+              }}
+              subtitle={columnPlace}
+            />
+          }
           subtitle={columnSquad}
           after={<Info type="text" subtitle={columnScore} />}
         />
-        {renderSquads()};
+        {renderSquads()}
       </Section>
     );
   };
@@ -387,18 +410,52 @@ export const LeaguePage: FC = () => {
       return <Placeholder header="Squads not found" />;
     }
 
-    return squads?.map(squad => {
-      const players = squadsPlayers?.find(
-        squadPlayers => squadPlayers.squad.id === squad.squad.id
-      );
+    if (isTourInProgress) {
+      FantasyService.recalculateSquadsLiveScore(squads, squadsCurrentTourInfo);
+    }
 
-      const place = FantasyService.getSquadPlace(tour, squad);
-      const tourScore = FantasyService.getTourScore(tour, squad);
-      const seasonScore = FantasyService.getSeasonScore(tour, squad);
-      const squadBadge = FantasyService.getSquadBadge(tour, squad);
-      const squadBadgeMode = FantasyService.getSquadBadgeMode(tour, squad);
-      const squadDescription = FantasyService.getSquadDescription(players);
-      const squadSubtitle = FantasyService.getSquadSubtitle(players);
+    return squads?.map(squad => {
+      let seasonPlace,
+        tourScore,
+        seasonScore,
+        seasonPlaceDiff,
+        seasonPlaceDiffClass;
+      if (isTourScoreAvailable) {
+        seasonPlace = squad.scoreInfo.placeAfterTour.toString();
+        tourScore = squad.scoreInfo.score.toString();
+        seasonScore = squad.scoreInfo.pointsAfterTour.toString();
+        seasonPlaceDiff = FantasyService.formatSquadPlaceDiff(squad);
+        seasonPlaceDiffClass = FantasyService.isSquadPlaceDiffNegative(squad)
+          ? 'info-subtitle-destructive-text-color'
+          : 'info-subtitle-accent-text-color';
+      } else {
+        seasonPlace = squad.scoreInfo.place.toString();
+        tourScore = FantasyService.formatSquadAverageScore(squad);
+        seasonScore = squad.scoreInfo.score.toString();
+      }
+      const columnPlaceWidth = squad.scoreInfo.totalPlaces.toString().length;
+
+      let squadTourInfo, playersPointsCount, squadTransfers;
+      if (isTourCurrent) {
+        squadTourInfo = squadsCurrentTourInfo?.find(
+          s => s.squad.id === squad.squad.id
+        );
+
+        playersPointsCount =
+          isTourInProgress &&
+          FantasyService.getSquadTourPlayersWithPointsCount(
+            squadTourInfo?.squad.currentTourInfo?.players || []
+          )?.length.toString();
+
+        const squadTransfersDone =
+          squadTourInfo?.squad.currentTourInfo?.transfersDone.toString();
+        const squadTransfersTotal =
+          FantasyService.formatSquadTransfersTotal(squadTourInfo);
+        squadTransfers =
+          squadTransfersDone &&
+          squadTransfersTotal &&
+          `🔄 ${squadTransfersDone}/${squadTransfersTotal}`;
+      }
 
       return (
         <Accordion
@@ -410,18 +467,22 @@ export const LeaguePage: FC = () => {
         >
           <Accordion.Summary
             titleBadge={
-              squadBadge ? (
-                <Badge type="number" mode={squadBadgeMode}>
-                  {squadBadge}
-                </Badge>
+              playersPointsCount ? (
+                <Badge type="number">{playersPointsCount}</Badge>
               ) : undefined
             }
             subhead={squad.squad.user.nick}
-            subtitle={squadSubtitle}
-            description={squadDescription}
+            subtitle={squadTransfers}
             before={
-              <Info type="text">
-                <span dangerouslySetInnerHTML={{ __html: place }} />
+              <Info
+                type="text"
+                className={`table-column-before ${seasonPlaceDiffClass}`}
+                style={{
+                  '--table-column-before--number': columnPlaceWidth,
+                }}
+                subtitle={seasonPlaceDiff}
+              >
+                <span dangerouslySetInnerHTML={{ __html: seasonPlace }} />
               </Info>
             }
             after={

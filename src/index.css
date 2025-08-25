@@ -16,11 +16,36 @@ body {
   gap: 2px;
 }
 
-.table-header > div {
+.table-headers > div {
   padding-top: 16px;
   padding-bottom: 4px;
 }
 
-.tgui-d0251b46536ac046 {
+.table-title header {
   padding-top: 16px;
+  padding-bottom: 0px;
+  color: var(--tg-theme-text-color);
+}
+
+.table-column-before {
+  --table-column-before--number: 1;
+  --table-column-before--min--width: 9px;
+  width: calc(var(--table-column-before--min--width) * var(--table-column-before--number));
+  direction: rtl;
+}
+
+.info-accent-text-color span {
+  color: var(--tg-theme-accent-text-color);
+}
+
+.info-text-color span {
+  color: var(--tg-theme-text-color);
+}
+
+.info-subtitle-accent-text-color h6 {
+  color: var(--tg-theme-accent-text-color);
+}
+
+.info-subtitle-destructive-text-color h6 {
+  color: var(--tg-theme-destructive-text-color);
 }

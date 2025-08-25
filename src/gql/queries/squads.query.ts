@@ -28,7 +28,6 @@ graphql(`
               totalPlaces
               averageScore
               placeDiff
-              topPercent
               placeAfterTour
               pointsAfterTour
               placeAfterTourDiff
@@ -45,6 +44,9 @@ graphql(`
                 isApply
                 isActive
               }
+              seasonScoreInfo {
+                score
+              }
             }
           }
         }
@@ -57,7 +59,7 @@ graphql(`
  *
  */
 graphql(`
-  query GetLeagueSquadsCurrentPlayers($leagueId: ID!, $seasonId: ID!) {
+  query GetLeagueSquadsCurrentTourInfo($leagueId: ID!, $seasonId: ID!) {
     fantasyQueries {
       rating {
         squads(
@@ -88,6 +90,14 @@ graphql(`
                   score
                   isPointsCount
                   playedMatchesTour
+                  seasonPlayer {
+                    id
+                    name
+                    role
+                  }
+                  statPlayer {
+                    points
+                  }
                 }
               }
             }
