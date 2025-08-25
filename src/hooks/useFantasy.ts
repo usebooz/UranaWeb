@@ -28,9 +28,9 @@ import type {
 } from '@/gql';
 
 /**
- * Хук для получения лиги по ID
- * @param id - ID лиги
- * @param options - дополнительные опции для Apollo Client
+ * Hook for getting league by ID
+ * @param id - League ID
+ * @param options - additional options for Apollo Client
  */
 export const useLeagueById = (
   id: Scalars['ID']['input'],
@@ -57,6 +57,11 @@ export const useLeagueById = (
   };
 };
 
+/**
+ * Hook for getting tour by ID
+ * @param id - Tour ID
+ * @param options - additional options for Apollo Client
+ */
 export const useTourById = (
   id: Scalars['ID']['input'],
   options?: Omit<
@@ -82,6 +87,11 @@ export const useTourById = (
   };
 };
 
+/**
+ * Hook for getting tour matches
+ * @param id - Tour ID
+ * @param options - additional options for Apollo Client
+ */
 export const useTourMatches = (
   id: Scalars['ID']['input'],
   options?: Omit<
@@ -109,6 +119,12 @@ export const useTourMatches = (
   };
 };
 
+/**
+ * Hook for getting league squads with tour rating
+ * @param leagueId - League ID
+ * @param tourId - Tour ID
+ * @param options - additional options for Apollo Client
+ */
 export const useLeagueSquadsWithTourRating = (
   leagueId: Scalars['ID']['input'],
   tourId: Scalars['ID']['input'],
@@ -144,6 +160,12 @@ export const useLeagueSquadsWithTourRating = (
   };
 };
 
+/**
+ * Hook for getting league squads with season rating
+ * @param leagueId - League ID
+ * @param seasonId - Season ID
+ * @param options - additional options for Apollo Client
+ */
 export const useLeagueSquadsWithSeasonRating = (
   leagueId: Scalars['ID']['input'],
   seasonId: Scalars['ID']['input'],
@@ -174,6 +196,12 @@ export const useLeagueSquadsWithSeasonRating = (
   };
 };
 
+/**
+ * Hook for getting league squads current tour players info
+ * @param leagueId - League ID
+ * @param seasonId - Season ID
+ * @param options - additional options for Apollo Client
+ */
 export const useLeagueSquadsCurrentPlayers = (
   leagueId: Scalars['ID']['input'],
   seasonId: Scalars['ID']['input'],

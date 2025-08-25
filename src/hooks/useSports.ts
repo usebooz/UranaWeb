@@ -9,7 +9,7 @@ import {
 } from '@apollo/client';
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 
-// Apollo Client для Sports.ru API (инкапсулирован в хуке)
+// Apollo Client for Sports.ru API (encapsulated in hook)
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_SPORTS_API_URL as string,
 });
@@ -21,9 +21,9 @@ const sportsClient = new ApolloClient({
       Query: {
         fields: {
           fantasyQueries: {
-            // Custom merge функция для безопасного объединения FantasyQueries
+            // Custom merge function for safe FantasyQueries combining
             merge(existing, incoming) {
-              // Объединяем поля из existing и incoming
+              // Merge fields from existing and incoming
               return {
                 ...existing,
                 ...incoming,
@@ -45,8 +45,8 @@ const sportsClient = new ApolloClient({
 });
 
 /**
- * Базовый хук для выполнения запросов к Sports.ru API
- * Автоматически использует sportsClient
+ * Base hook for executing queries to Sports.ru API
+ * Automatically uses sportsClient
  */
 export const useSportsQuery = <
   TData = unknown,

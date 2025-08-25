@@ -43,7 +43,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({ error }) => {
       appearance={isDark ? 'dark' : 'light'}
       platform={['macos', 'ios'].includes(platform) ? 'ios' : 'base'}
     >
-      <Placeholder header="Oops" description={errorMessage}>
+      <Placeholder header="Упс" description={errorMessage}>
         <img
           alt="Telegram sticker"
           src="https://xelene.me/telegram.gif"

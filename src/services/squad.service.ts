@@ -1,30 +1,47 @@
 import type { LeagueSquad, LeagueSquadCurrentTourInfo } from '@/gql';
 import { PlayerService } from './player.service';
 
+/**
+ * Service for team/squad scoring and statistics operations
+ */
 export class SquadService {
   /**
-   *
-   * @param leagueSquads
-   * @returns
+   * Finds tour winner from squads
+   * @param leagueSquads - array of league squads
+   * @returns squad with first place or undefined
    */
-  static getTourWinner(leagueSquads?: LeagueSquad[]): LeagueSquad | undefined {
+  static findTourWinner(leagueSquads?: LeagueSquad[]): LeagueSquad | undefined {
     return leagueSquads?.find(squad => squad.scoreInfo.place === 1);
   }
 
   /**
-   * Получает среднее значение очков из рейтинга команд
-   * @param leagueSquads - данные команд лиги
-   * @returns
+   * Formats squads tour average score for display
+   * @param leagueSquads - league squads data
+   * @returns formatted average score with symbol or undefined
    */
-  static getTourAverageScore(leagueSquads?: LeagueSquad[]): string {
+  static formatSquadsTourAverageScore(
+    leagueSquads?: LeagueSquad[]
+  ): string | undefined {
     const firstSquad = leagueSquads?.[0];
-    return '∅' + (firstSquad?.scoreInfo?.averageScore ?? '0');
+    if (!firstSquad) {
+      return undefined;
+    }
+    return this.formatAverageScore(firstSquad);
   }
 
   /**
-   * Получает общее количество команд из рейтинга
-   * @param leagueSquads - данные команд лиги
-   * @returns общее количество команд или 0
+   * Formats individual squad average score for display
+   * @param leagueSquad - squad data
+   * @returns formatted average score with symbol
+   */
+  static formatAverageScore(leagueSquad: LeagueSquad): string {
+    return `∅${leagueSquad.scoreInfo.averageScore?.toString() ?? '0'}`;
+  }
+
+  /**
+   * Gets total squads count from rating
+   * @param leagueSquads - league squads data
+   * @returns total squads count as string or undefined
    */
   static getSquadsCount(leagueSquads?: LeagueSquad[]): string | undefined {
     const firstSquad = leagueSquads?.[0];
@@ -33,39 +50,30 @@ export class SquadService {
   }
 
   /**
-   *
-   * @param leagueSquad
-   * @returns
+   * Checks if squad place difference is negative (position dropped)
+   * @param leagueSquad - squad data
+   * @returns true if place difference is negative
    */
-  static isSquadPlaceDiffNegative(leagueSquad: LeagueSquad): boolean {
+  static isPlaceDiffNegative(leagueSquad: LeagueSquad): boolean {
     return leagueSquad.scoreInfo.placeAfterTourDiff < 0;
   }
 
   /**
-   *
-   * @param leagueSquad
-   * @returns
+   * Formats squad place difference with + or - symbol
+   * @param leagueSquad - squad data
+   * @returns formatted place difference string or undefined
    */
-  static formatSquadPlaceDiff(leagueSquad: LeagueSquad): string | undefined {
+  static formatPlaceDiff(leagueSquad: LeagueSquad): string | undefined {
     if (!leagueSquad.scoreInfo.placeAfterTourDiff) return undefined;
-    return this.isSquadPlaceDiffNegative(leagueSquad)
+    return this.isPlaceDiffNegative(leagueSquad)
       ? `${leagueSquad.scoreInfo.placeAfterTourDiff.toString().replace('-', '')}-`
       : `${leagueSquad.scoreInfo.placeAfterTourDiff.toString()}+`;
   }
 
   /**
-   *
-   * @param leagueSquad
-   * @returns
-   */
-  static formatSquadAverageScore(leagueSquad: LeagueSquad): string {
-    return `∅${leagueSquad.scoreInfo.averageScore?.toString() ?? '0'}`;
-  }
-
-  /**
-   *
-   * @param squadTourInfo
-   * @returns
+   * Formats squad transfers total count
+   * @param squadTourInfo - squad tour info
+   * @returns formatted transfers total or undefined
    */
   static formatSquadTransfersTotal(
     squadTourInfo?: LeagueSquadCurrentTourInfo
@@ -79,9 +87,8 @@ export class SquadService {
   }
 
   /**
-   *
-   * @param squadCurrentTourInfo
-   * @returns
+   * Recalculates squad players live score during tour
+   * @param squadCurrentTourInfo - squad current tour info
    */
   static recalculateSquadPlayersLiveScore(
     squadCurrentTourInfo?: LeagueSquadCurrentTourInfo
@@ -97,8 +104,9 @@ export class SquadService {
   }
 
   /**
-   * @param squads
-   * @param squadsCurrentTourInfo
+   * Recalculates all squads live scores during tour
+   * @param squads - array of league squads
+   * @param squadsCurrentTourInfo - array of squads current tour info
    */
   static recalculateSquadsLiveScore(
     squads: LeagueSquad[],
@@ -125,7 +133,7 @@ export class SquadService {
         s => s.squad.id === squad.squad.id
       );
       squad.scoreInfo.score = tourInfo?.squad.currentTourInfo
-        ? PlayerService.getSquadTourPlayersWithPointsCount(
+        ? PlayerService.filterPlayersWithPointsCount(
             tourInfo.squad.currentTourInfo.players
           ).reduce((sum, p) => sum + (p.points || 0), 0)
         : 0;

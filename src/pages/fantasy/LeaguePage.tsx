@@ -55,7 +55,7 @@ export const LeaguePage: FC = () => {
     [league?.season.currentTour?.id]
   );
   const isLeagueFromActiveRplSeason = useMemo(
-    () => LeagueService.isLeagueFromActiveRplSeason(league),
+    () => LeagueService.isFromActiveRplSeason(league),
     [league?.season]
   );
 
@@ -69,17 +69,17 @@ export const LeaguePage: FC = () => {
     skip: !tourId,
   });
   const isTourFromLeague = useMemo(
-    () => TourService.isTourFromLeague(tour, league?.season.tours),
+    () => TourService.isFromLeague(tour, league?.season.tours),
     [league?.season.tours.length, tour?.id]
   );
   const isTourAvailable = useMemo(
-    () => TourService.isTourAvailable(tour),
+    () => TourService.isAvailable(tour),
     [tour?.status]
   );
 
   // Matches
   const isTourInProgress = useMemo(
-    () => TourService.isTourInProgress(tour),
+    () => TourService.isInProgress(tour),
     [tour?.status]
   );
   const matchesSkip = !tourId || !shouldLoadMatches;
@@ -88,12 +88,9 @@ export const LeaguePage: FC = () => {
   });
 
   // Squads
-  const seasonId = useMemo(
-    () => LeagueService.getSeasonId(league),
-    [league?.season?.id]
-  );
+  const seasonId = useMemo(() => league?.season?.id, []);
   const isTourScoreAvailable = useMemo(
-    () => TourService.isTourScoreAvailable(tour),
+    () => TourService.isScoreAvailable(tour),
     [tour?.status]
   );
   const seasonRatingSkip = !seasonId || !leagueId || isTourScoreAvailable;
@@ -158,7 +155,7 @@ export const LeaguePage: FC = () => {
 
   //Switch Tour
   const handleTourChange = (_event: unknown, page: number): void => {
-    const selectedTour = LeagueService.getTourByPage(league, page);
+    const selectedTour = TourService.findTourByPage(page, league?.season.tours);
 
     if (selectedTour) {
       const newSearchParams = new URLSearchParams(searchParams);
@@ -170,7 +167,7 @@ export const LeaguePage: FC = () => {
   //Expand Tour
   const handleTourExpand = (isExpanded: boolean) => {
     setIsTourExpanded(isExpanded);
-    // При первом разворачивании аккордеона загружаем матчи (если не IN_PROGRESS)
+    // Load matches on first accordion expand (if not IN_PROGRESS)
     if (isExpanded && !shouldLoadMatches) {
       setShouldLoadMatches(true);
     }
@@ -197,7 +194,7 @@ export const LeaguePage: FC = () => {
     return <LoadingPage />;
   }
   if (!league || !isLeagueFromActiveRplSeason) {
-    return <ErrorPage error={new Error('League not found')} />;
+    return <ErrorPage error={new Error('Лига не найдена')} />;
   }
   const renderLeagueSection = () => (
     <Section>
@@ -211,7 +208,7 @@ export const LeaguePage: FC = () => {
   if (tourError) {
     return <ErrorPage error={tourError} />;
   }
-  //Устанавливается тур в параметры
+  //Tour is being set in parameters
   if (!tourLoading && !tour && !tourId && currentTourId) {
     return <LoadingPage />;
   }
@@ -219,17 +216,19 @@ export const LeaguePage: FC = () => {
     (!tour && !tourLoading) ||
     (tour && (!isTourFromLeague || !isTourAvailable))
   ) {
-    return <ErrorPage error={new Error('Tour not found')} />;
+    return <ErrorPage error={new Error('Тур не найден')} />;
   }
   const renderTourSection = () => {
     const tourSkeletonVisible =
       tourLoading || (isTourInProgress && matchesLoading);
-    const availableToursCount = LeagueService.getAvailableToursCount(league);
-    const currentTourNumber = TourService.getTourNumber(tour);
-    const tourHint = TourService.getTourStatusText(tour) || '░░░░░░░░░░';
+    const availableToursCount =
+      TourService.filterAvailableTours(league.season?.tours).length || 0;
+    const currentTourNumber = TourService.extractNumber(tour);
+    const tourHint = TourService.formatStatus(tour) || '░░░░░░░░░░';
     let matchesStartedCount;
     if (isTourInProgress) {
-      matchesStartedCount = MatchService.getMatchesStartedCount(matches);
+      matchesStartedCount =
+        MatchService.filterMatchesStarted(matches)?.length.toString();
     }
 
     return (
@@ -249,7 +248,7 @@ export const LeaguePage: FC = () => {
               hint={tourHint}
               titleBadge={
                 matchesStartedCount ? (
-                  <Badge type="number">matchesStartedCount</Badge>
+                  <Badge type="number">{matchesStartedCount}</Badge>
                 ) : undefined
               }
             >
@@ -276,15 +275,15 @@ export const LeaguePage: FC = () => {
   //Matches Content
   const renderMatches = () => {
     if (!matches || matches.length === 0) {
-      return <Placeholder header="Matches not found" />;
+      return <Placeholder header="Матчи не найдены" />;
     }
 
     return matches.map(match => {
       let teamWinner, teamBefore, teamAfter;
-      if (MatchService.isMatctHomeWinner(match)) {
+      if (MatchService.isHomeWinner(match)) {
         teamWinner = match.home?.team?.name;
         teamAfter = match.away?.team?.name;
-      } else if (MatchService.isMatctAwayWinner(match)) {
+      } else if (MatchService.isAwayWinner(match)) {
         teamBefore = match.home?.team?.name;
         teamWinner = match.away?.team?.name;
       } else {
@@ -293,7 +292,7 @@ export const LeaguePage: FC = () => {
       }
 
       let homeBet, awayBet, homeScore, awayScore;
-      if (MatchService.isMatchNotStarted(match)) {
+      if (MatchService.isNotStarted(match)) {
         homeBet = match.bettingOdds[0]?.line1x2?.h?.toString();
         awayBet = match.bettingOdds[0]?.line1x2?.a?.toString();
       } else {
@@ -301,19 +300,19 @@ export const LeaguePage: FC = () => {
         awayScore = match.away?.score.toString();
       }
       let scoreClass;
-      if (MatchService.isMatchInProgress(match)) {
+      if (MatchService.isInProgress(match)) {
         scoreClass = 'info-accent-text-color';
       } else {
         scoreClass = 'info-text-color';
       }
 
-      const matchCurrentTime = MatchService.getMatchCurrentTime(match);
+      const matchCurrentTime = MatchService.formatCurrentTime(match);
       const matchScheduledAt = MatchService.formatMatchScheduledAt(match);
       let matchInfo;
-      if (MatchService.isMatchInProgress(match)) {
+      if (MatchService.isInProgress(match)) {
         matchInfo = <Badge type="number">{matchCurrentTime}</Badge>;
       }
-      if (MatchService.isMatchNotStarted(match))
+      if (MatchService.isNotStarted(match))
         matchInfo = <Info type="text" subtitle={matchScheduledAt}></Info>;
 
       return (
@@ -374,15 +373,15 @@ export const LeaguePage: FC = () => {
 
     let columnScore, squadsHeader;
     if (isTourScoreAvailable) {
-      const winnerSquad = SquadService.getTourWinner(squads);
+      const winnerSquad = SquadService.findTourWinner(squads);
       const winnerName =
         winnerSquad &&
         `${winnerSquad.squad.name} (${winnerSquad.scoreInfo.score})`;
       squadsHeader =
-        !!winnerName && TourService.isTourFinished(tour)
+        !!winnerName && TourService.isFinished(tour)
           ? `👑 ${winnerName}`
           : `1️⃣ ${winnerName}`;
-      columnScore = `Всего/Тур (${SquadService.getTourAverageScore(squads)})`;
+      columnScore = `Всего/Тур (${SquadService.formatSquadsTourAverageScore(squads)})`;
     } else {
       columnScore = 'Всего/В среднем';
     }
@@ -413,7 +412,7 @@ export const LeaguePage: FC = () => {
   //Squads content
   const renderSquads = () => {
     if (!squads || squads.length === 0) {
-      return <Placeholder header="Squads not found" />;
+      return <Placeholder header="Команды не найдены" />;
     }
 
     if (isTourInProgress) {
@@ -430,13 +429,13 @@ export const LeaguePage: FC = () => {
         seasonPlace = squad.scoreInfo.placeAfterTour.toString();
         tourScore = squad.scoreInfo.score.toString();
         seasonScore = squad.scoreInfo.pointsAfterTour.toString();
-        seasonPlaceDiff = SquadService.formatSquadPlaceDiff(squad);
-        seasonPlaceDiffClass = SquadService.isSquadPlaceDiffNegative(squad)
+        seasonPlaceDiff = SquadService.formatPlaceDiff(squad);
+        seasonPlaceDiffClass = SquadService.isPlaceDiffNegative(squad)
           ? 'info-subtitle-destructive-text-color'
           : 'info-subtitle-accent-text-color';
       } else {
         seasonPlace = squad.scoreInfo.place.toString();
-        tourScore = SquadService.formatSquadAverageScore(squad);
+        tourScore = SquadService.formatAverageScore(squad);
         seasonScore = squad.scoreInfo.score.toString();
       }
       const columnPlaceWidth = squad.scoreInfo.totalPlaces.toString().length;
@@ -449,7 +448,7 @@ export const LeaguePage: FC = () => {
 
         playersPointsCount =
           isTourInProgress &&
-          PlayerService.getSquadTourPlayersWithPointsCount(
+          PlayerService.filterPlayersWithPointsCount(
             squadTourInfo?.squad.currentTourInfo?.players || []
           )?.length.toString();
 

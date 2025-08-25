@@ -1,84 +1,82 @@
 import type { SquadTourPlayer } from '@/gql';
 import { FantasyPlayerRole } from '@/gql/generated/graphql';
 
+/**
+ * Service for individual player operations and statistics
+ */
 export class PlayerService {
   /**
-   *
-   * @param player
-   * @returns
+   * Checks if player points count towards squad score
+   * @param player - squad tour player data
+   * @returns true if player points are counted
    */
-  static isSquadTourPlayerPointsCount(player: SquadTourPlayer): boolean {
+  static isPointsCount(player: SquadTourPlayer): boolean {
     return player.isPointsCount;
   }
 
   /**
-   *
-   * @param player
-   * @returns
+   * Checks if player's team played in tour
+   * @param player - squad tour player data
+   * @returns true if team played any matches in tour
    */
-  static isSquadTourPlayerTeamPlayed(player: SquadTourPlayer): boolean {
+  static isTeamPlayed(player: SquadTourPlayer): boolean {
     return player.playedMatchesTour > 0;
   }
 
   /**
-   *
-   * @param player
-   * @returns
+   * Checks if player didn't play in match despite team playing
+   * @param player - squad tour player data
+   * @returns true if team played but player didn't get points
    */
-  static isSquadTourPlayerNotPlayedInMatch(player: SquadTourPlayer): boolean {
-    return (
-      this.isSquadTourPlayerTeamPlayed(player) &&
-      !this.isSquadTourPlayerPointsCount(player)
-    );
+  static isNotPlayedInMatch(player: SquadTourPlayer): boolean {
+    return this.isTeamPlayed(player) && !this.isPointsCount(player);
   }
 
   /**
-   *
-   * @param player
-   * @returns
+   * Checks if player is a field player (not goalkeeper)
+   * @param player - squad tour player data
+   * @returns true if player is not a goalkeeper
    */
-  static isSquadTourFieldPlayer(player: SquadTourPlayer): boolean {
+  static isFieldPlayer(player: SquadTourPlayer): boolean {
     return player.seasonPlayer.role !== FantasyPlayerRole.Goalkeeper;
   }
 
   /**
-   *
-   * @param player
-   * @returns
+   * Checks if player is in starting lineup
+   * @param player - squad tour player data
+   * @returns true if player is starting
    */
-  static isSquadTourStartPlayer(player: SquadTourPlayer): boolean {
+  static isStartPlayer(player: SquadTourPlayer): boolean {
     return player.isStarting;
   }
 
   /**
-   *
-   * @param players
-   * @returns
+   * Filters field players currently on bench sorted by substitute priority
+   * @param players - array of squad tour players
+   * @returns sorted array of field players on bench
    */
-  static getSquadTourFieldPlayersOnBench(
+  static filterFieldPlayersOnBench(
     players: SquadTourPlayer[]
   ): SquadTourPlayer[] {
     return players
-      .filter(
-        p => this.isSquadTourFieldPlayer(p) && !this.isSquadTourStartPlayer(p)
-      )
+      .filter(p => this.isFieldPlayer(p) && !this.isStartPlayer(p))
       .sort(
         (a, b) => (a.substitutePriority || 0) - (b.substitutePriority || 0)
       );
   }
 
   /**
-   *
-   * @param players
-   * @returns
+   * Gets formation map of starting players by their roles
+   * @param players - array of squad tour players
+   * @returns object with role counts
    */
-  static getSquadTourStartPlayersFormation(
+  static getStartPlayersFormation(
     players: SquadTourPlayer[]
   ): Record<string, number> {
     const formation: Record<string, number> = {};
 
     players
-      .filter(p => this.isSquadTourStartPlayer(p))
+      .filter(p => this.isStartPlayer(p))
       .forEach(p => {
         const role = p.seasonPlayer.role;
         formation[role] = (formation[role] || 0) + 1;
@@ -88,43 +86,41 @@ export class PlayerService {
   }
 
   /**
-   *
-   * @param players
-   * @returns
+   * Filters starting field players who didn't play in matches
+   * @param players - array of squad tour players
+   * @returns array of starting field players who didn't play
    */
-  static getSquadTourStartFieldPlayersNotPlayed(
+  static filterStartFieldPlayersNotPlayed(
     players: SquadTourPlayer[]
   ): SquadTourPlayer[] {
     return players.filter(
       p =>
-        this.isSquadTourStartPlayer(p) &&
-        this.isSquadTourFieldPlayer(p) &&
-        this.isSquadTourPlayerNotPlayedInMatch(p)
+        this.isStartPlayer(p) &&
+        this.isFieldPlayer(p) &&
+        this.isNotPlayedInMatch(p)
     );
   }
 
   /**
-   *
-   * @param players
-   * @returns
+   * Filters players whose points count towards squad score
+   * @param players - array of squad tour players
+   * @returns array of players with counted points
    */
-  static getSquadTourPlayersWithPointsCount(
+  static filterPlayersWithPointsCount(
     players: SquadTourPlayer[]
   ): SquadTourPlayer[] {
-    return players.filter(p => this.isSquadTourPlayerPointsCount(p));
+    return players.filter(p => this.isPointsCount(p));
   }
 
   /**
-   *
+   * Recalculates vice captain points if captain didn't play
+   * @param players - array of squad tour players
    */
   static recalculateViceCaptain(players: SquadTourPlayer[]): void {
     const viceCaptain = players.find(p => p.isViceCaptain);
     const captain = players.find(p => p.isCaptain);
     if (!viceCaptain || !captain) return;
-    if (
-      !this.isSquadTourPlayerPointsCount(viceCaptain) ||
-      this.isSquadTourPlayerNotPlayedInMatch(captain)
-    )
+    if (!this.isPointsCount(viceCaptain) || this.isNotPlayedInMatch(captain))
       return;
 
     viceCaptain.points = viceCaptain.score =
@@ -132,37 +128,36 @@ export class PlayerService {
   }
 
   /**
-   *
+   * Recalculates goalkeeper live score with substitution logic
+   * @param players - array of squad tour players
    */
   static recalculateGoalkeeperLiveScore(players: SquadTourPlayer[]): void {
     const goalkeeperOnBench = players.find(
-      p => !this.isSquadTourFieldPlayer(p) && !this.isSquadTourStartPlayer(p)
+      p => !this.isFieldPlayer(p) && !this.isStartPlayer(p)
     );
     if (!goalkeeperOnBench) return;
-    if (!this.isSquadTourPlayerPointsCount(goalkeeperOnBench)) {
+    if (!this.isPointsCount(goalkeeperOnBench)) {
       goalkeeperOnBench.points = 0;
       return;
     }
 
     const goalkeeperInStarting = players.find(
-      p => !this.isSquadTourFieldPlayer(p) && this.isSquadTourStartPlayer(p)
+      p => !this.isFieldPlayer(p) && this.isStartPlayer(p)
     );
-    if (
-      !goalkeeperInStarting ||
-      this.isSquadTourPlayerNotPlayedInMatch(goalkeeperInStarting)
-    )
+    if (!goalkeeperInStarting || this.isNotPlayedInMatch(goalkeeperInStarting))
       return;
 
     goalkeeperOnBench.isPointsCount = false;
   }
 
   /**
-   *
+   * Recalculates field players live score with substitution logic
+   * @param players - array of squad tour players
    */
   static recalculateFieldPlayersLiveScore(players: SquadTourPlayer[]): void {
-    const fieldPlayersOnBench = this.getSquadTourFieldPlayersOnBench(players);
+    const fieldPlayersOnBench = this.filterFieldPlayersOnBench(players);
     for (const substitutePlayer of fieldPlayersOnBench) {
-      if (!this.isSquadTourPlayerPointsCount(substitutePlayer)) {
+      if (!this.isPointsCount(substitutePlayer)) {
         substitutePlayer.points = 0;
         continue;
       }

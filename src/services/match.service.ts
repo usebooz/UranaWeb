@@ -1,22 +1,25 @@
 import type { TourMatch } from '@/gql';
 import { MatchStatus, StatPeriodId, StatWinner } from '@/gql/generated/graphql';
 
+/**
+ * Service for individual match operations and status management
+ */
 export class MatchService {
   /**
-   *
-   * @param match
-   * @returns
+   * Checks if match is currently in progress
+   * @param match - match data
+   * @returns true if match status is Live
    */
-  static isMatchInProgress(match: TourMatch): boolean {
+  static isInProgress(match: TourMatch): boolean {
     return match?.matchStatus === MatchStatus.Live;
   }
 
   /**
-   *
-   * @param match
-   * @returns
+   * Checks if match has not started yet
+   * @param match - match data
+   * @returns true if match is not started, delayed, or postponed
    */
-  static isMatchNotStarted(match: TourMatch): boolean {
+  static isNotStarted(match: TourMatch): boolean {
     return (
       match?.matchStatus === MatchStatus.NotStarted ||
       match?.matchStatus === MatchStatus.StartDelayed ||
@@ -25,11 +28,11 @@ export class MatchService {
   }
 
   /**
-   *
-   * @param match
-   * @returns
+   * Checks if match is finished
+   * @param match - match data
+   * @returns true if match is closed or ended
    */
-  static isMatchFinished(match: TourMatch): boolean {
+  static isFinished(match: TourMatch): boolean {
     return (
       match?.matchStatus === MatchStatus.Closed ||
       match?.matchStatus === MatchStatus.Ended
@@ -37,48 +40,46 @@ export class MatchService {
   }
 
   /**
-   *
-   * @param match
-   * @returns
+   * Formats current match time for display
+   * @param match - match data
+   * @returns formatted time string or undefined
    */
-  static getMatchCurrentTime(match: TourMatch): string | undefined {
+  static formatCurrentTime(match: TourMatch): string | undefined {
     if (match.periodId === StatPeriodId.HalfTime) return 'перерыв';
     return `${match.currentTime}'`;
   }
 
   /**
-   *
-   * @param match
-   * @returns
+   * Checks if home team won the match
+   * @param match - match data
+   * @returns true if match is finished and home team won
    */
-  static isMatctHomeWinner(match: TourMatch): boolean {
-    return this.isMatchFinished(match) && match.winner === StatWinner.Home;
+  static isHomeWinner(match: TourMatch): boolean {
+    return this.isFinished(match) && match.winner === StatWinner.Home;
   }
 
   /**
-   *
-   * @param match
-   * @returns
+   * Checks if away team won the match
+   * @param match - match data
+   * @returns true if match is finished and away team won
    */
-  static isMatctAwayWinner(match: TourMatch): boolean {
-    return this.isMatchFinished(match) && match.winner === StatWinner.Away;
+  static isAwayWinner(match: TourMatch): boolean {
+    return this.isFinished(match) && match.winner === StatWinner.Away;
   }
 
   /**
-   *
-   * @param matches
-   * @returns
+   * Filters matches that have started (not waiting to start)
+   * @param matches - array of tour matches
+   * @returns array of started matches or undefined
    */
-  static getMatchesStartedCount(matches?: TourMatch[]): string | undefined {
-    return matches
-      ?.filter(match => !this.isMatchNotStarted(match))
-      .length.toString();
+  static filterMatchesStarted(matches?: TourMatch[]): TourMatch[] | undefined {
+    return matches?.filter(match => !this.isNotStarted(match));
   }
 
   /**
-   *
-   * @param match
-   * @returns
+   * Formats match scheduled time for display
+   * @param match - match data
+   * @returns formatted schedule string or undefined
    */
   static formatMatchScheduledAt(match: TourMatch): string | undefined {
     if (!match?.scheduledAt || typeof match.scheduledAt !== 'string') {
