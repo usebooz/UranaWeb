@@ -26,7 +26,13 @@ import {
   useLeagueSquadsCurrentPlayers,
   useTourMatches,
 } from '@/hooks/useFantasy';
-import { FantasyService } from '@/services/fantasy.service';
+import {
+  MatchService,
+  TourService,
+  LeagueService,
+  PlayerService,
+  SquadService,
+} from '@/services';
 import { AccordionContent } from '@telegram-apps/telegram-ui/dist/components/Blocks/Accordion/components/AccordionContent/AccordionContent';
 
 export const LeaguePage: FC = () => {
@@ -45,11 +51,11 @@ export const LeaguePage: FC = () => {
     skip: !leagueId,
   });
   const currentTourId = useMemo(
-    () => FantasyService.getCurrentTourId(league),
+    () => LeagueService.getCurrentTourId(league),
     [league?.season.currentTour?.id]
   );
   const isLeagueFromActiveRplSeason = useMemo(
-    () => FantasyService.isLeagueFromActiveRplSeason(league),
+    () => LeagueService.isLeagueFromActiveRplSeason(league),
     [league?.season]
   );
 
@@ -63,17 +69,17 @@ export const LeaguePage: FC = () => {
     skip: !tourId,
   });
   const isTourFromLeague = useMemo(
-    () => FantasyService.isTourFromLeague(tour, league?.season.tours),
+    () => TourService.isTourFromLeague(tour, league?.season.tours),
     [league?.season.tours.length, tour?.id]
   );
   const isTourAvailable = useMemo(
-    () => FantasyService.isTourAvailable(tour),
+    () => TourService.isTourAvailable(tour),
     [tour?.status]
   );
 
   // Matches
   const isTourInProgress = useMemo(
-    () => FantasyService.isTourInProgress(tour),
+    () => TourService.isTourInProgress(tour),
     [tour?.status]
   );
   const matchesSkip = !tourId || !shouldLoadMatches;
@@ -83,11 +89,11 @@ export const LeaguePage: FC = () => {
 
   // Squads
   const seasonId = useMemo(
-    () => FantasyService.getSeasonId(league),
+    () => LeagueService.getSeasonId(league),
     [league?.season?.id]
   );
   const isTourScoreAvailable = useMemo(
-    () => FantasyService.isTourScoreAvailable(tour),
+    () => TourService.isTourScoreAvailable(tour),
     [tour?.status]
   );
   const seasonRatingSkip = !seasonId || !leagueId || isTourScoreAvailable;
@@ -152,7 +158,7 @@ export const LeaguePage: FC = () => {
 
   //Switch Tour
   const handleTourChange = (_event: unknown, page: number): void => {
-    const selectedTour = FantasyService.getTourByPage(league, page);
+    const selectedTour = LeagueService.getTourByPage(league, page);
 
     if (selectedTour) {
       const newSearchParams = new URLSearchParams(searchParams);
@@ -218,12 +224,12 @@ export const LeaguePage: FC = () => {
   const renderTourSection = () => {
     const tourSkeletonVisible =
       tourLoading || (isTourInProgress && matchesLoading);
-    const availableToursCount = FantasyService.getAvailableToursCount(league);
-    const currentTourNumber = FantasyService.getTourNumber(tour);
-    const tourHint = FantasyService.getTourStatusText(tour);
+    const availableToursCount = LeagueService.getAvailableToursCount(league);
+    const currentTourNumber = TourService.getTourNumber(tour);
+    const tourHint = TourService.getTourStatusText(tour) || '░░░░░░░░░░';
     let matchesStartedCount;
     if (isTourInProgress) {
-      matchesStartedCount = FantasyService.getMatchesStartedCount(matches);
+      matchesStartedCount = MatchService.getMatchesStartedCount(matches);
     }
 
     return (
@@ -275,10 +281,10 @@ export const LeaguePage: FC = () => {
 
     return matches.map(match => {
       let teamWinner, teamBefore, teamAfter;
-      if (FantasyService.isMatctHomeWinner(match)) {
+      if (MatchService.isMatctHomeWinner(match)) {
         teamWinner = match.home?.team?.name;
         teamAfter = match.away?.team?.name;
-      } else if (FantasyService.isMatctAwayWinner(match)) {
+      } else if (MatchService.isMatctAwayWinner(match)) {
         teamBefore = match.home?.team?.name;
         teamWinner = match.away?.team?.name;
       } else {
@@ -287,7 +293,7 @@ export const LeaguePage: FC = () => {
       }
 
       let homeBet, awayBet, homeScore, awayScore;
-      if (FantasyService.isMatchNotStarted(match)) {
+      if (MatchService.isMatchNotStarted(match)) {
         homeBet = match.bettingOdds[0]?.line1x2?.h?.toString();
         awayBet = match.bettingOdds[0]?.line1x2?.a?.toString();
       } else {
@@ -295,19 +301,19 @@ export const LeaguePage: FC = () => {
         awayScore = match.away?.score.toString();
       }
       let scoreClass;
-      if (FantasyService.isMatchInProgress(match)) {
+      if (MatchService.isMatchInProgress(match)) {
         scoreClass = 'info-accent-text-color';
       } else {
         scoreClass = 'info-text-color';
       }
 
-      const matchCurrentTime = FantasyService.getMatchCurrentTime(match);
-      const matchScheduledAt = FantasyService.formatMatchScheduledAt(match);
+      const matchCurrentTime = MatchService.getMatchCurrentTime(match);
+      const matchScheduledAt = MatchService.formatMatchScheduledAt(match);
       let matchInfo;
-      if (FantasyService.isMatchInProgress(match)) {
+      if (MatchService.isMatchInProgress(match)) {
         matchInfo = <Badge type="number">{matchCurrentTime}</Badge>;
       }
-      if (FantasyService.isMatchNotStarted(match))
+      if (MatchService.isMatchNotStarted(match))
         matchInfo = <Info type="text" subtitle={matchScheduledAt}></Info>;
 
       return (
@@ -361,22 +367,22 @@ export const LeaguePage: FC = () => {
       );
     }
 
-    const squadsCount = FantasyService.getSquadsCount(squads);
+    const squadsCount = SquadService.getSquadsCount(squads);
     const columnPlaceWidth = squadsCount?.length;
     const columnPlace = '🔝';
     const columnSquad = `Команда (${squadsCount})`;
 
     let columnScore, squadsHeader;
     if (isTourScoreAvailable) {
-      const winnerSquad = FantasyService.getTourWinner(squads);
+      const winnerSquad = SquadService.getTourWinner(squads);
       const winnerName =
         winnerSquad &&
         `${winnerSquad.squad.name} (${winnerSquad.scoreInfo.score})`;
       squadsHeader =
-        !!winnerName && FantasyService.isTourFinished(tour)
+        !!winnerName && TourService.isTourFinished(tour)
           ? `👑 ${winnerName}`
           : `1️⃣ ${winnerName}`;
-      columnScore = `Всего/Тур (${FantasyService.getTourAverageScore(squads)})`;
+      columnScore = `Всего/Тур (${SquadService.getTourAverageScore(squads)})`;
     } else {
       columnScore = 'Всего/В среднем';
     }
@@ -411,7 +417,7 @@ export const LeaguePage: FC = () => {
     }
 
     if (isTourInProgress) {
-      FantasyService.recalculateSquadsLiveScore(squads, squadsCurrentTourInfo);
+      SquadService.recalculateSquadsLiveScore(squads, squadsCurrentTourInfo);
     }
 
     return squads?.map(squad => {
@@ -424,13 +430,13 @@ export const LeaguePage: FC = () => {
         seasonPlace = squad.scoreInfo.placeAfterTour.toString();
         tourScore = squad.scoreInfo.score.toString();
         seasonScore = squad.scoreInfo.pointsAfterTour.toString();
-        seasonPlaceDiff = FantasyService.formatSquadPlaceDiff(squad);
-        seasonPlaceDiffClass = FantasyService.isSquadPlaceDiffNegative(squad)
+        seasonPlaceDiff = SquadService.formatSquadPlaceDiff(squad);
+        seasonPlaceDiffClass = SquadService.isSquadPlaceDiffNegative(squad)
           ? 'info-subtitle-destructive-text-color'
           : 'info-subtitle-accent-text-color';
       } else {
         seasonPlace = squad.scoreInfo.place.toString();
-        tourScore = FantasyService.formatSquadAverageScore(squad);
+        tourScore = SquadService.formatSquadAverageScore(squad);
         seasonScore = squad.scoreInfo.score.toString();
       }
       const columnPlaceWidth = squad.scoreInfo.totalPlaces.toString().length;
@@ -443,14 +449,14 @@ export const LeaguePage: FC = () => {
 
         playersPointsCount =
           isTourInProgress &&
-          FantasyService.getSquadTourPlayersWithPointsCount(
+          PlayerService.getSquadTourPlayersWithPointsCount(
             squadTourInfo?.squad.currentTourInfo?.players || []
           )?.length.toString();
 
         const squadTransfersDone =
           squadTourInfo?.squad.currentTourInfo?.transfersDone.toString();
         const squadTransfersTotal =
-          FantasyService.formatSquadTransfersTotal(squadTourInfo);
+          SquadService.formatSquadTransfersTotal(squadTourInfo);
         squadTransfers =
           squadTransfersDone &&
           squadTransfersTotal &&
