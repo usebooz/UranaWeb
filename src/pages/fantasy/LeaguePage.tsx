@@ -80,10 +80,6 @@ export const LeaguePage: FC = () => {
   );
 
   // Matches
-  const isTourInProgress = useMemo(
-    () => TourService.isInProgress(tour),
-    [tour?.status]
-  );
   const matchesSkip = !tourId || !shouldLoadMatches;
   const { data: matches, loading: matchesLoading } = useTourMatches(tourId!, {
     skip: matchesSkip,
@@ -140,10 +136,10 @@ export const LeaguePage: FC = () => {
 
   //Start Load Matches
   useEffect(() => {
-    if (isTourInProgress) {
+    if (isTourCurrent) {
       setShouldLoadMatches(true);
     }
-  }, [isTourInProgress]);
+  }, [isTourCurrent]);
 
   // //Logging (DO NOT DELETE)
   // useEffect(() => {
@@ -231,13 +227,13 @@ export const LeaguePage: FC = () => {
   }
   const renderTourSection = () => {
     const tourSkeletonVisible =
-      tourLoading || (isTourInProgress && matchesLoading);
+      tourLoading || (isTourCurrent && matchesLoading);
     const availableToursCount =
       TourService.filterAvailableTours(league.season?.tours).length || 0;
     const currentTourNumber = TourService.extractNumber(tour);
     const tourHint = TourService.formatStatus(tour) || '░░░░░░░░░░';
     let matchesStartedCount;
-    if (isTourInProgress) {
+    if (TourService.isInProgress(tour)) {
       matchesStartedCount =
         MatchService.filterMatchesStarted(matches)?.length.toString();
     }
@@ -353,7 +349,7 @@ export const LeaguePage: FC = () => {
       return <Placeholder header="Команды не найдены" />;
     }
 
-    if (isTourInProgress) {
+    if (TourService.isInProgress(tour)) {
       // SquadService.recalculateSquadsLiveScore could be implemented here
     }
 
@@ -385,7 +381,7 @@ export const LeaguePage: FC = () => {
         );
 
         playersPointsCount =
-          isTourInProgress &&
+          TourService.isInProgress(tour) &&
           PlayerService.filterPlayersWithPointsCount(
             squadTourInfo?.tourInfo?.players || []
           )?.length.toString();
