@@ -94,6 +94,24 @@ graphql(`
                     id
                     name
                     role
+                    status {
+                      status
+                    }
+                    statObject {
+                      id
+                      firstName
+                      lastName
+                    }
+                    team {
+                      id
+                      name
+                      statObject {
+                        id
+                      }
+                      svgKit {
+                        url
+                      }
+                    }
                   }
                   statPlayer {
                     points
@@ -101,6 +119,59 @@ graphql(`
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+`);
+
+/**
+ *
+ */
+graphql(`
+  query GetSquadTourInfo($tourId: ID!, $squadId: ID!) {
+    fantasyQueries {
+      squadTourInfo(input: { tourID: $tourId, squadID: $squadId }) {
+        isNotLimit
+        transfersDone
+        transfersLeft
+        currentBalance
+        totalPrice
+        players {
+          isCaptain
+          isViceCaptain
+          isStarting
+          substitutePriority
+          points
+          score
+          isPointsCount
+          playedMatchesTour
+          seasonPlayer {
+            id
+            name
+            role
+            status {
+              status
+            }
+            statObject {
+              id
+              firstName
+              lastName
+            }
+            team {
+              id
+              name
+              statObject {
+                id
+              }
+              svgKit {
+                url
+              }
+            }
+          }
+          statPlayer {
+            points
           }
         }
       }

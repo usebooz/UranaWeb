@@ -1,10 +1,78 @@
 import type { SquadTourPlayer } from '@/gql';
-import { FantasyPlayerRole } from '@/gql/generated/graphql';
+import {
+  FantasyPlayerRole,
+  FantasyPlayerStatus,
+} from '@/gql/generated/graphql';
 
 /**
  * Service for individual player operations and statistics
  */
 export class PlayerService {
+  /**
+   *
+   * @param
+   * @returns
+   */
+  static getRoleEmoji(player: SquadTourPlayer): string {
+    switch (player.seasonPlayer.role) {
+      case FantasyPlayerRole.Goalkeeper:
+        return '🧤';
+      case FantasyPlayerRole.Defender:
+        return '🛡️';
+      case FantasyPlayerRole.Midfielder:
+        return '🔗';
+      case FantasyPlayerRole.Forward:
+        return '🎯';
+    }
+  }
+
+  /**
+   *
+   * @param
+   * @returns
+   */
+  static getStatusEmoji(player: SquadTourPlayer): string | undefined {
+    switch (player.seasonPlayer.status?.status) {
+      case FantasyPlayerStatus.Injury:
+        return '💔';
+      case FantasyPlayerStatus.Fiery:
+        return '🔥';
+      case FantasyPlayerStatus.Disqualification:
+        return '🟥';
+      case FantasyPlayerStatus.EndedCareer:
+      case FantasyPlayerStatus.LeftTournament:
+      case FantasyPlayerStatus.Unavailable:
+      case FantasyPlayerStatus.ExceededClubLimit:
+        return '🪦';
+      default:
+        return undefined;
+    }
+  }
+
+  /**
+   *
+   * @param
+   * @returns
+   */
+  static getCaptainEmoji(player: SquadTourPlayer): string | undefined {
+    if (player.isCaptain) {
+      return '🥇';
+    } else if (player.isViceCaptain) {
+      return '🥈';
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   *
+   * @param player - squad tour player data
+   * @returns
+   */
+  static isGoalkeeper(player: SquadTourPlayer): boolean {
+    return player.seasonPlayer.role === FantasyPlayerRole.Goalkeeper;
+  }
+
   /**
    * Checks if player points count towards squad score
    * @param player - squad tour player data
@@ -12,6 +80,24 @@ export class PlayerService {
    */
   static isPointsCount(player: SquadTourPlayer): boolean {
     return player.isPointsCount;
+  }
+
+  /**
+   *
+   * @param player
+   * @returns
+   */
+  static isPointsMayCount(player: SquadTourPlayer): boolean {
+    return !player.isPointsCount && player.points !== player.score;
+  }
+
+  /**
+   *
+   * @param player
+   * @returns
+   */
+  static isPointsNotCount(player: SquadTourPlayer): boolean {
+    return !(this.isPointsCount(player) || this.isPointsMayCount(player));
   }
 
   /**
@@ -51,6 +137,19 @@ export class PlayerService {
   }
 
   /**
+   * Filters players currently on bench sorted by substitute priority
+   * @param players - array of squad tour players
+   * @returns sorted array of players on bench
+   */
+  static filterPlayersOnBench(players: SquadTourPlayer[]): SquadTourPlayer[] {
+    return players
+      .filter(p => !this.isStartPlayer(p))
+      .sort(
+        (a, b) => (a.substitutePriority || 0) - (b.substitutePriority || 0)
+      );
+  }
+
+  /**
    * Filters field players currently on bench sorted by substitute priority
    * @param players - array of squad tour players
    * @returns sorted array of field players on bench
@@ -58,11 +157,24 @@ export class PlayerService {
   static filterFieldPlayersOnBench(
     players: SquadTourPlayer[]
   ): SquadTourPlayer[] {
-    return players
-      .filter(p => this.isFieldPlayer(p) && !this.isStartPlayer(p))
-      .sort(
-        (a, b) => (a.substitutePriority || 0) - (b.substitutePriority || 0)
-      );
+    return this.filterPlayersOnBench(players).filter(p =>
+      this.isFieldPlayer(p)
+    );
+  }
+
+  /**
+   *
+   * @param players
+   * @param role
+   * @returns
+   */
+  static filterStartPlayersByRole(
+    players: SquadTourPlayer[],
+    role: FantasyPlayerRole
+  ): SquadTourPlayer[] {
+    return players.filter(
+      p => this.isStartPlayer(p) && p.seasonPlayer.role === role
+    );
   }
 
   /**

@@ -1,4 +1,4 @@
-import type { LeagueSquad, LeagueSquadCurrentTourInfo } from '@/gql';
+import type { LeagueSquad, SquadTourInfo } from '@/gql';
 import { PlayerService } from './player.service';
 
 /**
@@ -66,8 +66,8 @@ export class SquadService {
   static formatPlaceDiff(leagueSquad: LeagueSquad): string | undefined {
     if (!leagueSquad.scoreInfo.placeAfterTourDiff) return undefined;
     return this.isPlaceDiffNegative(leagueSquad)
-      ? `${leagueSquad.scoreInfo.placeAfterTourDiff.toString().replace('-', '')}-`
-      : `${leagueSquad.scoreInfo.placeAfterTourDiff.toString()}+`;
+      ? `${leagueSquad.scoreInfo.placeAfterTourDiff.toString().replace('-', '')}↓`
+      : `${leagueSquad.scoreInfo.placeAfterTourDiff.toString()}↑`;
   }
 
   /**
@@ -76,13 +76,13 @@ export class SquadService {
    * @returns formatted transfers total or undefined
    */
   static formatSquadTransfersTotal(
-    squadTourInfo?: LeagueSquadCurrentTourInfo
+    squadTourInfo?: SquadTourInfo
   ): string | undefined {
-    return squadTourInfo?.squad.currentTourInfo?.isNotLimit
+    return squadTourInfo?.tourInfo?.isNotLimit
       ? '∞'
       : (
-          Number(squadTourInfo?.squad.currentTourInfo?.transfersDone) +
-          Number(squadTourInfo?.squad.currentTourInfo?.transfersLeft)
+          Number(squadTourInfo?.tourInfo?.transfersDone) +
+          Number(squadTourInfo?.tourInfo?.transfersLeft)
         ).toString();
   }
 
@@ -91,12 +91,12 @@ export class SquadService {
    * @param squadCurrentTourInfo - squad current tour info
    */
   static recalculateSquadPlayersLiveScore(
-    squadCurrentTourInfo?: LeagueSquadCurrentTourInfo
+    squadCurrentTourInfo?: SquadTourInfo
   ): void {
-    if (!squadCurrentTourInfo?.squad.currentTourInfo) {
+    if (!squadCurrentTourInfo?.tourInfo) {
       return;
     }
-    const players = squadCurrentTourInfo.squad.currentTourInfo.players;
+    const players = squadCurrentTourInfo.tourInfo.players;
 
     PlayerService.recalculateGoalkeeperLiveScore(players);
     PlayerService.recalculateFieldPlayersLiveScore(players);
@@ -110,7 +110,7 @@ export class SquadService {
    */
   static recalculateSquadsLiveScore(
     squads: LeagueSquad[],
-    squadsCurrentTourInfo?: LeagueSquadCurrentTourInfo[]
+    squadsCurrentTourInfo?: SquadTourInfo[]
   ): void {
     if (!squads?.length || !squadsCurrentTourInfo?.length) {
       return;
@@ -129,12 +129,10 @@ export class SquadService {
         : 0;
 
       //3. Calculate new squad tour score as a sum of player scores
-      const tourInfo = squadsCurrentTourInfo.find(
-        s => s.squad.id === squad.squad.id
-      );
-      squad.scoreInfo.score = tourInfo?.squad.currentTourInfo
+      const tourInfo = squadsCurrentTourInfo.find(s => s.id === squad.squad.id);
+      squad.scoreInfo.score = tourInfo?.tourInfo
         ? PlayerService.filterPlayersWithPointsCount(
-            tourInfo.squad.currentTourInfo.players
+            tourInfo.tourInfo.players
           ).reduce((sum, p) => sum + (p.points || 0), 0)
         : 0;
 

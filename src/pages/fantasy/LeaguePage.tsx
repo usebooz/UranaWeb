@@ -9,7 +9,6 @@ import {
   Section,
   Select,
   Skeleton,
-  Avatar,
   Spinner,
   Placeholder,
 } from '@telegram-apps/telegram-ui';
@@ -18,12 +17,14 @@ import { useEffect, useState, useMemo, type FC } from 'react';
 import { Page } from '@/components/Page/Page';
 import { LoadingPage } from '@/components/Page/LoadingPage';
 import { ErrorPage } from '@/components/Page/ErrorPage';
+import { Player } from '@/components/Player/Player';
+import { Match } from '@/components/Match/Match';
 import {
   useLeagueById,
   useTourById,
   useLeagueSquadsWithTourRating,
   useLeagueSquadsWithSeasonRating,
-  useLeagueSquadsCurrentPlayers,
+  useLeagueSquadsCurrentTourInfo,
   useTourMatches,
 } from '@/hooks/useFantasy';
 import {
@@ -33,7 +34,8 @@ import {
   PlayerService,
   SquadService,
 } from '@/services';
-import { AccordionContent } from '@telegram-apps/telegram-ui/dist/components/Blocks/Accordion/components/AccordionContent/AccordionContent';
+import { FantasyPlayerRole } from '@/gql/generated/graphql';
+import { SquadTourInfo, SquadTourPlayer } from '@/gql';
 
 export const LeaguePage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -88,7 +90,7 @@ export const LeaguePage: FC = () => {
   });
 
   // Squads
-  const seasonId = useMemo(() => league?.season?.id, []);
+  const seasonId = useMemo(() => league?.season?.id, [league?.season?.id]);
   const isTourScoreAvailable = useMemo(
     () => TourService.isScoreAvailable(tour),
     [tour?.status]
@@ -115,7 +117,7 @@ export const LeaguePage: FC = () => {
     [tour?.id, currentTourId]
   );
   const { data: squadsCurrentTourInfo, loading: currentTourInfoLoading } =
-    useLeagueSquadsCurrentPlayers(leagueId!, seasonId!, {
+    useLeagueSquadsCurrentTourInfo(leagueId!, seasonId!, {
       skip: !leagueId || !seasonId || !isTourCurrent,
     });
 
@@ -143,15 +145,24 @@ export const LeaguePage: FC = () => {
     }
   }, [isTourInProgress]);
 
-  //Logging (DO NOT DELETE)
+  // //Logging (DO NOT DELETE)
   // useEffect(() => {
   //   console.log('leagueId:', leagueId);
-  //   console.log('isTourCurrent:', isTourCurrent);
-  //   console.log('currentTourId:', currentTourId);
-  //   console.log('currentTourInfoLoading:', currentTourInfoLoading);
-  //   console.log('squadsCurrentTourInfo', squadsCurrentTourInfo);
-  //   console.log('qwerty', qwerty);
-  // }, [isTourCurrent, currentTourInfoLoading, leagueId, currentTourId]);
+  //   console.log('seasonId:', seasonId);
+  //   console.log('isTourScoreAvailable:', isTourScoreAvailable);
+  //   console.log('seasonRatingSkip:', seasonRatingSkip);
+  //   console.log('tourRatingSkip', tourRatingSkip);
+  //   console.log('squadsLoading:', squadsLoading);
+  //   console.log('squads', squads);
+  // }, [
+  //   seasonRatingSkip,
+  //   tourRatingSkip,
+  //   leagueId,
+  //   seasonId,
+  //   isTourScoreAvailable,
+  //   squadsLoading,
+  //   squads,
+  // ]);
 
   //Switch Tour
   const handleTourChange = (_event: unknown, page: number): void => {
@@ -255,16 +266,16 @@ export const LeaguePage: FC = () => {
               {tour?.name}
             </Accordion.Summary>
             {isTourExpanded && matchesLoading && (
-              <AccordionContent>
+              <Accordion.Content>
                 <Placeholder>
                   <Spinner size="m" />
                 </Placeholder>
-              </AccordionContent>
+              </Accordion.Content>
             )}
             {isTourExpanded && !matchesLoading && (
-              <AccordionContent>
+              <Accordion.Content>
                 <Section>{renderMatches()}</Section>
-              </AccordionContent>
+              </Accordion.Content>
             )}
           </Accordion>
         </Skeleton>
@@ -278,80 +289,7 @@ export const LeaguePage: FC = () => {
       return <Placeholder header="Матчи не найдены" />;
     }
 
-    return matches.map(match => {
-      let teamWinner, teamBefore, teamAfter;
-      if (MatchService.isHomeWinner(match)) {
-        teamWinner = match.home?.team?.name;
-        teamAfter = match.away?.team?.name;
-      } else if (MatchService.isAwayWinner(match)) {
-        teamBefore = match.home?.team?.name;
-        teamWinner = match.away?.team?.name;
-      } else {
-        teamBefore = match.home?.team?.name;
-        teamAfter = match.away?.team?.name;
-      }
-
-      let homeBet, awayBet, homeScore, awayScore;
-      if (MatchService.isNotStarted(match)) {
-        homeBet = match.bettingOdds[0]?.line1x2?.h?.toString();
-        awayBet = match.bettingOdds[0]?.line1x2?.a?.toString();
-      } else {
-        homeScore = match.home?.score.toString();
-        awayScore = match.away?.score.toString();
-      }
-      let scoreClass;
-      if (MatchService.isInProgress(match)) {
-        scoreClass = 'info-accent-text-color';
-      } else {
-        scoreClass = 'info-text-color';
-      }
-
-      const matchCurrentTime = MatchService.formatCurrentTime(match);
-      const matchScheduledAt = MatchService.formatMatchScheduledAt(match);
-      let matchInfo;
-      if (MatchService.isInProgress(match)) {
-        matchInfo = <Badge type="number">{matchCurrentTime}</Badge>;
-      }
-      if (MatchService.isNotStarted(match))
-        matchInfo = <Info type="text" subtitle={matchScheduledAt}></Info>;
-
-      return (
-        <Cell
-          className="match-cell"
-          key={match.id}
-          before={
-            <div className="match-logos">
-              <Avatar
-                size={20}
-                src={match.home?.team?.logo.main}
-                style={{ backgroundColor: 'white' }}
-              />
-              <Avatar
-                size={20}
-                src={match.away?.team?.logo.main}
-                style={{ backgroundColor: 'white' }}
-              />
-            </div>
-          }
-          subhead={teamBefore}
-          subtitle={teamAfter}
-          after={
-            <Info type="avatarStack" avatarStack={matchInfo}>
-              <div className="match-scores">
-                <Info type="text" subtitle={homeBet} className={scoreClass}>
-                  {homeScore}
-                </Info>
-                <Info type="text" subtitle={awayBet} className={scoreClass}>
-                  {awayScore}
-                </Info>
-              </div>
-            </Info>
-          }
-        >
-          {teamWinner}
-        </Cell>
-      );
-    });
+    return matches.map(match => <Match key={match.id} match={match} />);
   };
 
   //Squads Section
@@ -416,7 +354,7 @@ export const LeaguePage: FC = () => {
     }
 
     if (isTourInProgress) {
-      SquadService.recalculateSquadsLiveScore(squads, squadsCurrentTourInfo);
+      // SquadService.recalculateSquadsLiveScore could be implemented here
     }
 
     return squads?.map(squad => {
@@ -443,17 +381,17 @@ export const LeaguePage: FC = () => {
       let squadTourInfo, playersPointsCount, squadTransfers;
       if (isTourCurrent) {
         squadTourInfo = squadsCurrentTourInfo?.find(
-          s => s.squad.id === squad.squad.id
+          s => s.id === squad.squad.id
         );
 
         playersPointsCount =
           isTourInProgress &&
           PlayerService.filterPlayersWithPointsCount(
-            squadTourInfo?.squad.currentTourInfo?.players || []
+            squadTourInfo?.tourInfo?.players || []
           )?.length.toString();
 
         const squadTransfersDone =
-          squadTourInfo?.squad.currentTourInfo?.transfersDone.toString();
+          squadTourInfo?.tourInfo?.transfersDone.toString();
         const squadTransfersTotal =
           SquadService.formatSquadTransfersTotal(squadTourInfo);
         squadTransfers =
@@ -487,7 +425,7 @@ export const LeaguePage: FC = () => {
                 }}
                 subtitle={seasonPlaceDiff}
               >
-                <span dangerouslySetInnerHTML={{ __html: seasonPlace }} />
+                {seasonPlace}
               </Info>
             }
             after={
@@ -498,9 +436,81 @@ export const LeaguePage: FC = () => {
           >
             {squad.squad.name}
           </Accordion.Summary>
+          <Accordion.Content className="secondary-bg-color">
+            {renderSquadInfo(squadTourInfo)}
+          </Accordion.Content>
         </Accordion>
       );
     });
+  };
+
+  const renderSquadInfo = (squadTourInfo?: SquadTourInfo) => {
+    const players = squadTourInfo?.tourInfo?.players;
+    if (!players || players.length === 0) {
+      return <Placeholder header="Игроки не найдены" />;
+    }
+    const matchesFinished = TourService.isFinished(tour);
+    const withoutBadge = !matchesFinished && !isTourCurrent;
+    const subEmoji = '🪑';
+
+    const playersStarted = [
+      FantasyPlayerRole.Goalkeeper,
+      FantasyPlayerRole.Defender,
+      FantasyPlayerRole.Midfielder,
+      FantasyPlayerRole.Forward,
+    ].map((role, i) => {
+      const roleKey = squadTourInfo.id + i;
+      const rolePlayers = PlayerService.filterStartPlayersByRole(players, role);
+      const fakePlayer = { seasonPlayer: { role: role } } as SquadTourPlayer;
+
+      return (
+        <Cell
+          key={roleKey}
+          className="cell-display-block cell-align-items-center cell-overflow-visible"
+          readOnly
+          before={
+            <Info
+              type="text"
+              subtitle={PlayerService.getRoleEmoji(fakePlayer)}
+            />
+          }
+        >
+          {rolePlayers.map((player, j) => (
+            <Player
+              key={roleKey + j}
+              player={player}
+              matches={matches}
+              matchesFinished={matchesFinished}
+              withoutBadge={withoutBadge}
+            />
+          ))}
+        </Cell>
+      );
+    });
+
+    const subKey = squadTourInfo.id + 5;
+    const subPlayers = PlayerService.filterPlayersOnBench(players);
+    const substitutes = (
+      <Cell
+        key={subKey}
+        className="cell-display-block cell-overflow-visible"
+        readOnly
+        before={<Info type="text" subtitle={subEmoji} />}
+        hovered
+      >
+        {subPlayers.map((player, j) => (
+          <Player
+            key={subKey + j}
+            player={player}
+            matches={matches}
+            matchesFinished={matchesFinished}
+            withoutBadge={withoutBadge}
+          />
+        ))}
+      </Cell>
+    );
+
+    return [...playersStarted, substitutes];
   };
 
   return (

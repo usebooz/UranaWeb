@@ -1,0 +1,12 @@
+.match-logos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.match-scores {
+  width: 45px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}

@@ -18,11 +18,14 @@ import {
   GetTourMatchesQuery,
   GetTourMatchesDocument,
   GetTourMatchesQueryVariables,
+  GetSquadTourInfoQuery,
+  GetSquadTourInfoQueryVariables,
+  GetSquadTourInfoDocument,
 } from '@/gql/generated/graphql';
 import type {
   League,
   LeagueSquad,
-  LeagueSquadCurrentTourInfo,
+  SquadTourInfo,
   Tour,
   TourMatch,
 } from '@/gql';
@@ -197,12 +200,12 @@ export const useLeagueSquadsWithSeasonRating = (
 };
 
 /**
- * Hook for getting league squads current tour players info
+ *
  * @param leagueId - League ID
  * @param seasonId - Season ID
  * @param options - additional options for Apollo Client
  */
-export const useLeagueSquadsCurrentPlayers = (
+export const useLeagueSquadsCurrentTourInfo = (
   leagueId: Scalars['ID']['input'],
   seasonId: Scalars['ID']['input'],
   options?: Omit<
@@ -221,7 +224,7 @@ export const useLeagueSquadsCurrentPlayers = (
   >,
   'data'
 > & {
-  data?: LeagueSquadCurrentTourInfo[];
+  data?: SquadTourInfo[];
 } => {
   const result = useSportsQuery(GetLeagueSquadsCurrentTourInfoDocument, {
     ...options,
@@ -233,6 +236,48 @@ export const useLeagueSquadsCurrentPlayers = (
 
   return {
     ...result,
-    data: result.data?.fantasyQueries?.rating?.squads?.list || [],
+    data:
+      result.data?.fantasyQueries?.rating?.squads?.list.map(s => ({
+        id: s.squad.id,
+        tourInfo: s.squad.currentTourInfo,
+      })) || [],
+  };
+};
+
+/**
+ *
+ * @param tourId - Tour ID
+ * @param squadId - Squad ID
+ * @param options - additional options for Apollo Client
+ */
+export const useLeagueSquadTourInfo = (
+  tourId: Scalars['ID']['input'],
+  squadId: Scalars['ID']['input'],
+  options?: Omit<
+    QueryHookOptions<GetSquadTourInfoQuery, GetSquadTourInfoQueryVariables>,
+    'variables'
+  >
+): Omit<
+  ReturnType<
+    typeof useSportsQuery<GetSquadTourInfoQuery, GetSquadTourInfoQueryVariables>
+  >,
+  'data'
+> & {
+  data?: SquadTourInfo;
+} => {
+  const result = useSportsQuery(GetSquadTourInfoDocument, {
+    ...options,
+    variables: {
+      tourId,
+      squadId,
+    },
+  });
+
+  return {
+    ...result,
+    data: {
+      id: squadId,
+      tourInfo: result.data?.fantasyQueries.squadTourInfo,
+    },
   };
 };

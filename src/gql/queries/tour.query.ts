@@ -34,22 +34,37 @@ graphql(`
           currentTime
           winner
           periodId
+          hasLineups
           home {
             score
             team {
+              id
               name
               logo {
                 main
               }
             }
+            lineup(skipPreview: true) {
+              player {
+                id
+              }
+              lineupStarting
+            }
           }
           away {
             score
             team {
+              id
               name
               logo {
                 main
               }
+            }
+            lineup(skipPreview: true) {
+              player {
+                id
+              }
+              lineupStarting
             }
           }
           prediction {

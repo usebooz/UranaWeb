@@ -1,4 +1,5 @@
 import type { TourMatch } from '@/gql';
+import { MatchLineupPlayerStatus } from '@/gql';
 import { MatchStatus, StatPeriodId, StatWinner } from '@/gql/generated/graphql';
 
 /**
@@ -10,8 +11,17 @@ export class MatchService {
    * @param match - match data
    * @returns true if match status is Live
    */
-  static isInProgress(match: TourMatch): boolean {
+  static isInProgress(match?: TourMatch): boolean {
     return match?.matchStatus === MatchStatus.Live;
+  }
+
+  /**
+   *
+   * @param match
+   * @returns
+   */
+  static isScoreAvailable(match?: TourMatch): boolean {
+    return this.isInProgress(match) || this.isFinished(match);
   }
 
   /**
@@ -19,7 +29,7 @@ export class MatchService {
    * @param match - match data
    * @returns true if match is not started, delayed, or postponed
    */
-  static isNotStarted(match: TourMatch): boolean {
+  static isNotStarted(match?: TourMatch): boolean {
     return (
       match?.matchStatus === MatchStatus.NotStarted ||
       match?.matchStatus === MatchStatus.StartDelayed ||
@@ -32,7 +42,7 @@ export class MatchService {
    * @param match - match data
    * @returns true if match is closed or ended
    */
-  static isFinished(match: TourMatch): boolean {
+  static isFinished(match?: TourMatch): boolean {
     return (
       match?.matchStatus === MatchStatus.Closed ||
       match?.matchStatus === MatchStatus.Ended
@@ -74,6 +84,68 @@ export class MatchService {
    */
   static filterMatchesStarted(matches?: TourMatch[]): TourMatch[] | undefined {
     return matches?.filter(match => !this.isNotStarted(match));
+  }
+
+  /**
+   *
+   * @param matches - array of tour matches
+   * @param teamId
+   * @returns
+   */
+  static findMatchByTeamId(
+    matches?: TourMatch[],
+    teamId?: string
+  ): TourMatch | undefined {
+    return matches?.find(
+      match =>
+        match.home?.team?.id === teamId || match.away?.team?.id === teamId
+    );
+  }
+
+  /**
+   *
+   * @param match
+   * @param playerId
+   * @returns
+   */
+  static getLineupPlayerStatus(
+    match?: TourMatch,
+    playerId?: string,
+    emoji = false
+  ): MatchLineupPlayerStatus | undefined | string {
+    if (!playerId || !match?.hasLineups) {
+      return undefined;
+    }
+
+    const lineupHome = match.home?.lineup || [];
+    const lineupAway = match.away?.lineup || [];
+    const lineupPlayer = [...lineupHome, ...lineupAway].find(
+      lp => lp?.player?.id === playerId
+    );
+
+    if (!lineupPlayer) {
+      return emoji ? '🔴' : MatchLineupPlayerStatus.NotInLineup;
+    } else if (lineupPlayer.lineupStarting) {
+      return emoji ? '🔵' : MatchLineupPlayerStatus.Starting;
+    } else {
+      return emoji ? '🪑' : MatchLineupPlayerStatus.Substituted;
+    }
+  }
+
+  /**
+   *
+   * @param match
+   * @param playerId
+   * @returns
+   */
+  static isPlayerInLineup(match?: TourMatch, playerId?: string): boolean {
+    const status = this.getLineupPlayerStatus(match, playerId) as
+      | MatchLineupPlayerStatus
+      | undefined;
+    return (
+      status === MatchLineupPlayerStatus.Starting ||
+      status === MatchLineupPlayerStatus.Substituted
+    );
   }
 
   /**

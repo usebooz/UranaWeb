@@ -4,28 +4,16 @@ body {
   margin: 0;
 }
 
-.match-logos {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.match-scores {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .table-headers > div {
   padding-top: 16px;
   padding-bottom: 4px;
 }
 
-.table-title header {
+/* .table-title header {
   padding-top: 16px;
   padding-bottom: 0px;
   color: var(--tg-theme-text-color);
-}
+} */
 
 .table-column-before {
   --table-column-before--number: 1;
@@ -34,18 +22,48 @@ body {
   direction: rtl;
 }
 
-.info-accent-text-color span {
+.cell-overflow-visible > div > h6,
+.cell-overflow-visible > div > h6 > span {
+  overflow: visible;
+}
+
+.cell-align-items-center > div > h6 {
+  align-self: center;
+}
+
+.cell-display-block > div > h6 > span {
+  display: flex;
+  gap: 16px;
+}
+
+.text-crossed {
+  text-decoration: line-through;
+}
+
+.secondary-bg-color {
+  background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.white-bg-color {
+  background-color: var(--tgui--white);
+}
+
+.transparent-bg-color {
+  background-color: transparent;
+}
+
+.info-accent-text-color > span {
   color: var(--tg-theme-accent-text-color);
 }
 
-.info-text-color span {
+.info-text-color > span {
   color: var(--tg-theme-text-color);
 }
 
-.info-subtitle-accent-text-color h6 {
+.info-subtitle-accent-text-color > h6 {
   color: var(--tg-theme-accent-text-color);
 }
 
-.info-subtitle-destructive-text-color h6 {
+.info-subtitle-destructive-text-color > h6 {
   color: var(--tg-theme-destructive-text-color);
 }
