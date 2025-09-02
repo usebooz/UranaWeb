@@ -136,6 +136,8 @@ export const LeaguePage: FC = () => {
 
   //Start Load Matches
   useEffect(() => {
+    // Not only for in-progress
+    // For Opened tour before 1 hour we need lineups
     if (isTourCurrent) {
       setShouldLoadMatches(true);
     }
@@ -354,6 +356,10 @@ export const LeaguePage: FC = () => {
     }
 
     return squads?.map(squad => {
+      const squadTourInfo = squadsCurrentTourInfo?.find(
+        s => s.id === squad.squad.id
+      );
+
       let seasonPlace,
         tourScore,
         seasonScore,
@@ -374,27 +380,20 @@ export const LeaguePage: FC = () => {
       }
       const columnPlaceWidth = squad.scoreInfo.totalPlaces.toString().length;
 
-      let squadTourInfo, playersPointsCount, squadTransfers;
-      if (isTourCurrent) {
-        squadTourInfo = squadsCurrentTourInfo?.find(
-          s => s.id === squad.squad.id
-        );
+      const playersPointsCount =
+        TourService.isInProgress(tour) &&
+        PlayerService.filterPlayersWithPointsCount(
+          squadTourInfo?.tourInfo?.players || []
+        )?.length.toString();
 
-        playersPointsCount =
-          TourService.isInProgress(tour) &&
-          PlayerService.filterPlayersWithPointsCount(
-            squadTourInfo?.tourInfo?.players || []
-          )?.length.toString();
-
-        const squadTransfersDone =
-          squadTourInfo?.tourInfo?.transfersDone.toString();
-        const squadTransfersTotal =
-          SquadService.formatSquadTransfersTotal(squadTourInfo);
-        squadTransfers =
-          squadTransfersDone &&
-          squadTransfersTotal &&
-          `🔄 ${squadTransfersDone}/${squadTransfersTotal}`;
-      }
+      const squadTransfersDone =
+        squadTourInfo?.tourInfo?.transfersDone.toString();
+      const squadTransfersTotal =
+        SquadService.formatSquadTransfersTotal(squadTourInfo);
+      const squadTransfers =
+        squadTransfersDone &&
+        squadTransfersTotal &&
+        `🔄 ${squadTransfersDone}/${squadTransfersTotal}`;
 
       return (
         <Accordion
