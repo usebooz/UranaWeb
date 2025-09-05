@@ -39,12 +39,8 @@ export class PlayerService {
         return '🔥';
       case FantasyPlayerStatus.Disqualification:
         return '🟥';
-      case FantasyPlayerStatus.EndedCareer:
-      case FantasyPlayerStatus.LeftTournament:
-      case FantasyPlayerStatus.Unavailable:
-      case FantasyPlayerStatus.ExceededClubLimit:
-        return '🪦';
       default:
+        if (!player.seasonPlayer.team) return '🪦';
         return undefined;
     }
   }

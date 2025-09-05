@@ -9,7 +9,7 @@ interface PlayerProps {
   player: SquadTourPlayer;
   matches?: TourMatch[];
   matchesFinished?: boolean;
-  withoutBadge?: boolean;
+  tourAfterCurrent?: boolean;
   className?: string;
 }
 
@@ -21,7 +21,7 @@ export const Player: FC<PlayerProps> = ({
   player,
   matches,
   matchesFinished = false,
-  withoutBadge = false,
+  tourAfterCurrent = false,
   className = '',
 }) => {
   const playerId = player.seasonPlayer.statObject.id;
@@ -65,7 +65,7 @@ export const Player: FC<PlayerProps> = ({
     showBadge = true;
   };
 
-  if (withoutBadge) {
+  if (tourAfterCurrent) {
     showBadge = false;
   } else if (matchesFinished || MatchService.isScoreAvailable(match)) {
     setBadgeScore();

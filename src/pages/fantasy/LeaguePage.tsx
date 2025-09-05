@@ -17,8 +17,8 @@ import { useEffect, useState, useMemo, type FC } from 'react';
 import { Page } from '@/components/Page/Page';
 import { LoadingPage } from '@/components/Page/LoadingPage';
 import { ErrorPage } from '@/components/Page/ErrorPage';
-import { Player } from '@/components/Player/Player';
 import { Match } from '@/components/Match/Match';
+import { SquadTourInfo } from '@/components/SquadTourInfo/SquadTourInfo';
 import {
   useLeagueById,
   useTourById,
@@ -34,8 +34,6 @@ import {
   PlayerService,
   SquadService,
 } from '@/services';
-import { FantasyPlayerRole } from '@/gql/generated/graphql';
-import { SquadTourInfo, SquadTourPlayer } from '@/gql';
 
 export const LeaguePage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -355,6 +353,9 @@ export const LeaguePage: FC = () => {
       // SquadService.recalculateSquadsLiveScore could be implemented here
     }
 
+    const matchesFinished = TourService.isFinished(tour);
+    const tourAfterCurrent = !matchesFinished && !isTourCurrent;
+
     return squads?.map(squad => {
       const squadTourInfo = squadsCurrentTourInfo?.find(
         s => s.id === squad.squad.id
@@ -432,80 +433,16 @@ export const LeaguePage: FC = () => {
             {squad.squad.name}
           </Accordion.Summary>
           <Accordion.Content className="secondary-bg-color">
-            {renderSquadInfo(squadTourInfo)}
+            <SquadTourInfo
+              squadTourInfo={squadTourInfo}
+              matches={matches}
+              matchesFinished={matchesFinished}
+              tourAfterCurrent={tourAfterCurrent}
+            />
           </Accordion.Content>
         </Accordion>
       );
     });
-  };
-
-  const renderSquadInfo = (squadTourInfo?: SquadTourInfo) => {
-    const players = squadTourInfo?.tourInfo?.players;
-    if (!players || players.length === 0) {
-      return <Placeholder header="Игроки не найдены" />;
-    }
-    const matchesFinished = TourService.isFinished(tour);
-    const withoutBadge = !matchesFinished && !isTourCurrent;
-    const subEmoji = '🪑';
-
-    const playersStarted = [
-      FantasyPlayerRole.Goalkeeper,
-      FantasyPlayerRole.Defender,
-      FantasyPlayerRole.Midfielder,
-      FantasyPlayerRole.Forward,
-    ].map((role, i) => {
-      const roleKey = squadTourInfo.id + i;
-      const rolePlayers = PlayerService.filterStartPlayersByRole(players, role);
-      const fakePlayer = { seasonPlayer: { role: role } } as SquadTourPlayer;
-
-      return (
-        <Cell
-          key={roleKey}
-          className="cell-display-block cell-align-items-center cell-overflow-visible"
-          readOnly
-          before={
-            <Info
-              type="text"
-              subtitle={PlayerService.getRoleEmoji(fakePlayer)}
-            />
-          }
-        >
-          {rolePlayers.map((player, j) => (
-            <Player
-              key={roleKey + j}
-              player={player}
-              matches={matches}
-              matchesFinished={matchesFinished}
-              withoutBadge={withoutBadge}
-            />
-          ))}
-        </Cell>
-      );
-    });
-
-    const subKey = squadTourInfo.id + 5;
-    const subPlayers = PlayerService.filterPlayersOnBench(players);
-    const substitutes = (
-      <Cell
-        key={subKey}
-        className="cell-display-block cell-overflow-visible"
-        readOnly
-        before={<Info type="text" subtitle={subEmoji} />}
-        hovered
-      >
-        {subPlayers.map((player, j) => (
-          <Player
-            key={subKey + j}
-            player={player}
-            matches={matches}
-            matchesFinished={matchesFinished}
-            withoutBadge={withoutBadge}
-          />
-        ))}
-      </Cell>
-    );
-
-    return [...playersStarted, substitutes];
   };
 
   return (

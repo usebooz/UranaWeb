@@ -6,6 +6,8 @@ import { MatchStatus, StatPeriodId, StatWinner } from '@/gql/generated/graphql';
  * Service for individual match operations and status management
  */
 export class MatchService {
+  static readonly subEmoji = '🪑';
+
   /**
    * Checks if match is currently in progress
    * @param match - match data
@@ -128,7 +130,7 @@ export class MatchService {
     } else if (lineupPlayer.lineupStarting) {
       return emoji ? '🔵' : MatchLineupPlayerStatus.Starting;
     } else {
-      return emoji ? '🪑' : MatchLineupPlayerStatus.Substituted;
+      return emoji ? this.subEmoji : MatchLineupPlayerStatus.Substituted;
     }
   }
 
