@@ -5,9 +5,6 @@ import {
   type GetLeagueQuery,
   type GetLeagueQueryVariables,
   GetLeagueDocument,
-  GetTourDocument,
-  GetTourQuery,
-  GetTourQueryVariables,
   GetLeagueSquadsDocument,
   GetLeagueSquadsQuery,
   GetLeagueSquadsQueryVariables,
@@ -15,20 +12,8 @@ import {
   GetLeagueSquadsCurrentTourInfoQuery,
   GetLeagueSquadsCurrentTourInfoQueryVariables,
   GetLeagueSquadsCurrentTourInfoDocument,
-  GetTourMatchesQuery,
-  GetTourMatchesDocument,
-  GetTourMatchesQueryVariables,
-  GetSquadTourInfoQuery,
-  GetSquadTourInfoQueryVariables,
-  GetSquadTourInfoDocument,
 } from '@/gql/generated/graphql';
-import type {
-  League,
-  LeagueSquad,
-  SquadTourInfo,
-  Tour,
-  TourMatch,
-} from '@/gql';
+import type { League, LeagueSquad, SquadTourInfo } from '@/gql';
 
 /**
  * Hook for getting league by ID
@@ -57,68 +42,6 @@ export const useLeagueById = (
   return {
     ...result,
     data: result.data?.fantasyQueries?.league || null,
-  };
-};
-
-/**
- * Hook for getting tour by ID
- * @param id - Tour ID
- * @param options - additional options for Apollo Client
- */
-export const useTourById = (
-  id: Scalars['ID']['input'],
-  options?: Omit<
-    QueryHookOptions<GetTourQuery, GetTourQueryVariables>,
-    'variables'
-  >
-): Omit<
-  ReturnType<typeof useSportsQuery<GetTourQuery, GetTourQueryVariables>>,
-  'data'
-> & {
-  data?: Tour;
-} => {
-  const result = useSportsQuery(GetTourDocument, {
-    ...options,
-    variables: {
-      id,
-    },
-  });
-
-  return {
-    ...result,
-    data: result.data?.fantasyQueries?.tour || null,
-  };
-};
-
-/**
- * Hook for getting tour matches
- * @param id - Tour ID
- * @param options - additional options for Apollo Client
- */
-export const useTourMatches = (
-  id: Scalars['ID']['input'],
-  options?: Omit<
-    QueryHookOptions<GetTourMatchesQuery, GetTourMatchesQueryVariables>,
-    'variables'
-  >
-): Omit<
-  ReturnType<
-    typeof useSportsQuery<GetTourMatchesQuery, GetTourMatchesQueryVariables>
-  >,
-  'data'
-> & {
-  data?: TourMatch[];
-} => {
-  const result = useSportsQuery(GetTourMatchesDocument, {
-    ...options,
-    variables: {
-      id,
-    },
-  });
-
-  return {
-    ...result,
-    data: result.data?.fantasyQueries?.tour?.matches || [],
   };
 };
 
@@ -200,7 +123,7 @@ export const useLeagueSquadsWithSeasonRating = (
 };
 
 /**
- *
+ * Hook for getting league squads current tour info
  * @param leagueId - League ID
  * @param seasonId - Season ID
  * @param options - additional options for Apollo Client
@@ -241,43 +164,5 @@ export const useLeagueSquadsCurrentTourInfo = (
         id: s.squad.id,
         tourInfo: s.squad.currentTourInfo,
       })) || [],
-  };
-};
-
-/**
- *
- * @param tourId - Tour ID
- * @param squadId - Squad ID
- * @param options - additional options for Apollo Client
- */
-export const useLeagueSquadTourInfo = (
-  tourId: Scalars['ID']['input'],
-  squadId: Scalars['ID']['input'],
-  options?: Omit<
-    QueryHookOptions<GetSquadTourInfoQuery, GetSquadTourInfoQueryVariables>,
-    'variables'
-  >
-): Omit<
-  ReturnType<
-    typeof useSportsQuery<GetSquadTourInfoQuery, GetSquadTourInfoQueryVariables>
-  >,
-  'data'
-> & {
-  data?: SquadTourInfo;
-} => {
-  const result = useSportsQuery(GetSquadTourInfoDocument, {
-    ...options,
-    variables: {
-      tourId,
-      squadId,
-    },
-  });
-
-  return {
-    ...result,
-    data: {
-      id: squadId,
-      tourInfo: result.data?.fantasyQueries.squadTourInfo,
-    },
   };
 };

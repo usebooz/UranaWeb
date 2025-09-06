@@ -18,7 +18,9 @@ body {
 .table-column-before {
   --table-column-before--number: 1;
   --table-column-before--min--width: 9px;
-  width: calc(var(--table-column-before--min--width) * var(--table-column-before--number));
+  width: calc(
+    var(--table-column-before--min--width) * var(--table-column-before--number)
+  );
   direction: rtl;
 }
 

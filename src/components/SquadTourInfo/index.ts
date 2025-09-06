@@ -1,1 +1,0 @@
-export { SquadTourInfo } from './SquadTourInfo';

@@ -2,10 +2,11 @@ import { type FC } from 'react';
 import { Cell, Info, Placeholder } from '@telegram-apps/telegram-ui';
 
 import { Player } from '@/components/Player/Player';
-import { MatchService, PlayerService } from '@/services';
+import { MatchService, PlayerService, TourService } from '@/services';
 import { FantasyPlayerRole } from '@/gql/generated/graphql';
 import {
-  type SquadTourInfo as SquadTourInfoType,
+  Tour,
+  type SquadTourInfo,
   type SquadTourPlayer,
   type TourMatch,
 } from '@/gql';
@@ -13,27 +14,30 @@ import {
 /**
  * Props for the SquadTourInfo component
  */
-interface SquadTourInfoProps {
+interface SquadItemPlayersProps {
   /** Squad tour info with players data */
-  squadTourInfo?: SquadTourInfoType;
+  squadTourInfo?: SquadTourInfo;
   /** Array of matches for the tour */
   matches?: TourMatch[];
   /**  */
-  matchesFinished?: boolean;
+  tour?: Tour;
   /**  */
-  tourAfterCurrent?: boolean;
+  isTourCurrent: boolean;
 }
 
 /**
  * SquadTourInfo component for displaying squad players information
  * Renders players by positions and substitutes
  */
-export const SquadTourInfo: FC<SquadTourInfoProps> = ({
+export const SquadItemPlayers: FC<SquadItemPlayersProps> = ({
   squadTourInfo,
   matches,
-  matchesFinished,
-  tourAfterCurrent,
+  tour,
+  isTourCurrent,
 }) => {
+  const matchesFinished = TourService.isFinished(tour);
+  const tourAfterCurrent = !matchesFinished && !isTourCurrent;
+
   const players = squadTourInfo?.tourInfo?.players;
   if (!players || players.length === 0) {
     return <Placeholder header="Игроки не найдены" />;

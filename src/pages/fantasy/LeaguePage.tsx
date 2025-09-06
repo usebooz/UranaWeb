@@ -17,27 +17,24 @@ import { useEffect, useState, useMemo, type FC } from 'react';
 import { Page } from '@/components/Page/Page';
 import { LoadingPage } from '@/components/Page/LoadingPage';
 import { ErrorPage } from '@/components/Page/ErrorPage';
-import { Match } from '@/components/Match/Match';
-import { SquadTourInfo } from '@/components/SquadTourInfo/SquadTourInfo';
+import { MatchList } from '@/components/Match/MatchList';
+import { SquadList } from '@/components/Squad/SquadList';
 import {
   useLeagueById,
-  useTourById,
   useLeagueSquadsWithTourRating,
   useLeagueSquadsWithSeasonRating,
   useLeagueSquadsCurrentTourInfo,
-  useTourMatches,
-} from '@/hooks/useFantasy';
+} from '@/hooks/useLeague';
+import { useTourById, useTourMatches } from '@/hooks/useTour';
 import {
   MatchService,
   TourService,
   LeagueService,
-  PlayerService,
   SquadService,
 } from '@/services';
 
 export const LeaguePage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [expandedSquads, setExpandedSquads] = useState<Set<string>>(new Set());
   const [isTourExpanded, setIsTourExpanded] = useState<boolean>(false);
   const [shouldLoadMatches, setShouldLoadMatches] = useState<boolean>(false);
 
@@ -83,14 +80,14 @@ export const LeaguePage: FC = () => {
     skip: matchesSkip,
   });
 
-  // Squads
+  // Squads Rating
   const seasonId = useMemo(() => league?.season?.id, [league?.season?.id]);
   const isTourScoreAvailable = useMemo(
     () => TourService.isScoreAvailable(tour),
     [tour?.status]
   );
+  // Season Rating
   const seasonRatingSkip = !seasonId || !leagueId || isTourScoreAvailable;
-  const tourRatingSkip = !leagueId || !tourId || !isTourScoreAvailable;
   const seasonRatingResult = useLeagueSquadsWithSeasonRating(
     leagueId!,
     seasonId!,
@@ -98,9 +95,12 @@ export const LeaguePage: FC = () => {
       skip: seasonRatingSkip,
     }
   );
+  // Tour Rating
+  const tourRatingSkip = !leagueId || !tourId || !isTourScoreAvailable;
   const tourRatingResult = useLeagueSquadsWithTourRating(leagueId!, tourId!, {
     skip: tourRatingSkip,
   });
+  // Choose Squads source by available rating
   const { data: squads, loading: squadsLoading } = isTourScoreAvailable
     ? tourRatingResult
     : seasonRatingResult;
@@ -127,7 +127,6 @@ export const LeaguePage: FC = () => {
 
   //Change Tour
   useEffect(() => {
-    setExpandedSquads(new Set());
     setIsTourExpanded(false);
     setShouldLoadMatches(false);
   }, [tourId]);
@@ -140,25 +139,6 @@ export const LeaguePage: FC = () => {
       setShouldLoadMatches(true);
     }
   }, [isTourCurrent]);
-
-  // //Logging (DO NOT DELETE)
-  // useEffect(() => {
-  //   console.log('leagueId:', leagueId);
-  //   console.log('seasonId:', seasonId);
-  //   console.log('isTourScoreAvailable:', isTourScoreAvailable);
-  //   console.log('seasonRatingSkip:', seasonRatingSkip);
-  //   console.log('tourRatingSkip', tourRatingSkip);
-  //   console.log('squadsLoading:', squadsLoading);
-  //   console.log('squads', squads);
-  // }, [
-  //   seasonRatingSkip,
-  //   tourRatingSkip,
-  //   leagueId,
-  //   seasonId,
-  //   isTourScoreAvailable,
-  //   squadsLoading,
-  //   squads,
-  // ]);
 
   //Switch Tour
   const handleTourChange = (_event: unknown, page: number): void => {
@@ -178,19 +158,6 @@ export const LeaguePage: FC = () => {
     if (isExpanded && !shouldLoadMatches) {
       setShouldLoadMatches(true);
     }
-  };
-
-  //Expand Squad
-  const handleSquadExpand = (squadId: string, isExpanded: boolean) => {
-    setExpandedSquads(prev => {
-      const newSet = new Set(prev);
-      if (isExpanded) {
-        newSet.add(squadId);
-      } else {
-        newSet.delete(squadId);
-      }
-      return newSet;
-    });
   };
 
   //League Section
@@ -270,22 +237,15 @@ export const LeaguePage: FC = () => {
             )}
             {isTourExpanded && !matchesLoading && (
               <Accordion.Content>
-                <Section>{renderMatches()}</Section>
+                <Section>
+                  <MatchList matches={matches} />
+                </Section>
               </Accordion.Content>
             )}
           </Accordion>
         </Skeleton>
       </Section>
     );
-  };
-
-  //Matches Content
-  const renderMatches = () => {
-    if (!matches || matches.length === 0) {
-      return <Placeholder header="Матчи не найдены" />;
-    }
-
-    return matches.map(match => <Match key={match.id} match={match} />);
   };
 
   //Squads Section
@@ -338,111 +298,15 @@ export const LeaguePage: FC = () => {
           subtitle={columnSquad}
           after={<Info type="text" subtitle={columnScore} />}
         />
-        {renderSquads()}
+        <SquadList
+          squads={squads}
+          squadsCurrentTourInfo={squadsCurrentTourInfo}
+          tour={tour}
+          matches={matches}
+          isTourCurrent={isTourCurrent}
+        />
       </Section>
     );
-  };
-
-  //Squads content
-  const renderSquads = () => {
-    if (!squads || squads.length === 0) {
-      return <Placeholder header="Команды не найдены" />;
-    }
-
-    if (TourService.isInProgress(tour)) {
-      // SquadService.recalculateSquadsLiveScore could be implemented here
-    }
-
-    const matchesFinished = TourService.isFinished(tour);
-    const tourAfterCurrent = !matchesFinished && !isTourCurrent;
-
-    return squads?.map(squad => {
-      const squadTourInfo = squadsCurrentTourInfo?.find(
-        s => s.id === squad.squad.id
-      );
-
-      let seasonPlace,
-        tourScore,
-        seasonScore,
-        seasonPlaceDiff,
-        seasonPlaceDiffClass;
-      if (isTourScoreAvailable) {
-        seasonPlace = squad.scoreInfo.placeAfterTour.toString();
-        tourScore = squad.scoreInfo.score.toString();
-        seasonScore = squad.scoreInfo.pointsAfterTour.toString();
-        seasonPlaceDiff = SquadService.formatPlaceDiff(squad);
-        seasonPlaceDiffClass = SquadService.isPlaceDiffNegative(squad)
-          ? 'info-subtitle-destructive-text-color'
-          : 'info-subtitle-accent-text-color';
-      } else {
-        seasonPlace = squad.scoreInfo.place.toString();
-        tourScore = SquadService.formatAverageScore(squad);
-        seasonScore = squad.scoreInfo.score.toString();
-      }
-      const columnPlaceWidth = squad.scoreInfo.totalPlaces.toString().length;
-
-      const playersPointsCount =
-        TourService.isInProgress(tour) &&
-        PlayerService.filterPlayersWithPointsCount(
-          squadTourInfo?.tourInfo?.players || []
-        )?.length.toString();
-
-      const squadTransfersDone =
-        squadTourInfo?.tourInfo?.transfersDone.toString();
-      const squadTransfersTotal =
-        SquadService.formatSquadTransfersTotal(squadTourInfo);
-      const squadTransfers =
-        squadTransfersDone &&
-        squadTransfersTotal &&
-        `🔄 ${squadTransfersDone}/${squadTransfersTotal}`;
-
-      return (
-        <Accordion
-          key={squad.squad.id}
-          expanded={expandedSquads.has(squad.squad.id)}
-          onChange={(isExpanded: boolean) =>
-            handleSquadExpand(squad.squad.id, isExpanded)
-          }
-        >
-          <Accordion.Summary
-            titleBadge={
-              playersPointsCount ? (
-                <Badge type="number">{playersPointsCount}</Badge>
-              ) : undefined
-            }
-            subhead={squad.squad.user.nick}
-            subtitle={squadTransfers}
-            before={
-              <Info
-                type="text"
-                className={`table-column-before ${seasonPlaceDiffClass}`}
-                style={{
-                  '--table-column-before--number': columnPlaceWidth,
-                }}
-                subtitle={seasonPlaceDiff}
-              >
-                {seasonPlace}
-              </Info>
-            }
-            after={
-              <Info type="text" subtitle={tourScore}>
-                {seasonScore}
-              </Info>
-            }
-          >
-            {squad.squad.name}
-          </Accordion.Summary>
-          <Accordion.Content className="secondary-bg-color">
-            <SquadTourInfo
-              squadTourInfo={squadTourInfo}
-              matches={matches}
-              matchesFinished={matchesFinished}
-              tourAfterCurrent={tourAfterCurrent}
-            />
-          </Accordion.Content>
-        </Accordion>
-      );
-    });
   };
 
   return (

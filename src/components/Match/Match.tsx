@@ -5,7 +5,7 @@ import type { TourMatch } from '@/gql';
 
 import './Match.css';
 
-interface MatchProps {
+interface MatchItemProps {
   /**
    * Match data containing teams, scores, betting odds, and status information
    */
@@ -17,7 +17,7 @@ interface MatchProps {
  * @param props - Component props containing match data
  * @returns JSX element representing a match cell
  */
-export const Match: FC<MatchProps> = ({ match }) => {
+export const MatchItem: FC<MatchItemProps> = ({ match }) => {
   let teamWinner, teamBefore, teamAfter;
   if (MatchService.isHomeWinner(match)) {
     teamWinner = match.home?.team?.name;
