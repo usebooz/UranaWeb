@@ -3,11 +3,9 @@ import type { FC } from 'react';
 import { type SquadTourPlayer, type TourMatch } from '@/gql';
 import { MatchService, PlayerService } from '@/services';
 
-import './Player.css';
-
 interface PlayerProps {
   player: SquadTourPlayer;
-  matches?: TourMatch[];
+  currentMatches?: TourMatch[];
   matchesFinished?: boolean;
   tourAfterCurrent?: boolean;
   className?: string;
@@ -19,14 +17,14 @@ interface PlayerProps {
  */
 export const Player: FC<PlayerProps> = ({
   player,
-  matches,
+  currentMatches,
   matchesFinished = false,
   tourAfterCurrent = false,
   className = '',
 }) => {
   const playerId = player.seasonPlayer.statObject.id;
   const match = MatchService.findMatchByTeamId(
-    matches,
+    currentMatches,
     player.seasonPlayer.team?.statObject.id
   );
 

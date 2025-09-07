@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 import { Placeholder } from '@telegram-apps/telegram-ui';
 
 import { SquadItem } from './SquadItem';
@@ -11,7 +11,7 @@ import {
 } from '@/gql';
 
 /**
- * Props for the SquadList component
+ * Props for the component
  */
 interface SquadListProps {
   /** Array of squads with rating information */
@@ -21,7 +21,7 @@ interface SquadListProps {
   /** Current tour data */
   tour?: Tour;
   /** Array of matches for the tour */
-  matches?: TourMatch[];
+  currentMatches?: TourMatch[];
   /** Whether tour is current */
   isTourCurrent: boolean;
 }
@@ -34,22 +34,9 @@ export const SquadList: FC<SquadListProps> = ({
   squads,
   squadsCurrentTourInfo,
   tour,
-  matches,
+  currentMatches,
   isTourCurrent,
 }) => {
-  const [expandedSquads, setExpandedSquads] = useState<Set<string>>(new Set());
-
-  const handleSquadExpand = (squadId: string, isExpanded: boolean) => {
-    setExpandedSquads(prev => {
-      const newSet = new Set(prev);
-      if (isExpanded) {
-        newSet.add(squadId);
-      } else {
-        newSet.delete(squadId);
-      }
-      return newSet;
-    });
-  };
   if (!squads || squads.length === 0) {
     return <Placeholder header="Команды не найдены" />;
   }
@@ -71,12 +58,8 @@ export const SquadList: FC<SquadListProps> = ({
             squad={squad}
             squadCurrentTourInfo={squadCurrentTourInfo}
             tour={tour}
-            matches={matches}
+            currentMatches={currentMatches}
             isTourCurrent={isTourCurrent}
-            isExpanded={expandedSquads.has(squad.squad.id)}
-            onExpandChange={(isExpanded: boolean) =>
-              handleSquadExpand(squad.squad.id, isExpanded)
-            }
           />
         );
       })}

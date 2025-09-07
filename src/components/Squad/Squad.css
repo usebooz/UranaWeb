@@ -1,0 +1,13 @@
+.squad-table-headers > div {
+  padding-top: 16px;
+  padding-bottom: 4px;
+}
+
+.squad-table-column-before {
+  --squad-table-column-before--number: 1;
+  --squad-table-column-before--min--width: 9px;
+  width: calc(
+    var(--squad-table-column-before--min--width) * var(--squad-table-column-before--number)
+  );
+  direction: rtl;
+}

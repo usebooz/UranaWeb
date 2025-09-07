@@ -1,21 +1,15 @@
-import { type FC } from 'react';
-import {
-  Accordion,
-  Badge,
-  Info,
-  Spinner,
-  Placeholder,
-} from '@telegram-apps/telegram-ui';
+import { useEffect, useState, type FC } from 'react';
+import { Accordion, Badge, Info } from '@telegram-apps/telegram-ui';
 
-import { SquadItemPlayers } from './SquadItemPlayers';
 import { PlayerService, SquadService, TourService } from '@/services';
-import { useLeagueSquadTourInfo } from '@/hooks/useSquad';
 import {
   Tour,
   type LeagueSquad,
   type SquadTourInfo,
   type TourMatch,
 } from '@/gql';
+import { PlayerFormation } from '../Player';
+import { useLeagueSquadTourInfo } from '@/hooks';
 
 /**
  * Props for the SquadItem component
@@ -28,13 +22,9 @@ interface SquadItemProps {
   /** Current tour data */
   tour?: Tour;
   /** Array of matches for the tour */
-  matches?: TourMatch[];
+  currentMatches?: TourMatch[];
   /** Whether tour is current */
   isTourCurrent: boolean;
-  /** Whether the squad item is expanded */
-  isExpanded: boolean;
-  /** Callback when squad expand state changes */
-  onExpandChange: (isExpanded: boolean) => void;
 }
 
 /**
@@ -45,17 +35,27 @@ export const SquadItem: FC<SquadItemProps> = ({
   squad,
   squadCurrentTourInfo,
   tour,
-  matches,
+  currentMatches,
   isTourCurrent,
-  isExpanded,
-  onExpandChange,
 }) => {
-  // Dynamic loading for non-current tours when expanded
-  const shouldLoadSquadTourInfo = !isTourCurrent && isExpanded;
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [shouldLoadInfo, setShouldLoadInfo] = useState<boolean>(false);
+
+  // Handle tour expansion
+  const handleExpand = (isExpanded: boolean): void => {
+    setIsExpanded(isExpanded);
+  };
+
+  useEffect(() => {
+    if (!isTourCurrent && isExpanded) {
+      setShouldLoadInfo(true);
+    }
+  }, [isTourCurrent, isExpanded]);
+
   const { data: squadTourInfo, loading: infoLoading } = useLeagueSquadTourInfo(
     tour!.id,
     squad.squad.id,
-    { skip: !tour?.id || !shouldLoadSquadTourInfo }
+    { skip: !tour?.id || !shouldLoadInfo }
   );
 
   let seasonPlace,
@@ -94,7 +94,7 @@ export const SquadItem: FC<SquadItemProps> = ({
     `🔄 ${squadTransfersDone}/${squadTransfersTotal}`;
 
   return (
-    <Accordion expanded={isExpanded} onChange={onExpandChange}>
+    <Accordion expanded={isExpanded} onChange={handleExpand}>
       <Accordion.Summary
         titleBadge={
           playersPointsCount ? (
@@ -106,9 +106,9 @@ export const SquadItem: FC<SquadItemProps> = ({
         before={
           <Info
             type="text"
-            className={`table-column-before ${seasonPlaceDiffClass}`}
+            className={`squad-table-column-before ${seasonPlaceDiffClass}`}
             style={{
-              '--table-column-before--number': columnPlaceWidth,
+              '--squad-table-column-before--number': columnPlaceWidth,
             }}
             subtitle={seasonPlaceDiff}
           >
@@ -123,22 +123,19 @@ export const SquadItem: FC<SquadItemProps> = ({
       >
         {squad.squad.name}
       </Accordion.Summary>
-      {isExpanded && infoLoading && (
-        <Accordion.Content className="secondary-bg-color">
-          <Placeholder>
-            <Spinner size="m" />
-          </Placeholder>
-        </Accordion.Content>
-      )}
-      {isExpanded && !infoLoading && (
-        <Accordion.Content className="secondary-bg-color">
-          <SquadItemPlayers
-            squadTourInfo={isTourCurrent ? squadCurrentTourInfo : squadTourInfo}
-            matches={matches}
-            tour={tour}
-            isTourCurrent={isTourCurrent}
-          />
-        </Accordion.Content>
+      {isExpanded && (
+        <PlayerFormation
+          players={
+            isTourCurrent
+              ? squadCurrentTourInfo?.tourInfo?.players
+              : squadTourInfo?.tourInfo?.players
+          }
+          currentMatches={currentMatches}
+          tour={tour}
+          isTourCurrent={isTourCurrent}
+          playersLoading={infoLoading}
+          Component={Accordion.Content}
+        />
       )}
     </Accordion>
   );

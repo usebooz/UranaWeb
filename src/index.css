@@ -4,26 +4,6 @@ body {
   margin: 0;
 }
 
-.table-headers > div {
-  padding-top: 16px;
-  padding-bottom: 4px;
-}
-
-/* .table-title header {
-  padding-top: 16px;
-  padding-bottom: 0px;
-  color: var(--tg-theme-text-color);
-} */
-
-.table-column-before {
-  --table-column-before--number: 1;
-  --table-column-before--min--width: 9px;
-  width: calc(
-    var(--table-column-before--min--width) * var(--table-column-before--number)
-  );
-  direction: rtl;
-}
-
 .cell-overflow-visible > div > h6,
 .cell-overflow-visible > div > h6 > span {
   overflow: visible;

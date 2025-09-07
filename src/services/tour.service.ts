@@ -20,8 +20,8 @@ export class TourService {
    * @param tours
    * @returns
    */
-  static filterAvailableTours(tours: Tour[]): Tour[] {
-    return tours.filter(tour => TourService.isAvailable(tour));
+  static filterAvailableTours(tours?: Tour[]): Tour[] | undefined {
+    return tours?.filter(tour => TourService.isAvailable(tour));
   }
 
   /**

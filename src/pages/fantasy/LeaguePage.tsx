@@ -1,24 +1,11 @@
 import { useParams, useSearchParams } from 'react-router-dom';
-import {
-  Accordion,
-  Badge,
-  Cell,
-  Info,
-  List,
-  Pagination,
-  Section,
-  Select,
-  Skeleton,
-  Spinner,
-  Placeholder,
-} from '@telegram-apps/telegram-ui';
-import { useEffect, useState, useMemo, type FC } from 'react';
+import { List, Section } from '@telegram-apps/telegram-ui';
+import { useEffect, useMemo, type FC } from 'react';
 
-import { Page } from '@/components/Page/Page';
-import { LoadingPage } from '@/components/Page/LoadingPage';
-import { ErrorPage } from '@/components/Page/ErrorPage';
-import { MatchList } from '@/components/Match/MatchList';
-import { SquadList } from '@/components/Squad/SquadList';
+import { Page, LoadingPage, ErrorPage } from '@/components/Page';
+import { LeagueSelector } from '@/components/League';
+import { TourSelector } from '@/components/Tour';
+import { SquadRating } from '@/components/Squad';
 import {
   useLeagueById,
   useLeagueSquadsWithTourRating,
@@ -26,17 +13,10 @@ import {
   useLeagueSquadsCurrentTourInfo,
 } from '@/hooks/useLeague';
 import { useTourById, useTourMatches } from '@/hooks/useTour';
-import {
-  MatchService,
-  TourService,
-  LeagueService,
-  SquadService,
-} from '@/services';
+import { TourService, LeagueService } from '@/services';
 
 export const LeaguePage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isTourExpanded, setIsTourExpanded] = useState<boolean>(false);
-  const [shouldLoadMatches, setShouldLoadMatches] = useState<boolean>(false);
 
   // League
   const { leagueId } = useParams<{ leagueId: string }>();
@@ -73,12 +53,18 @@ export const LeaguePage: FC = () => {
     () => TourService.isAvailable(tour),
     [tour?.status]
   );
+  const isTourCurrent = useMemo(
+    () => tour?.id === currentTourId,
+    [tour?.id, currentTourId]
+  );
 
-  // Matches
-  const matchesSkip = !tourId || !shouldLoadMatches;
-  const { data: matches, loading: matchesLoading } = useTourMatches(tourId!, {
-    skip: matchesSkip,
-  });
+  // Current Tour Matches
+  const { data: currentMatches, loading: matchesLoading } = useTourMatches(
+    tourId!,
+    {
+      skip: !tourId || !isTourCurrent,
+    }
+  );
 
   // Squads Rating
   const seasonId = useMemo(() => league?.season?.id, [league?.season?.id]);
@@ -106,10 +92,6 @@ export const LeaguePage: FC = () => {
     : seasonRatingResult;
 
   // Squads with Players for Current Tour
-  const isTourCurrent = useMemo(
-    () => tour?.id === currentTourId,
-    [tour?.id, currentTourId]
-  );
   const { data: squadsCurrentTourInfo, loading: currentTourInfoLoading } =
     useLeagueSquadsCurrentTourInfo(leagueId!, seasonId!, {
       skip: !leagueId || !seasonId || !isTourCurrent,
@@ -125,39 +107,11 @@ export const LeaguePage: FC = () => {
     setSearchParams(newSearchParams);
   }, [tourId, currentTourId, setSearchParams]);
 
-  //Change Tour
-  useEffect(() => {
-    setIsTourExpanded(false);
-    setShouldLoadMatches(false);
-  }, [tourId]);
-
-  //Start Load Matches
-  useEffect(() => {
-    // Not only for in-progress
-    // For Opened tour before 1 hour we need lineups
-    if (isTourCurrent) {
-      setShouldLoadMatches(true);
-    }
-  }, [isTourCurrent]);
-
   //Switch Tour
-  const handleTourChange = (_event: unknown, page: number): void => {
-    const selectedTour = TourService.findTourByPage(page, league?.season.tours);
-
-    if (selectedTour) {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('tourId', selectedTour.id);
-      setSearchParams(newSearchParams);
-    }
-  };
-
-  //Expand Tour
-  const handleTourExpand = (isExpanded: boolean) => {
-    setIsTourExpanded(isExpanded);
-    // Load matches on first accordion expand (if not IN_PROGRESS)
-    if (isExpanded && !shouldLoadMatches) {
-      setShouldLoadMatches(true);
-    }
+  const handleTourChange = (tourId: string): void => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('tourId', tourId);
+    setSearchParams(newSearchParams);
   };
 
   //League Section
@@ -170,13 +124,6 @@ export const LeaguePage: FC = () => {
   if (!league || !isLeagueFromActiveRplSeason) {
     return <ErrorPage error={new Error('Лига не найдена')} />;
   }
-  const renderLeagueSection = () => (
-    <Section>
-      <Select header="Лига" disabled>
-        <option>{league.name}</option>
-      </Select>
-    </Section>
-  );
 
   //Tour Section
   if (tourError) {
@@ -192,129 +139,39 @@ export const LeaguePage: FC = () => {
   ) {
     return <ErrorPage error={new Error('Тур не найден')} />;
   }
-  const renderTourSection = () => {
-    const tourSkeletonVisible =
-      tourLoading || (isTourCurrent && matchesLoading);
-    const availableToursCount =
-      TourService.filterAvailableTours(league.season?.tours).length || 0;
-    const currentTourNumber = TourService.extractNumber(tour);
-    const tourHint = TourService.formatStatus(tour) || '░░░░░░░░░░';
-    let matchesStartedCount;
-    if (TourService.isInProgress(tour)) {
-      matchesStartedCount =
-        MatchService.filterMatchesStarted(matches)?.length.toString();
-    }
 
-    return (
-      <Section>
-        <Pagination
-          hideNextButton
-          hidePrevButton
-          boundaryCount={1}
-          count={availableToursCount}
-          siblingCount={1}
-          page={currentTourNumber}
-          onChange={handleTourChange}
-        />
-        <Skeleton visible={tourSkeletonVisible}>
-          <Accordion expanded={isTourExpanded} onChange={handleTourExpand}>
-            <Accordion.Summary
-              hint={tourHint}
-              titleBadge={
-                matchesStartedCount ? (
-                  <Badge type="number">{matchesStartedCount}</Badge>
-                ) : undefined
-              }
-            >
-              {tour?.name}
-            </Accordion.Summary>
-            {isTourExpanded && matchesLoading && (
-              <Accordion.Content>
-                <Placeholder>
-                  <Spinner size="m" />
-                </Placeholder>
-              </Accordion.Content>
-            )}
-            {isTourExpanded && !matchesLoading && (
-              <Accordion.Content>
-                <Section>
-                  <MatchList matches={matches} />
-                </Section>
-              </Accordion.Content>
-            )}
-          </Accordion>
-        </Skeleton>
-      </Section>
-    );
-  };
-
-  //Squads Section
-  const renderSquadsSection = () => {
-    if (tourLoading || squadsLoading || currentTourInfoLoading) {
-      return (
-        <Section>
-          <Placeholder>
-            <Spinner size="m" />
-          </Placeholder>
-        </Section>
-      );
-    }
-
-    const squadsCount = SquadService.getSquadsCount(squads);
-    const columnPlaceWidth = squadsCount?.length;
-    const columnPlace = '🔝';
-    const columnSquad = `Команда (${squadsCount})`;
-
-    let columnScore, squadsHeader;
-    if (isTourScoreAvailable) {
-      const winnerSquad = SquadService.findTourWinner(squads);
-      const winnerName =
-        winnerSquad &&
-        `${winnerSquad.squad.name} (${winnerSquad.scoreInfo.score})`;
-      squadsHeader =
-        !!winnerName && TourService.isFinished(tour)
-          ? `👑 ${winnerName}`
-          : `1️⃣ ${winnerName}`;
-      columnScore = `Всего/Тур (${SquadService.formatSquadsTourAverageScore(squads)})`;
-    } else {
-      columnScore = 'Всего/В среднем';
-    }
-
-    return (
-      <Section header={squadsHeader} className="table-title">
-        <Cell
-          readOnly
-          className="table-headers"
-          before={
-            <Info
-              type="text"
-              className="table-column-before"
-              style={{
-                '--table-column-before--number': columnPlaceWidth,
-              }}
-              subtitle={columnPlace}
-            />
-          }
-          subtitle={columnSquad}
-          after={<Info type="text" subtitle={columnScore} />}
-        />
-        <SquadList
-          squads={squads}
-          squadsCurrentTourInfo={squadsCurrentTourInfo}
-          tour={tour}
-          matches={matches}
-          isTourCurrent={isTourCurrent}
-        />
-      </Section>
-    );
-  };
+  const availableTours = TourService.filterAvailableTours(
+    league?.season?.tours
+  );
 
   return (
     <Page back={false}>
       <List>
-        {renderLeagueSection()}
-        {renderTourSection()}
-        {renderSquadsSection()}
+        <Section>
+          <LeagueSelector league={league} />
+        </Section>
+        <Section>
+          <TourSelector
+            tour={tour}
+            tours={availableTours}
+            currentMatches={currentMatches}
+            isTourCurrent={isTourCurrent}
+            tourLoading={tourLoading || matchesLoading}
+            onTourChange={handleTourChange}
+          />
+        </Section>
+        <Section>
+          <SquadRating
+            squads={squads}
+            squadsCurrentTourInfo={squadsCurrentTourInfo}
+            tour={tour}
+            currentMatches={currentMatches}
+            isTourCurrent={isTourCurrent}
+            squadsLoading={
+              tourLoading || squadsLoading || currentTourInfoLoading
+            }
+          />
+        </Section>
       </List>
     </Page>
   );

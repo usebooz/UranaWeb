@@ -3,8 +3,6 @@ import { Cell, Info, Badge, Avatar } from '@telegram-apps/telegram-ui';
 import { MatchService } from '@/services';
 import type { TourMatch } from '@/gql';
 
-import './Match.css';
-
 interface MatchItemProps {
   /**
    * Match data containing teams, scores, betting odds, and status information

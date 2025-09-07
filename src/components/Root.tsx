@@ -1,6 +1,5 @@
-import { App } from '@/components/App';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { ErrorPage } from '@/components/Page/ErrorPage';
+import { App, ErrorBoundary } from '@/components';
+import { ErrorPage } from '@/components/Page';
 
 export function Root() {
   return (
