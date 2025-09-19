@@ -7,7 +7,7 @@ import {
 } from '@telegram-apps/sdk-react';
 import { AppRoot } from '@telegram-apps/telegram-ui';
 
-import { routes } from '@/navigation/routes';
+import { DebugRoute, FantasyRoute } from './Route';
 
 export function App() {
   const lp = useMemo(() => retrieveLaunchParams(), []);
@@ -20,10 +20,9 @@ export function App() {
     >
       <HashRouter>
         <Routes>
-          {routes.map(route => (
-            <Route key={route.path} {...route} />
-          ))}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/debug/*" Component={DebugRoute} />
+          <Route path="/fantasy/*" Component={FantasyRoute} />
+          <Route path="*" element={<Navigate to="/fantasy" />} />
         </Routes>
       </HashRouter>
     </AppRoot>

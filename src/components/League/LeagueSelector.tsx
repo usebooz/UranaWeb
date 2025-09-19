@@ -1,21 +1,16 @@
 import { type FC } from 'react';
 import { Select } from '@telegram-apps/telegram-ui';
-import type { League } from '@/gql';
+import { useContextLeague } from '@/hooks';
 
 /**
- * Props for the LeagueSelector component
+ *
  */
-interface LeagueSelectorProps {
-  /** League data */
-  league: League;
-}
+export const LeagueSelector: FC = () => {
+  const league = useContextLeague();
 
-/**
- * LeagueSelector component for displaying selected league
- * Simple read-only selector showing current league name
- */
-export const LeagueSelector: FC<LeagueSelectorProps> = ({ league }) => (
-  <Select header="Лига" disabled>
-    <option>{league?.name}</option>
-  </Select>
-);
+  return (
+    <Select header="Лига" disabled>
+      <option>{league?.name}</option>
+    </Select>
+  );
+};

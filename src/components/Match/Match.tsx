@@ -5,15 +5,15 @@ import type { TourMatch } from '@/gql';
 
 interface MatchItemProps {
   /**
-   * Match data containing teams, scores, betting odds, and status information
+   *
    */
   match: TourMatch;
 }
 
 /**
- * Match component displays a single match with team logos, scores, betting odds, and match status
- * @param props - Component props containing match data
- * @returns JSX element representing a match cell
+ *
+ * @param
+ * @returns
  */
 export const MatchItem: FC<MatchItemProps> = ({ match }) => {
   let teamWinner, teamBefore, teamAfter;

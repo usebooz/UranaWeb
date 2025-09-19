@@ -1,4 +1,5 @@
+export { MatchesList } from './MatchesList';
 export { MatchItem } from './Match';
-export { MatchList } from './MatchList';
+export { MatchesStatus } from './MatchesStatus';
 
 import './Match.css';

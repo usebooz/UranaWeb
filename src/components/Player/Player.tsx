@@ -1,74 +1,34 @@
-import { Image, Caption, BadgeProps } from '@telegram-apps/telegram-ui';
-import type { FC } from 'react';
-import { type SquadTourPlayer, type TourMatch } from '@/gql';
-import { MatchService, PlayerService } from '@/services';
+import { Image, Caption } from '@telegram-apps/telegram-ui';
+import { Suspense, useMemo, type FC } from 'react';
+import { type SquadTourPlayer } from '@/gql';
+import { PlayerService, TourService } from '@/services';
+import {
+  useContextCurrentTourMatches,
+  useContextTour,
+  useIsTourCurrent,
+} from '@/hooks';
+import { PlayerScore } from './PlayerScore';
+import { PlayerMatchStatus } from './PlayerMatchStatus';
+import { BadgeLoading } from '../Loading/BadgeLoading';
 
 interface PlayerProps {
   player: SquadTourPlayer;
-  currentMatches?: TourMatch[];
-  matchesFinished?: boolean;
-  tourAfterCurrent?: boolean;
-  className?: string;
 }
 
 /**
- * Player component for displaying individual player information
  *
  */
-export const Player: FC<PlayerProps> = ({
-  player,
-  currentMatches,
-  matchesFinished = false,
-  tourAfterCurrent = false,
-  className = '',
-}) => {
-  const playerId = player.seasonPlayer.statObject.id;
-  const match = MatchService.findMatchByTeamId(
-    currentMatches,
-    player.seasonPlayer.team?.statObject.id
-  );
+export const Player: FC<PlayerProps> = ({ player }) => {
+  const [matchesQueryRef] = useContextCurrentTourMatches();
+  const tour = useContextTour();
+  const isTourCurrent = useIsTourCurrent();
+  const matchesFinished = useMemo(() => TourService.isFinished(tour), [tour]);
 
-  let badgeMode: BadgeProps['mode'], badgeClassName, badgeContent, showBadge;
-  const setBadgeScore = () => {
-    if (MatchService.isInProgress(match)) {
-      badgeMode = PlayerService.isPointsMayCount(player)
-        ? 'secondary'
-        : 'primary';
-      badgeContent =
-        player.score?.toString() ||
-        (MatchService.isPlayerInLineup(match, playerId) && '0');
-    } else {
-      badgeMode = 'gray';
-      badgeContent = player.score?.toString();
-    }
-    if (badgeContent) {
-      badgeClassName = PlayerService.isPointsNotCount(player)
-        ? 'text-crossed'
-        : '';
-    } else {
-      badgeContent = '-';
-    }
-    showBadge = true;
-  };
-  const setBadgeStatus = () => {
-    if (match?.hasLineups) {
-      badgeContent = MatchService.getLineupPlayerStatus(match, playerId, true);
-    } else {
-      badgeContent = PlayerService.getStatusEmoji(player);
-    }
-    if (!badgeContent) {
-      return;
-    }
-    badgeClassName = 'transparent-bg-color';
-    showBadge = true;
-  };
-
-  if (tourAfterCurrent) {
-    showBadge = false;
-  } else if (matchesFinished || MatchService.isScoreAvailable(match)) {
-    setBadgeScore();
-  } else {
-    setBadgeStatus();
+  let badge;
+  if (matchesFinished) {
+    badge = <PlayerScore player={player} />;
+  } else if (isTourCurrent && matchesQueryRef) {
+    badge = <PlayerMatchStatus player={player} queryRef={matchesQueryRef} />;
   }
 
   let subCaption;
@@ -82,22 +42,14 @@ export const Player: FC<PlayerProps> = ({
   }
 
   return (
-    <div className={`player ${className}`}>
+    <div className="player">
       <Image
         className="player-image"
         size={28}
         src={player.seasonPlayer.team?.svgKit?.url || undefined}
         fallbackIcon={<span>👤</span>}
       >
-        {showBadge && (
-          <Image.Badge
-            type="number"
-            mode={badgeMode}
-            className={`player-badge ${badgeClassName}`}
-          >
-            {badgeContent}
-          </Image.Badge>
-        )}
+        <Suspense fallback={<BadgeLoading transparent />}>{badge}</Suspense>
       </Image>
       <Caption level="2" className="player-name">
         {player.seasonPlayer.statObject.lastName}

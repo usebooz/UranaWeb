@@ -1,83 +1,67 @@
-import { useEffect, useState, type FC } from 'react';
-import { Accordion, Badge, Skeleton } from '@telegram-apps/telegram-ui';
-import { TourService, MatchService } from '@/services';
-import type { Tour, TourMatch } from '@/gql';
-import { MatchList } from '../Match';
-import { useTourMatches } from '@/hooks';
+import { Suspense, useEffect, useMemo, useState, type FC } from 'react';
+import { Accordion } from '@telegram-apps/telegram-ui';
+import { TourService } from '@/services';
+import {
+  useContextTour,
+  useIsTourCurrent,
+  useLoadableTourMatches,
+} from '@/hooks';
+import { MatchesStatus, MatchesList } from '../Match';
+import { PlaceSpinner } from '../Loading';
+import { BadgeLoading } from '../Loading/BadgeLoading';
 
 /**
- * Props for the TourItem component
+ *
+ *
  */
-interface TourItemProps {
-  /** Current tour */
-  tour?: Tour;
-  /** Whether tour is current */
-  isTourCurrent: boolean;
-  /** Tour matches */
-  currentMatches?: TourMatch[];
-  /** */
-  tourLoading: boolean;
-}
+export const TourItem: FC = () => {
+  const tour = useContextTour();
+  const [loadMatches, matchesQueryRef] = useLoadableTourMatches();
 
-/**
- * TourItem component for displaying tour information
- * Renders tour accordion with name, status, and expandable content
- */
-export const TourItem: FC<TourItemProps> = ({
-  tour,
-  isTourCurrent,
-  currentMatches,
-  tourLoading,
-}) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-  // Reset expansion state when tour changes
+  //Load matches if current tour
+  const isTourCurrent = useIsTourCurrent();
   useEffect(() => {
-    setIsExpanded(false);
-  }, [tour?.id]);
+    if (isTourCurrent) {
+      loadMatches({ id: tour.id });
+    }
+  }, [tour, isTourCurrent]);
 
-  // Handle tour expansion
+  //Load matches during expanding
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const handleExpand = (isExpanded: boolean): void => {
     setIsExpanded(isExpanded);
+    if (isExpanded) {
+      loadMatches({ id: tour.id });
+    }
   };
 
-  const tourId = tour?.id;
-
-  // Tour Matches
-  const shouldLoadMatches = !tourLoading && !isTourCurrent && isExpanded;
-  const { data: matches, loading: matchesLoading } = useTourMatches(tourId!, {
-    skip: !tourId || !shouldLoadMatches,
-  });
-
-  const tourHint = TourService.formatStatus(tour) || '░░░░░░░░░░';
-
-  let matchesStartedCount;
-  if (TourService.isInProgress(tour)) {
-    matchesStartedCount =
-      MatchService.filterMatchesStarted(currentMatches)?.length.toString();
-  }
+  const tourStatus = useMemo(() => TourService.formatStatus(tour), [tour]);
+  const isTourInProgress = useMemo(
+    () => TourService.isInProgress(tour),
+    [tour]
+  );
 
   return (
-    <Skeleton visible={tourLoading}>
-      <Accordion expanded={isExpanded} onChange={handleExpand}>
-        <Accordion.Summary
-          hint={tourHint}
-          titleBadge={
-            matchesStartedCount ? (
-              <Badge type="number">{matchesStartedCount}</Badge>
-            ) : undefined
-          }
-        >
-          {tour?.name}
-        </Accordion.Summary>
-        {isExpanded && (
-          <MatchList
-            matches={isTourCurrent ? currentMatches : matches}
-            matchesLoading={tourLoading || matchesLoading}
-            Component={Accordion.Content}
-          />
+    <Accordion expanded={isExpanded} onChange={handleExpand}>
+      <Accordion.Summary
+        hint={tourStatus}
+        titleBadge={
+          <Suspense fallback={<BadgeLoading />}>
+            {isTourInProgress && matchesQueryRef ? (
+              <MatchesStatus queryRef={matchesQueryRef} />
+            ) : undefined}
+          </Suspense>
+        }
+      >
+        {tour?.name}
+      </Accordion.Summary>
+      <Suspense fallback={<PlaceSpinner size="m" />}>
+        {isExpanded && matchesQueryRef && (
+          <Accordion.Content>
+            <MatchesList queryRef={matchesQueryRef} />
+          </Accordion.Content>
         )}
-      </Accordion>
-    </Skeleton>
+      </Suspense>
+    </Accordion>
   );
 };

@@ -1,4 +1,7 @@
 export { Player } from './Player';
-export { PlayerFormation } from './PlayerFormation';
+export { PlayersFormation } from './PlayersFormation';
+export { PlayersStatus } from './PlayersStatus';
+export { PlayerScore } from './PlayerScore';
+export { PlayerMatchStatus } from './PlayerMatchStatus';
 
 import './Player.css';

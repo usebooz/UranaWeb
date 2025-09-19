@@ -2,36 +2,23 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  ColorHex: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  ColorHex: { input: any; output: any; }
   /** Скаляр времени в формате rfc3339 */
-  Time: { input: any; output: any };
-  TimeSecond: { input: any; output: any };
-  URL: { input: any; output: any };
+  Time: { input: any; output: any; }
+  TimeSecond: { input: any; output: any; }
+  URL: { input: any; output: any; }
 };
 
 export type AmateurFilterArgs = {
@@ -58,7 +45,7 @@ export enum AmateurScheduleStageStatus {
   Cancelled = 'CANCELLED',
   Live = 'LIVE',
   Postponed = 'POSTPONED',
-  Scheduled = 'SCHEDULED',
+  Scheduled = 'SCHEDULED'
 }
 
 export type AmateurSportsInput = {
@@ -78,24 +65,24 @@ export type Animation = {
 
 export enum AppLang {
   En = 'EN',
-  Ru = 'RU',
+  Ru = 'RU'
 }
 
 export enum AppScreen {
   FootballLiveList = 'FOOTBALL_LIVE_LIST',
   FootballMatchCenter = 'FOOTBALL_MATCH_CENTER',
-  FootballMatchDetails = 'FOOTBALL_MATCH_DETAILS',
+  FootballMatchDetails = 'FOOTBALL_MATCH_DETAILS'
 }
 
 export enum AppTheme {
   Dark = 'DARK',
-  Light = 'LIGHT',
+  Light = 'LIGHT'
 }
 
 /** Типы списков стоп-листов */
 export enum ApplyingType {
   BlogPost = 'BLOG_POST',
-  Comments = 'COMMENTS',
+  Comments = 'COMMENTS'
 }
 
 export type ArtefactSaveObjectInput = {
@@ -109,17 +96,17 @@ export enum AuthChangeUserPasswordErrorCode {
   InvalidToken = 'INVALID_TOKEN',
   PasswordWrongLength = 'PASSWORD_WRONG_LENGTH',
   TokenExpired = 'TOKEN_EXPIRED',
-  TokenHasAlreadyBeenUsed = 'TOKEN_HAS_ALREADY_BEEN_USED',
+  TokenHasAlreadyBeenUsed = 'TOKEN_HAS_ALREADY_BEEN_USED'
 }
 
 export enum AuthSendResetUserPasswordLinkErrorCode {
   LimitReached = 'LIMIT_REACHED',
-  UserNotFound = 'USER_NOT_FOUND',
+  UserNotFound = 'USER_NOT_FOUND'
 }
 
 export enum AutoSetTagsDocType {
   News = 'NEWS',
-  Post = 'POST',
+  Post = 'POST'
 }
 
 export type AutoSetTagsInput = {
@@ -132,7 +119,7 @@ export type AutoSetTagsInput = {
 export enum BadgeStatus {
   Active = 'ACTIVE',
   Disable = 'DISABLE',
-  Hidden = 'HIDDEN',
+  Hidden = 'HIDDEN'
 }
 
 export type BettingArgs = {
@@ -158,21 +145,21 @@ export type BettingPlacementArgs = {
 
 export enum BettingWidgetContentType {
   Team = 'TEAM',
-  Tournament = 'TOURNAMENT',
+  Tournament = 'TOURNAMENT'
 }
 
 export enum BettingWidgetDocumentType {
   News = 'NEWS',
-  Post = 'POST',
+  Post = 'POST'
 }
 
 export enum BettingWidgetSportType {
-  Football = 'FOOTBALL',
+  Football = 'FOOTBALL'
 }
 
 export enum BettingWidgetTagType {
   Team = 'TEAM',
-  Tournament = 'TOURNAMENT',
+  Tournament = 'TOURNAMENT'
 }
 
 /** постоянное или временное добавление в ЧС */
@@ -180,7 +167,7 @@ export enum BlacklistTimeType {
   /** постоянно */
   Permanent = 'PERMANENT',
   /** временно */
-  Temporary = 'TEMPORARY',
+  Temporary = 'TEMPORARY'
 }
 
 export enum BookmakerName {
@@ -200,7 +187,7 @@ export enum BookmakerName {
   Paribet = 'PARIBET',
   Parimatch = 'PARIMATCH',
   TennisiKz = 'TENNISI_KZ',
-  Winline = 'WINLINE',
+  Winline = 'WINLINE'
 }
 
 export type BookmakerRatingActivateAppInput = {
@@ -249,38 +236,38 @@ export type BookmakerRatingAmbassadorInput = {
 /** Фильтры приложений */
 export enum BookmakerRatingAppFilter {
   Active = 'ACTIVE',
-  All = 'ALL',
+  All = 'ALL'
 }
 
 /** Фильтр по истекшести */
 export enum BookmakerRatingBonusExpiredFilter {
   All = 'ALL',
   Current = 'CURRENT',
-  Expired = 'EXPIRED',
+  Expired = 'EXPIRED'
 }
 
 /** Фильтры бонусов */
 export enum BookmakerRatingBonusFilter {
   Active = 'ACTIVE',
-  All = 'ALL',
+  All = 'ALL'
 }
 
 /** Сортировка бонусов */
 export enum BookmakerRatingBonusOrder {
   Priority = 'PRIORITY',
-  ShuffleGroup = 'SHUFFLE_GROUP',
+  ShuffleGroup = 'SHUFFLE_GROUP'
 }
 
 /** Отображения бонусов */
 export enum BookmakerRatingBonusView {
   Normal = 'NORMAL',
-  Promo = 'PROMO',
+  Promo = 'PROMO'
 }
 
 /** Фильтры букмекеров */
 export enum BookmakerRatingBookmakerFilter {
   Active = 'ACTIVE',
-  All = 'ALL',
+  All = 'ALL'
 }
 
 /** Трансляция */
@@ -298,13 +285,13 @@ export type BookmakerRatingBroadcastInput = {
 /** Тип объекта куда ведет кнопка */
 export enum BookmakerRatingButtonTarget {
   Bonus = 'BONUS',
-  Site = 'SITE',
+  Site = 'SITE'
 }
 
 /** Тип кнопок */
 export enum BookmakerRatingButtonType {
   Custom = 'CUSTOM',
-  Default = 'DEFAULT',
+  Default = 'DEFAULT'
 }
 
 export type BookmakerRatingCreateAppInput = {
@@ -839,7 +826,7 @@ export type BookmakerRatingHeaderButtonInput = {
 /** Вид отображения шапки */
 export enum BookmakerRatingHeaderView {
   Normal = 'NORMAL',
-  Promo = 'PROMO',
+  Promo = 'PROMO'
 }
 
 /** Информация (имя/значение) */
@@ -854,7 +841,7 @@ export type BookmakerRatingInfoInput = {
 export enum BookmakerRatingListType {
   App = 'APP',
   Bonus = 'BONUS',
-  Bookmaker = 'BOOKMAKER',
+  Bookmaker = 'BOOKMAKER'
 }
 
 export type BookmakerRatingMoveAppInListInput = {
@@ -890,7 +877,7 @@ export enum BookmakerRatingObjectType {
   Bonus = 'BONUS',
   Bookmaker = 'BOOKMAKER',
   List = 'LIST',
-  Reviews = 'REVIEWS',
+  Reviews = 'REVIEWS'
 }
 
 /** Способ оплаты */
@@ -907,13 +894,13 @@ export type BookmakerRatingPaymentMethodInput = {
 export enum BookmakerRatingPaymentSystemLegacy {
   Mastercard = 'MASTERCARD',
   Mir = 'MIR',
-  Visa = 'VISA',
+  Visa = 'VISA'
 }
 
 /** Платформы */
 export enum BookmakerRatingPlatform {
   Android = 'ANDROID',
-  Ios = 'IOS',
+  Ios = 'IOS'
 }
 
 export type BookmakerRatingRemoveAppsFromListInput = {
@@ -942,7 +929,7 @@ export enum BookmakerRatingReviewOrder {
   Negative = 'NEGATIVE',
   New = 'NEW',
   ScoreThreshold = 'SCORE_THRESHOLD',
-  Top = 'TOP',
+  Top = 'TOP'
 }
 
 /** Оценки */
@@ -967,7 +954,7 @@ export enum BookmakerReviewAction {
   Complain = 'COMPLAIN',
   CopyText = 'COPY_TEXT',
   Delete = 'DELETE',
-  Edit = 'EDIT',
+  Edit = 'EDIT'
 }
 
 export type BookmarkInput = {
@@ -976,13 +963,13 @@ export type BookmarkInput = {
 };
 
 export enum BookmarkObjectType {
-  Post = 'POST',
+  Post = 'POST'
 }
 
 export enum BreakingNewsType {
   BreakingNewsMainTags = 'BREAKING_NEWS_MAIN_TAGS',
   BreakingNewsSite = 'BREAKING_NEWS_SITE',
-  BreakingNewsSportAndMainTags = 'BREAKING_NEWS_SPORT_AND_MAIN_TAGS',
+  BreakingNewsSportAndMainTags = 'BREAKING_NEWS_SPORT_AND_MAIN_TAGS'
 }
 
 export type BreakingPushInput = {
@@ -995,20 +982,20 @@ export type BreakingPushInput = {
 export enum CsEventWinner {
   Draw = 'DRAW',
   Team1 = 'TEAM1',
-  Team2 = 'TEAM2',
+  Team2 = 'TEAM2'
 }
 
 export enum CsMapRoundOutcome {
   BombDefused = 'BOMB_DEFUSED',
   BombExploded = 'BOMB_EXPLODED',
   Draw = 'DRAW',
-  TeamKilled = 'TEAM_KILLED',
+  TeamKilled = 'TEAM_KILLED'
 }
 
 export enum CsSide {
   Ct = 'CT',
   T = 'T',
-  Total = 'TOTAL',
+  Total = 'TOTAL'
 }
 
 export enum CampaignStatus {
@@ -1017,11 +1004,11 @@ export enum CampaignStatus {
   Complete = 'COMPLETE',
   Delete = 'DELETE',
   Expire = 'EXPIRE',
-  Open = 'OPEN',
+  Open = 'OPEN'
 }
 
 export enum CanAddDraftErrorCode {
-  PermissionDenied = 'PERMISSION_DENIED',
+  PermissionDenied = 'PERMISSION_DENIED'
 }
 
 export type ChangeStatusInput = {
@@ -1033,12 +1020,12 @@ export enum CoalesceNameAttrType {
   FirstName = 'FIRST_NAME',
   LastName = 'LAST_NAME',
   LineupName = 'LINEUP_NAME',
-  Name = 'NAME',
+  Name = 'NAME'
 }
 
 export enum CommentBanUserErrorCode {
   SelfBanForbidden = 'SELF_BAN_FORBIDDEN',
-  Unspecified = 'UNSPECIFIED',
+  Unspecified = 'UNSPECIFIED'
 }
 
 export type CommentChangeObjectInput = {
@@ -1061,7 +1048,7 @@ export enum CommentCreateErrorCode {
   TextEmpty = 'TEXT_EMPTY',
   TextTooLong = 'TEXT_TOO_LONG',
   Unauthorized = 'UNAUTHORIZED',
-  UserBanned = 'USER_BANNED',
+  UserBanned = 'USER_BANNED'
 }
 
 export type CommentCreateInput = {
@@ -1095,7 +1082,7 @@ export type CommentDeleteByUserInput = {
 export enum CommentEditErrorCode {
   CommentsDisabled = 'COMMENTS_DISABLED',
   TextEmpty = 'TEXT_EMPTY',
-  Unauthorized = 'UNAUTHORIZED',
+  Unauthorized = 'UNAUTHORIZED'
 }
 
 export type CommentEditInput = {
@@ -1203,7 +1190,7 @@ export type CreateQuestion = {
 
 export enum CreateReviewErrorCode {
   TextTooLong = 'TEXT_TOO_LONG',
-  Unauthorized = 'UNAUTHORIZED',
+  Unauthorized = 'UNAUTHORIZED'
 }
 
 export type CreateSection = {
@@ -1240,7 +1227,7 @@ export enum CustomPageObjectType {
   Predictor = 'PREDICTOR',
   Tag = 'TAG',
   /** @deprecated use TAG object type */
-  TagTournament = 'TAG_TOURNAMENT',
+  TagTournament = 'TAG_TOURNAMENT'
 }
 
 export type CustomPushCancelInput = {
@@ -1250,7 +1237,7 @@ export type CustomPushCancelInput = {
 export enum CustomPushErrorCode {
   CodeBadPushStatus = 'CODE_BAD_PUSH_STATUS',
   CodeNewsNotActive = 'CODE_NEWS_NOT_ACTIVE',
-  CodeUnspecified = 'CODE_UNSPECIFIED',
+  CodeUnspecified = 'CODE_UNSPECIFIED'
 }
 
 export type CustomPushInput = {
@@ -1287,7 +1274,7 @@ export enum CustomPushStatus {
   Failed = 'FAILED',
   Pending = 'PENDING',
   Sending = 'SENDING',
-  Success = 'SUCCESS',
+  Success = 'SUCCESS'
 }
 
 export type CustomPushUpdateInput = {
@@ -1324,14 +1311,14 @@ export type CyberBettingWidgetTagInput = {
 
 export enum CyberExpandTournaments {
   All = 'ALL',
-  First10Series = 'FIRST10SERIES',
+  First10Series = 'FIRST10SERIES'
 }
 
 export enum CyberIdType {
   Abios = 'ABIOS',
   Cyber = 'CYBER',
   Hru = 'HRU',
-  SportsTag = 'SPORTS_TAG',
+  SportsTag = 'SPORTS_TAG'
 }
 
 export type CyberOkkoTournamentWidgetInput = {
@@ -1360,12 +1347,12 @@ export type CyberSeriesByDateFilter = {
 export enum CyberSeriesByDateSort {
   AscStart = 'ASC_START',
   DescStart = 'DESC_START',
-  Priority = 'PRIORITY',
+  Priority = 'PRIORITY'
 }
 
 export enum CyberSportsType {
   Cs = 'CS',
-  Dota2 = 'DOTA2',
+  Dota2 = 'DOTA2'
 }
 
 export type CyberStatArgs = {
@@ -1379,13 +1366,13 @@ export enum CyberStatEventStatus {
   Live = 'LIVE',
   NotStarted = 'NOT_STARTED',
   Postponed = 'POSTPONED',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export enum CyberStatLastFileOutcome {
   Draw = 'DRAW',
   Lose = 'LOSE',
-  Win = 'WIN',
+  Win = 'WIN'
 }
 
 export type CyberStatMatchCenterFilter = {
@@ -1394,13 +1381,13 @@ export type CyberStatMatchCenterFilter = {
 
 export enum CyberStatPickBanPhaseEvent {
   Ban = 'BAN',
-  Pick = 'PICK',
+  Pick = 'PICK'
 }
 
 export enum CyberStatPromotion {
   Advance = 'ADVANCE',
   Descend = 'DESCEND',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export enum CyberStatSeriesState {
@@ -1409,21 +1396,21 @@ export enum CyberStatSeriesState {
   Map3 = 'MAP3',
   Map4 = 'MAP4',
   Map5 = 'MAP5',
-  None = 'NONE',
+  None = 'NONE'
 }
 
 export enum CyberStatSeriesType {
   Bo1 = 'BO1',
   Bo2 = 'BO2',
   Bo3 = 'BO3',
-  Bo5 = 'BO5',
+  Bo5 = 'BO5'
 }
 
 export enum CyberSubstageType {
   DoubleElimination = 'DOUBLE_ELIMINATION',
   Group = 'GROUP',
   Gsl = 'GSL',
-  SingleElimination = 'SINGLE_ELIMINATION',
+  SingleElimination = 'SINGLE_ELIMINATION'
 }
 
 export type CyberTournamentBettingWidgetInput = {
@@ -1438,7 +1425,7 @@ export type DateFilter = {
 
 export enum DealType {
   Campaign = 'CAMPAIGN',
-  Donation = 'DONATION',
+  Donation = 'DONATION'
 }
 
 export enum DeleteCommentReason {
@@ -1461,7 +1448,7 @@ export enum DeleteCommentReason {
   /**  Систематический оффтом  */
   SystematicOfftop = 'SYSTEMATIC_OFFTOP',
   /**  Угрозы  */
-  Threats = 'THREATS',
+  Threats = 'THREATS'
 }
 
 export type DeleteItemInput = {
@@ -1506,7 +1493,7 @@ export enum DotaRole {
   Mid = 'MID',
   Offlane = 'OFFLANE',
   Support = 'SUPPORT',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export type DotaSeriesInput = {
@@ -1518,7 +1505,7 @@ export type DotaSeriesInput = {
 export enum DotaSide {
   Dire = 'DIRE',
   Radiant = 'RADIANT',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export type EditBadgeInput = {
@@ -1569,7 +1556,7 @@ export type EditQuestion = {
 
 export enum EditReviewErrorCode {
   TextTooLong = 'TEXT_TOO_LONG',
-  Unauthorized = 'UNAUTHORIZED',
+  Unauthorized = 'UNAUTHORIZED'
 }
 
 export type EditSection = {
@@ -1588,19 +1575,19 @@ export type EditSection = {
 };
 
 export enum EventObjectClass {
-  Post = 'POST',
+  Post = 'POST'
 }
 
 export enum FakePlayerStatus {
   None = 'NONE',
   Review = 'REVIEW',
-  Translation = 'TRANSLATION',
+  Translation = 'TRANSLATION'
 }
 
 export enum FantasyBenefitType {
   BenchBoost = 'BENCH_BOOST',
   TripleCaptain = 'TRIPLE_CAPTAIN',
-  Wildcard = 'WILDCARD',
+  Wildcard = 'WILDCARD'
 }
 
 export type FantasyCreateLeagueInput = {
@@ -1620,7 +1607,7 @@ export type FantasyDeleteLeagueInput = {
 
 export enum FantasyIdSource {
   Hru = 'HRU',
-  Id = 'ID',
+  Id = 'ID'
 }
 
 export type FantasyLeagueSquadInput = {
@@ -1635,7 +1622,7 @@ export enum FantasyLeagueType {
   Prize = 'PRIZE',
   Regional = 'REGIONAL',
   SecondChance = 'SECOND_CHANCE',
-  User = 'USER',
+  User = 'USER'
 }
 
 export type FantasyLeaguesInput = {
@@ -1694,7 +1681,7 @@ export enum FantasyPlayerRole {
   /**  Вратарь  */
   Goalkeeper = 'GOALKEEPER',
   /**  Полузащитник  */
-  Midfielder = 'MIDFIELDER',
+  Midfielder = 'MIDFIELDER'
 }
 
 export enum FantasyPlayerSortType {
@@ -1721,7 +1708,7 @@ export enum FantasyPlayerSortType {
   /**  По цене  */
   ByPrice = 'BY_PRICE',
   /**  По сэйвам  */
-  BySaves = 'BY_SAVES',
+  BySaves = 'BY_SAVES'
 }
 
 export enum FantasyPlayerStatus {
@@ -1740,7 +1727,7 @@ export enum FantasyPlayerStatus {
   /**  Недоступен  */
   Unavailable = 'UNAVAILABLE',
   /**  Статус не задан  */
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export type FantasyPlayersInput = {
@@ -1758,7 +1745,7 @@ export type FantasyPlayersInput = {
 
 export enum FantasyRatingEntityType {
   Season = 'SEASON',
-  Tour = 'TOUR',
+  Tour = 'TOUR'
 }
 
 export type FantasySeasonInput = {
@@ -1768,7 +1755,7 @@ export type FantasySeasonInput = {
 
 export enum FantasySortOrder {
   Asc = 'ASC',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 export type FantasySquadInput = {
@@ -1814,7 +1801,7 @@ export enum FantasyTourSortField {
   Name = 'NAME',
   StartedAt = 'STARTED_AT',
   TransfersFinishedAt = 'TRANSFERS_FINISHED_AT',
-  TransfersStartedAt = 'TRANSFERS_STARTED_AT',
+  TransfersStartedAt = 'TRANSFERS_STARTED_AT'
 }
 
 export enum FantasyTourStatus {
@@ -1825,7 +1812,7 @@ export enum FantasyTourStatus {
   /**  Матчей и регистрации нет  */
   NotStarted = 'NOT_STARTED',
   /**  Регистрация (возможность собрать состав) есть, матчи не начались  */
-  Opened = 'OPENED',
+  Opened = 'OPENED'
 }
 
 export type FantasyTransferHistoryInput = {
@@ -1834,7 +1821,7 @@ export type FantasyTransferHistoryInput = {
 
 export enum FantasyTransferType {
   Bought = 'BOUGHT',
-  Sold = 'SOLD',
+  Sold = 'SOLD'
 }
 
 export type FantasyUpdateBenefitInput = {
@@ -1892,13 +1879,13 @@ export type FaqQuestionSectionInput = {
 export enum FaqQuestionStatus {
   Active = 'ACTIVE',
   Deleted = 'DELETED',
-  Hidden = 'HIDDEN',
+  Hidden = 'HIDDEN'
 }
 
 export enum FaqSectionStatus {
   Active = 'ACTIVE',
   Deleted = 'DELETED',
-  Hidden = 'HIDDEN',
+  Hidden = 'HIDDEN'
 }
 
 export type Filters = {
@@ -1914,7 +1901,7 @@ export type Filters = {
 
 export enum GeoPermissionCodes {
   Kz = 'KZ',
-  Ru = 'RU',
+  Ru = 'RU'
 }
 
 export type HruAddInput = {
@@ -1928,7 +1915,7 @@ export enum HubSport {
   Basketball = 'BASKETBALL',
   Football = 'FOOTBALL',
   Hockey = 'HOCKEY',
-  Tennis = 'TENNIS',
+  Tennis = 'TENNIS'
 }
 
 export enum ImageType {
@@ -1937,7 +1924,7 @@ export enum ImageType {
   Content = 'CONTENT',
   Main = 'MAIN',
   Stat = 'STAT',
-  Svg = 'SVG',
+  Svg = 'SVG'
 }
 
 export type ImageWithCropInput = {
@@ -1949,12 +1936,12 @@ export type ImageWithCropInput = {
 
 export enum IndexingListLocale {
   Cyber = 'CYBER',
-  Sports = 'SPORTS',
+  Sports = 'SPORTS'
 }
 
 export enum IndexingListOrder {
   Asc = 'ASC',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 export enum IndexingListSorting {
@@ -1962,7 +1949,7 @@ export enum IndexingListSorting {
   GoogleVisitTime = 'GOOGLE_VISIT_TIME',
   Url = 'URL',
   YandexSendTime = 'YANDEX_SEND_TIME',
-  YandexVisitTime = 'YANDEX_VISIT_TIME',
+  YandexVisitTime = 'YANDEX_VISIT_TIME'
 }
 
 export type IndexingPageListInput = {
@@ -1976,7 +1963,7 @@ export type IndexingPageListInput = {
 
 export enum IndexingType {
   Auto = 'AUTO',
-  Manual = 'MANUAL',
+  Manual = 'MANUAL'
 }
 
 export type InputChatMessage = {
@@ -2008,7 +1995,7 @@ export type MatchTournamentBettingWidgetInput = {
 
 export enum MobilePlatform {
   Android = 'ANDROID',
-  Ios = 'IOS',
+  Ios = 'IOS'
 }
 
 export type MoveItemInput = {
@@ -2030,7 +2017,7 @@ export enum NewsAdminCreateErrorCode {
   InvalidSourceUrl = 'INVALID_SOURCE_URL',
   MainSectionInvalid = 'MAIN_SECTION_INVALID',
   MainSectionRequired = 'MAIN_SECTION_REQUIRED',
-  RedirectNewsNotFound = 'REDIRECT_NEWS_NOT_FOUND',
+  RedirectNewsNotFound = 'REDIRECT_NEWS_NOT_FOUND'
 }
 
 export type NewsAdminListInput = {
@@ -2063,7 +2050,7 @@ export enum NewsAdminUpdateErrorCode {
   InvalidSourceUrl = 'INVALID_SOURCE_URL',
   MainSectionInvalid = 'MAIN_SECTION_INVALID',
   MainSectionRequired = 'MAIN_SECTION_REQUIRED',
-  RedirectNewsNotFound = 'REDIRECT_NEWS_NOT_FOUND',
+  RedirectNewsNotFound = 'REDIRECT_NEWS_NOT_FOUND'
 }
 
 export enum NewsBreakingPushErrorCode {
@@ -2071,7 +2058,7 @@ export enum NewsBreakingPushErrorCode {
   PushInfoRequired = 'PUSH_INFO_REQUIRED',
   SportOrTagsRequired = 'SPORT_OR_TAGS_REQUIRED',
   TagsRequired = 'TAGS_REQUIRED',
-  TimeInPast = 'TIME_IN_PAST',
+  TimeInPast = 'TIME_IN_PAST'
 }
 
 export type NewsByIdInput = {
@@ -2083,19 +2070,19 @@ export enum NewsFilterType {
   All = 'ALL',
   Main = 'MAIN',
   Personal = 'PERSONAL',
-  Section = 'SECTION',
+  Section = 'SECTION'
 }
 
 export enum NewsStatus {
   Active = 'ACTIVE',
   Deleted = 'DELETED',
-  Hidden = 'HIDDEN',
+  Hidden = 'HIDDEN'
 }
 
 export enum NotificationFilter {
   All = 'ALL',
   Mails = 'MAILS',
-  Notifications = 'NOTIFICATIONS',
+  Notifications = 'NOTIFICATIONS'
 }
 
 /** Типы плейсментов */
@@ -2165,7 +2152,7 @@ export enum OddsPlacement {
   /** Чемпионат мира 2022 Катар - 2 тип */
   WorldCupOdds = 'WORLD_CUP_ODDS',
   /** Коэффициенты в предиктор ЧМ 2022 */
-  WorldCupPredict = 'WORLD_CUP_PREDICT',
+  WorldCupPredict = 'WORLD_CUP_PREDICT'
 }
 
 export enum OddsWidgetView {
@@ -2175,7 +2162,7 @@ export enum OddsWidgetView {
   OddsHandicapView = 'ODDS_HANDICAP_VIEW',
   OddsIndividualTotalAwayView = 'ODDS_INDIVIDUAL_TOTAL_AWAY_VIEW',
   OddsIndividualTotalHomeView = 'ODDS_INDIVIDUAL_TOTAL_HOME_VIEW',
-  OddsTotalView = 'ODDS_TOTAL_VIEW',
+  OddsTotalView = 'ODDS_TOTAL_VIEW'
 }
 
 export type OkkoArgs = {
@@ -2198,13 +2185,13 @@ export type OmniAthletesPagination = {
 export enum OmniOlympicEventStatus {
   Closed = 'CLOSED',
   Live = 'LIVE',
-  NotStarted = 'NOT_STARTED',
+  NotStarted = 'NOT_STARTED'
 }
 
 export enum OmniOlympicFilterMedalType {
   BronzeFilterMedalType = 'BRONZE_FILTER_MEDAL_TYPE',
   GoldFilterMedalType = 'GOLD_FILTER_MEDAL_TYPE',
-  MedalsFilterMedalType = 'MEDALS_FILTER_MEDAL_TYPE',
+  MedalsFilterMedalType = 'MEDALS_FILTER_MEDAL_TYPE'
 }
 
 export type OmniOlympicGameInput = {
@@ -2214,25 +2201,25 @@ export type OmniOlympicGameInput = {
 export enum OmniOlympicMedalStatus {
   Medals = 'MEDALS',
   NoCompetition = 'NO_COMPETITION',
-  NoMedals = 'NO_MEDALS',
+  NoMedals = 'NO_MEDALS'
 }
 
 export enum OmniOlympicMedalType {
   Bronze = 'BRONZE',
   Gold = 'GOLD',
   Silver = 'SILVER',
-  UndefinedMedalType = 'UNDEFINED_MEDAL_TYPE',
+  UndefinedMedalType = 'UNDEFINED_MEDAL_TYPE'
 }
 
 export enum OmniOlympicParticipantType {
   Person = 'PERSON',
   Team = 'TEAM',
-  UndefinedParticipantType = 'UNDEFINED_PARTICIPANT_TYPE',
+  UndefinedParticipantType = 'UNDEFINED_PARTICIPANT_TYPE'
 }
 
 export enum OmniOlympicPersonGender {
   Female = 'FEMALE',
-  Male = 'MALE',
+  Male = 'MALE'
 }
 
 export type OmniOlympicPictureLogoInput = {
@@ -2263,14 +2250,14 @@ export type OmniOlympicsFiveEventsInput = {
 
 export enum OmniOlympicsFiveEventsType {
   LastFive = 'LAST_FIVE',
-  NextFive = 'NEXT_FIVE',
+  NextFive = 'NEXT_FIVE'
 }
 
 export enum OmniOlympicsMedalType {
   Bronze = 'BRONZE',
   Gold = 'GOLD',
   None = 'NONE',
-  Silver = 'SILVER',
+  Silver = 'SILVER'
 }
 
 export enum OrderStatus {
@@ -2285,18 +2272,18 @@ export enum OrderStatus {
   Refunded = 'REFUNDED',
   Rejected = 'REJECTED',
   Reversed = 'REVERSED',
-  Uninitialized = 'UNINITIALIZED',
+  Uninitialized = 'UNINITIALIZED'
 }
 
 export enum PersonalFeedCauseType {
   Blog = 'BLOG',
   Friend = 'FRIEND',
-  Tag = 'TAG',
+  Tag = 'TAG'
 }
 
 export enum PersonalFeedSubscriptionType {
   Blog = 'BLOG',
-  User = 'USER',
+  User = 'USER'
 }
 
 export enum PictureCountryLogoSize {
@@ -2308,7 +2295,7 @@ export enum PictureCountryLogoSize {
   Size_64_64 = 'SIZE_64_64',
   Size_128_128 = 'SIZE_128_128',
   Size_160_120 = 'SIZE_160_120',
-  Size_320_240 = 'SIZE_320_240',
+  Size_320_240 = 'SIZE_320_240'
 }
 
 export type PictureCreateBlog = {
@@ -2320,7 +2307,7 @@ export type PictureCreateBlog = {
 export enum PictureCreateBlogSize {
   Original = 'ORIGINAL',
   Width_256 = 'WIDTH_256',
-  Width_512 = 'WIDTH_512',
+  Width_512 = 'WIDTH_512'
 }
 
 export enum PictureExtension {
@@ -2329,7 +2316,7 @@ export enum PictureExtension {
   Jpeg = 'JPEG',
   Png = 'PNG',
   Svg = 'SVG',
-  Webp = 'WEBP',
+  Webp = 'WEBP'
 }
 
 export type PictureInputLogoCountry = {
@@ -2372,7 +2359,7 @@ export enum PictureLogoRetinaMultiplier {
   X1 = 'X1',
   X2 = 'X2',
   X3 = 'X3',
-  X4 = 'X4',
+  X4 = 'X4'
 }
 
 export enum PictureLogoSize {
@@ -2385,7 +2372,7 @@ export enum PictureLogoSize {
   Size_200_200 = 'SIZE_200_200',
   Size_256_256 = 'SIZE_256_256',
   Size_1280_720 = 'SIZE_1280_720',
-  Size_1920_1080 = 'SIZE_1920_1080',
+  Size_1920_1080 = 'SIZE_1920_1080'
 }
 
 export type PictureNews = {
@@ -2400,7 +2387,7 @@ export enum PictureNewsSize {
   Width_256 = 'WIDTH_256',
   Width_320 = 'WIDTH_320',
   Width_640 = 'WIDTH_640',
-  Width_730 = 'WIDTH_730',
+  Width_730 = 'WIDTH_730'
 }
 
 export type PicturePost = {
@@ -2413,7 +2400,7 @@ export enum PicturePostSize {
   Original = 'ORIGINAL',
   Width_320 = 'WIDTH_320',
   Width_640 = 'WIDTH_640',
-  Width_730 = 'WIDTH_730',
+  Width_730 = 'WIDTH_730'
 }
 
 export type PictureStructuredBody = {
@@ -2425,7 +2412,7 @@ export type PictureStructuredBody = {
 
 export enum PictureStructuredBodySize {
   Original = 'ORIGINAL',
-  Width_730 = 'WIDTH_730',
+  Width_730 = 'WIDTH_730'
 }
 
 export enum PictureUserAvatarSize {
@@ -2434,7 +2421,7 @@ export enum PictureUserAvatarSize {
   Size_32_32 = 'SIZE_32_32',
   Size_48_48 = 'SIZE_48_48',
   Size_64_64 = 'SIZE_64_64',
-  Size_128_128 = 'SIZE_128_128',
+  Size_128_128 = 'SIZE_128_128'
 }
 
 export enum Position {
@@ -2443,7 +2430,7 @@ export enum Position {
   Goalkeeper = 'GOALKEEPER',
   Manager = 'MANAGER',
   Midfielder = 'MIDFIELDER',
-  None = 'NONE',
+  None = 'NONE'
 }
 
 export enum PostCreateErrorCode {
@@ -2459,7 +2446,7 @@ export enum PostCreateErrorCode {
   PermissionDenied = 'PERMISSION_DENIED',
   UnknownMainSection = 'UNKNOWN_MAIN_SECTION',
   UnknownSubsection = 'UNKNOWN_SUBSECTION',
-  UnknownTag = 'UNKNOWN_TAG',
+  UnknownTag = 'UNKNOWN_TAG'
 }
 
 export type PostCreateInput = {
@@ -2500,7 +2487,7 @@ export type PostCreateInput = {
 };
 
 export enum PostDeleteErrorCode {
-  PermissionDenied = 'PERMISSION_DENIED',
+  PermissionDenied = 'PERMISSION_DENIED'
 }
 
 export enum PostEditErrorCode {
@@ -2515,7 +2502,7 @@ export enum PostEditErrorCode {
   PermissionDenied = 'PERMISSION_DENIED',
   UnknownMainSection = 'UNKNOWN_MAIN_SECTION',
   UnknownSubsection = 'UNKNOWN_SUBSECTION',
-  UnknownTag = 'UNKNOWN_TAG',
+  UnknownTag = 'UNKNOWN_TAG'
 }
 
 export type PostEditInput = {
@@ -2557,7 +2544,7 @@ export type PostEditInput = {
 
 export enum PostSource {
   Author = 'AUTHOR',
-  Blog = 'BLOG',
+  Blog = 'BLOG'
 }
 
 export enum PostStatus {
@@ -2565,11 +2552,11 @@ export enum PostStatus {
   Deleted = 'DELETED',
   Draft = 'DRAFT',
   Hidden = 'HIDDEN',
-  PublishedDraft = 'PUBLISHED_DRAFT',
+  PublishedDraft = 'PUBLISHED_DRAFT'
 }
 
 export enum PostUpdateAuthorErrorCode {
-  EmptyAuthor = 'EMPTY_AUTHOR',
+  EmptyAuthor = 'EMPTY_AUTHOR'
 }
 
 export type PredictionHubCreatePredictionInput = {
@@ -2590,14 +2577,14 @@ export type PredictionHubDeletePredictionInput = {
 
 export enum PredictionHubPredictionFilter {
   All = 'ALL',
-  Tomorrow = 'TOMORROW',
+  Tomorrow = 'TOMORROW'
 }
 
 export enum PredictionHubSportType {
   Basketball = 'BASKETBALL',
   Football = 'FOOTBALL',
   Hockey = 'HOCKEY',
-  Tennis = 'TENNIS',
+  Tennis = 'TENNIS'
 }
 
 export type PredictionHubUpdatePredictionInput = {
@@ -2610,31 +2597,31 @@ export enum PreferenceType {
   CancelDislike = 'CANCEL_DISLIKE',
   CancelSeen = 'CANCEL_SEEN',
   Dislike = 'DISLIKE',
-  Seen = 'SEEN',
+  Seen = 'SEEN'
 }
 
 export enum PushEntityType {
   Match = 'MATCH',
   News = 'NEWS',
   Post = 'POST',
-  Status = 'STATUS',
+  Status = 'STATUS'
 }
 
 export enum PushLanguage {
   En = 'EN',
-  Ru = 'RU',
+  Ru = 'RU'
 }
 
 export enum PushPlatform {
   Android = 'ANDROID',
   Ios = 'IOS',
-  Web = 'WEB',
+  Web = 'WEB'
 }
 
 export enum PushSubscriptionType {
   BreakingNews = 'BREAKING_NEWS',
   FavSports = 'FAV_SPORTS',
-  FavTags = 'FAV_TAGS',
+  FavTags = 'FAV_TAGS'
 }
 
 export type PusherAddTokenInput = {
@@ -2685,7 +2672,7 @@ export enum PusherEventType {
   ResultRound = 'RESULT_ROUND',
   StartBets = 'START_BETS',
   StartRound = 'START_ROUND',
-  TournamentMatch = 'TOURNAMENT_MATCH',
+  TournamentMatch = 'TOURNAMENT_MATCH'
 }
 
 export type PusherEventUnsubscribeInput = {
@@ -2706,7 +2693,7 @@ export type PusherUpdateTokenInput = {
 
 export enum PushesStatus {
   Active = 'ACTIVE',
-  Disabled = 'DISABLED',
+  Disabled = 'DISABLED'
 }
 
 export enum RateNotAllowedErrorCode {
@@ -2734,7 +2721,7 @@ export enum RateNotAllowedErrorCode {
   UserLimitMinusEnd = 'USER_LIMIT_MINUS_END',
   UserLimitMinusSectionEnd = 'USER_LIMIT_MINUS_SECTION_END',
   UserLimitMinusTagEnd = 'USER_LIMIT_MINUS_TAG_END',
-  WrongDateFormat = 'WRONG_DATE_FORMAT',
+  WrongDateFormat = 'WRONG_DATE_FORMAT'
 }
 
 export type RecommendationDoc = {
@@ -2744,20 +2731,20 @@ export type RecommendationDoc = {
 
 export enum RecommendationDocumentType {
   News = 'NEWS',
-  Post = 'POST',
+  Post = 'POST'
 }
 
 export enum RecommendationIgnoreType {
   Author = 'AUTHOR',
   Blog = 'BLOG',
   Section = 'SECTION',
-  Tag = 'TAG',
+  Tag = 'TAG'
 }
 
 export enum SearchEngine {
   All = 'ALL',
   Google = 'GOOGLE',
-  Yandex = 'YANDEX',
+  Yandex = 'YANDEX'
 }
 
 export type SeasonMatchesInput = {
@@ -2806,7 +2793,7 @@ export type SeriesByStatusArgs = {
 export enum SeriesOutcome {
   Draw = 'DRAW',
   Team1Win = 'TEAM1WIN',
-  Team2Win = 'TEAM2WIN',
+  Team2Win = 'TEAM2WIN'
 }
 
 export type SetAnimatedLogoInput = {
@@ -2873,7 +2860,7 @@ export enum SocialClass {
   Rss = 'RSS',
   Telegram = 'TELEGRAM',
   Twitter = 'TWITTER',
-  Vk = 'VK',
+  Vk = 'VK'
 }
 
 export type SocialLoginAuthByTelegramInput = {
@@ -2886,14 +2873,14 @@ export enum SocialLoginErrorCode {
   PhoneNotConfirmed = 'PHONE_NOT_CONFIRMED',
   UserBanned = 'USER_BANNED',
   UserBlocked = 'USER_BLOCKED',
-  UserNotActivated = 'USER_NOT_ACTIVATED',
+  UserNotActivated = 'USER_NOT_ACTIVATED'
 }
 
 export enum SocialLoginObjectType {
   BanObjectTypeBookmakerOpinion = 'BAN_OBJECT_TYPE_BOOKMAKER_OPINION',
   BanObjectTypeComment = 'BAN_OBJECT_TYPE_COMMENT',
   BanObjectTypeNoObject = 'BAN_OBJECT_TYPE_NO_OBJECT',
-  BanObjectTypePost = 'BAN_OBJECT_TYPE_POST',
+  BanObjectTypePost = 'BAN_OBJECT_TYPE_POST'
 }
 
 export type SocialLoginTelegramUserInfoInput = {
@@ -2913,7 +2900,7 @@ export type SplitByTournamentsInput = {
 export enum SportsTypeFilter {
   All = 'ALL',
   Cs = 'CS',
-  Dota2 = 'DOTA2',
+  Dota2 = 'DOTA2'
 }
 
 export enum StatImageNamespaceType {
@@ -2930,7 +2917,7 @@ export enum StatImageNamespaceType {
   Sport = 'SPORT',
   Team = 'TEAM',
   Tournament = 'TOURNAMENT',
-  UserAvatar = 'USER_AVATAR',
+  UserAvatar = 'USER_AVATAR'
 }
 
 export enum StatImageObjectType {
@@ -2943,14 +2930,14 @@ export enum StatImageObjectType {
   Team = 'TEAM',
   TennisCompetition = 'TENNIS_COMPETITION',
   TennisPerson = 'TENNIS_PERSON',
-  Tournament = 'TOURNAMENT',
+  Tournament = 'TOURNAMENT'
 }
 
 export enum StatImageType {
   Alternate = 'ALTERNATE',
   Avatar = 'AVATAR',
   Main = 'MAIN',
-  Svg = 'SVG',
+  Svg = 'SVG'
 }
 
 export type StreamInput = {
@@ -2961,7 +2948,7 @@ export type StreamInput = {
 };
 
 export enum StreamSource {
-  Twitch = 'TWITCH',
+  Twitch = 'TWITCH'
 }
 
 export type StreamsInput = {
@@ -2971,33 +2958,33 @@ export type StreamsInput = {
 
 export enum StructuredBodyLastMatchesSportType {
   Football = 'football',
-  Hockey = 'hockey',
+  Hockey = 'hockey'
 }
 
 export enum StructuredBodyListStyle {
   Decimal = 'decimal',
-  Disc = 'disc',
+  Disc = 'disc'
 }
 
 export enum StructuredBodyListType {
   Ordered = 'ordered',
-  Unordered = 'unordered',
+  Unordered = 'unordered'
 }
 
 export enum StructuredBodyOrderedListStyle {
   Decimal = 'decimal',
-  Disc = 'disc',
+  Disc = 'disc'
 }
 
 export enum StructuredBodyParagraphElementType {
   Break = 'break',
   Link = 'link',
-  Text = 'text',
+  Text = 'text'
 }
 
 export enum StructuredBodyParagraphSize {
   Regular = 'regular',
-  Small = 'small',
+  Small = 'small'
 }
 
 export type SubstageFilter = {
@@ -3007,7 +2994,7 @@ export type SubstageFilter = {
 export enum SubstituteStatus {
   In = 'IN',
   No = 'NO',
-  Out = 'OUT',
+  Out = 'OUT'
 }
 
 export type SummaryCreateInput = {
@@ -3019,7 +3006,7 @@ export type SummaryCreateInput = {
 
 export enum SummaryDocumentType {
   News = 'NEWS',
-  Post = 'POST',
+  Post = 'POST'
 }
 
 export type SummaryShortsArgs = {
@@ -3046,7 +3033,7 @@ export type SupportEmail = {
 export enum TagBettingWikiType {
   Category = 'CATEGORY',
   Main = 'MAIN',
-  Subcategory = 'SUBCATEGORY',
+  Subcategory = 'SUBCATEGORY'
 }
 
 export type TagFootballBettingWidgetInput = {
@@ -3061,7 +3048,7 @@ export enum TagSubtype {
   Person = 'PERSON',
   Stadium = 'STADIUM',
   Team = 'TEAM',
-  Tournament = 'TOURNAMENT',
+  Tournament = 'TOURNAMENT'
 }
 
 export type TagTopCreateSuggestionsInput = {
@@ -3130,7 +3117,7 @@ export type TagTopPositionInput = {
 /** Статусы топов */
 export enum TagTopStatus {
   Active = 'ACTIVE',
-  Disabled = 'DISABLED',
+  Disabled = 'DISABLED'
 }
 
 export type TagTopSuggestionInput = {
@@ -3242,7 +3229,7 @@ export type TextOnlineEditOnlineInput = {
 export enum TextOnlineNoteAction {
   Add = 'ADD',
   Delete = 'DELETE',
-  Edit = 'EDIT',
+  Edit = 'EDIT'
 }
 
 /** Типы сортировки сообщений текстовых трансляций */
@@ -3251,7 +3238,7 @@ export enum TextOnlineNoteOrder {
   MinuteAsc = 'MINUTE_ASC',
   MinuteDesc = 'MINUTE_DESC',
   New = 'NEW',
-  Old = 'OLD',
+  Old = 'OLD'
 }
 
 /** Типы сообщений текстовой трансляции */
@@ -3291,7 +3278,7 @@ export enum TextOnlineNoteType {
   /** «Мишень»/«Цель» в биатлонных трансляциях */
   Target = 'TARGET',
   /** «Желтая карточка» в футбольных трансляциях */
-  YellowCard = 'YELLOW_CARD',
+  YellowCard = 'YELLOW_CARD'
 }
 
 export type TextOnlineUnbindOnlineInput = {
@@ -3303,7 +3290,7 @@ export type TextOnlineUnbindOnlineInput = {
 
 export enum TopTennisRating {
   Atp = 'ATP',
-  Wta = 'WTA',
+  Wta = 'WTA'
 }
 
 export type UpdatableCyberPlayer = {
@@ -3397,7 +3384,7 @@ export type UpdateRelatedDocsInput = {
 };
 
 export enum UpdateStoryErrorCode {
-  ImageRequired = 'IMAGE_REQUIRED',
+  ImageRequired = 'IMAGE_REQUIRED'
 }
 
 export type UploadImageInput = {
@@ -3418,11 +3405,11 @@ export type UploadUserPictureInput = {
 };
 
 export enum UserImageObjectType {
-  UserAvatar = 'USER_AVATAR',
+  UserAvatar = 'USER_AVATAR'
 }
 
 export enum UserImageType {
-  Main = 'MAIN',
+  Main = 'MAIN'
 }
 
 export type UserLeagueAddSquadInput = {
@@ -3439,7 +3426,7 @@ export enum UserPhoneConfirmErrorCode {
   PhoneNoConfirmation = 'PHONE_NO_CONFIRMATION',
   PhoneUsed = 'PHONE_USED',
   PhoneWrongCode = 'PHONE_WRONG_CODE',
-  WrongPhone = 'WRONG_PHONE',
+  WrongPhone = 'WRONG_PHONE'
 }
 
 export enum UserRule {
@@ -3486,7 +3473,7 @@ export enum UserRule {
   UserTestSessions = 'USER_TEST_SESSIONS',
   UsePlusGun = 'USE_PLUS_GUN',
   UsePusher = 'USE_PUSHER',
-  UseStopWordsPosts = 'USE_STOP_WORDS_POSTS',
+  UseStopWordsPosts = 'USE_STOP_WORDS_POSTS'
 }
 
 export type UsersWithRulesInput = {
@@ -3498,7 +3485,7 @@ export type UsersWithRulesInput = {
 export enum VoteResult {
   Draw = 'draw',
   First = 'first',
-  Second = 'second',
+  Second = 'second'
 }
 
 export type VoteSeriesResultInput = {
@@ -3509,13 +3496,13 @@ export type VoteSeriesResultInput = {
 export enum WinterOlympicEventStatus {
   Closed = 'CLOSED',
   Live = 'LIVE',
-  NotStarted = 'NOT_STARTED',
+  NotStarted = 'NOT_STARTED'
 }
 
 export enum WinterOlympicFilterMedalType {
   BronzeFilterMedalType = 'BRONZE_FILTER_MEDAL_TYPE',
   GoldFilterMedalType = 'GOLD_FILTER_MEDAL_TYPE',
-  MedalsFilterMedalType = 'MEDALS_FILTER_MEDAL_TYPE',
+  MedalsFilterMedalType = 'MEDALS_FILTER_MEDAL_TYPE'
 }
 
 export type WinterOlympicGameInput = {
@@ -3524,31 +3511,31 @@ export type WinterOlympicGameInput = {
 
 export enum WinterOlympicHeaderType {
   OlympicHeader = 'OLYMPIC_HEADER',
-  RussianOlympicTeamHeader = 'RUSSIAN_OLYMPIC_TEAM_HEADER',
+  RussianOlympicTeamHeader = 'RUSSIAN_OLYMPIC_TEAM_HEADER'
 }
 
 export enum WinterOlympicMedalStatus {
   Medals = 'MEDALS',
   NoCompetition = 'NO_COMPETITION',
-  NoMedals = 'NO_MEDALS',
+  NoMedals = 'NO_MEDALS'
 }
 
 export enum WinterOlympicMedalType {
   Bronze = 'BRONZE',
   Gold = 'GOLD',
   Silver = 'SILVER',
-  UndefinedMedalType = 'UNDEFINED_MEDAL_TYPE',
+  UndefinedMedalType = 'UNDEFINED_MEDAL_TYPE'
 }
 
 export enum WinterOlympicParticipantType {
   Person = 'PERSON',
   Team = 'TEAM',
-  UndefinedParticipantType = 'UNDEFINED_PARTICIPANT_TYPE',
+  UndefinedParticipantType = 'UNDEFINED_PARTICIPANT_TYPE'
 }
 
 export enum WinterOlympicPersonGender {
   Female = 'FEMALE',
-  Male = 'MALE',
+  Male = 'MALE'
 }
 
 export type WinterOlympicPictureLogoInput = {
@@ -3579,14 +3566,14 @@ export type WinterOlympicsFiveEventsInput = {
 
 export enum WinterOlympicsFiveEventsType {
   LastFive = 'LAST_FIVE',
-  NextFive = 'NEXT_FIVE',
+  NextFive = 'NEXT_FIVE'
 }
 
 export enum WinterOlympicsMedalType {
   Bronze = 'BRONZE',
   Gold = 'GOLD',
   None = 'NONE',
-  Silver = 'SILVER',
+  Silver = 'SILVER'
 }
 
 export type AddComplaintInput = {
@@ -3641,12 +3628,12 @@ export enum AdminAction {
   /** Доступ к управлению пользователями */
   AdminAccessUsers = 'ADMIN_ACCESS_USERS',
   /** Доступ к управлению правами пользователей */
-  AdminAccessUsersRules = 'ADMIN_ACCESS_USERS_RULES',
+  AdminAccessUsersRules = 'ADMIN_ACCESS_USERS_RULES'
 }
 
 export enum AutoposterDocumentType {
   Post = 'POST',
-  UserNews = 'USER_NEWS',
+  UserNews = 'USER_NEWS'
 }
 
 export type AutoposterUploadInput = {
@@ -3665,7 +3652,7 @@ export enum BanLevelEnum {
   Fourth = 'FOURTH',
   Second = 'SECOND',
   Third = 'THIRD',
-  Unban = 'UNBAN',
+  Unban = 'UNBAN'
 }
 
 export enum BanObjectClass {
@@ -3683,7 +3670,7 @@ export enum BanObjectClass {
   Rumour = 'RUMOUR',
   Status2 = 'STATUS2',
   StopWord = 'STOP_WORD',
-  UserNews = 'USER_NEWS',
+  UserNews = 'USER_NEWS'
 }
 
 export enum BlogPostRole {
@@ -3696,7 +3683,7 @@ export enum BlogPostRole {
   /**  владелец блога  */
   BlogOwner = 'BLOG_OWNER',
   /**  коммент не к посту  */
-  Undefined = 'UNDEFINED',
+  Undefined = 'UNDEFINED'
 }
 
 export type BroadcastInput = {
@@ -3708,7 +3695,7 @@ export enum CardType {
   Master = 'MASTER',
   Mir = 'MIR',
   Undefined = 'UNDEFINED',
-  Visa = 'VISA',
+  Visa = 'VISA'
 }
 
 export type ChatMessageComplaintInput = {
@@ -3719,13 +3706,13 @@ export type ChatMessageComplaintInput = {
 
 export enum ClubType {
   Club = 'CLUB',
-  NationalTeam = 'NATIONAL_TEAM',
+  NationalTeam = 'NATIONAL_TEAM'
 }
 
 /** Действия над комментариями */
 export enum CommentAction {
   Add = 'ADD',
-  Edit = 'EDIT',
+  Edit = 'EDIT'
 }
 
 /** Доступные действия над комментариями */
@@ -3747,20 +3734,20 @@ export enum CommentEnableAction {
   RemoveFromBlacklist = 'REMOVE_FROM_BLACKLIST',
   UnbanInBlog = 'UNBAN_IN_BLOG',
   UnbanInPosts = 'UNBAN_IN_POSTS',
-  Unpin = 'UNPIN',
+  Unpin = 'UNPIN'
 }
 
 /** Статусы комментариев */
 export enum CommentStatus {
   Active = 'ACTIVE',
   All = 'ALL',
-  Deleted = 'DELETED',
+  Deleted = 'DELETED'
 }
 
 /** Типы комментариев */
 export enum CommentType {
   All = 'ALL',
-  Top = 'TOP',
+  Top = 'TOP'
 }
 
 /** Типы сортировки комментариев */
@@ -3769,18 +3756,18 @@ export enum CommentsOrder {
   Best = 'BEST',
   New = 'NEW',
   Old = 'OLD',
-  Rating = 'RATING',
+  Rating = 'RATING'
 }
 
 export enum ComplaintContentStatus {
   Approved = 'APPROVED',
   Declined = 'DECLINED',
-  Open = 'OPEN',
+  Open = 'OPEN'
 }
 
 export enum ComplaintContentsOrder {
   ComplaintCountDesc = 'COMPLAINT_COUNT_DESC',
-  LastComplaintDesc = 'LAST_COMPLAINT_DESC',
+  LastComplaintDesc = 'LAST_COMPLAINT_DESC'
 }
 
 export enum ComplaintType {
@@ -3796,7 +3783,7 @@ export enum ComplaintType {
   Swears = 'SWEARS',
   /**  Систематический оффтом  */
   SystematicOfftop = 'SYSTEMATIC_OFFTOP',
-  Threats = 'THREATS',
+  Threats = 'THREATS'
 }
 
 /** Типы контрактов */
@@ -3804,13 +3791,13 @@ export enum ContractType {
   Man = 'MAN',
   Unspecified = 'UNSPECIFIED',
   Women = 'WOMEN',
-  Youth = 'YOUTH',
+  Youth = 'YOUTH'
 }
 
 /** Формат картинок для флага */
 export enum CountryImageFormat {
   Png = 'PNG',
-  Svg = 'SVG',
+  Svg = 'SVG'
 }
 
 export type CreateCampaignInput = {
@@ -3845,7 +3832,7 @@ export enum DocumentKind {
   Post = 'POST',
   Status = 'STATUS',
   UserNews = 'USER_NEWS',
-  Video = 'VIDEO',
+  Video = 'VIDEO'
 }
 
 export type EditCampaignInput = {
@@ -3862,7 +3849,7 @@ export type EditCampaignInput = {
 /** Источники/редакторы для поста */
 export enum EditSource {
   Admin = 'ADMIN',
-  Wysiwyg = 'WYSIWYG',
+  Wysiwyg = 'WYSIWYG'
 }
 
 export type EntityByUrlInput = {
@@ -3871,7 +3858,7 @@ export type EntityByUrlInput = {
 
 export enum ExpandTournaments {
   All = 'ALL',
-  First5 = 'FIRST5',
+  First5 = 'FIRST5'
 }
 
 /** Регион популярности */
@@ -3881,7 +3868,7 @@ export enum GeoCodePopular {
   /** Россия ONBOARDING */
   OnboardingRu = 'ONBOARDING_RU',
   /** Россия */
-  Ru = 'RU',
+  Ru = 'RU'
 }
 
 export type GetLeagueByInviteToken = {
@@ -3921,7 +3908,7 @@ export type GetWidgetPointsAndRanking = {
 export enum GraphMedal {
   MedalBronze = 'MEDAL_BRONZE',
   MedalGold = 'MEDAL_GOLD',
-  MedalSilver = 'MEDAL_SILVER',
+  MedalSilver = 'MEDAL_SILVER'
 }
 
 export enum GraphStageName {
@@ -3938,7 +3925,7 @@ export enum GraphStageName {
   ThreeRdQualifyingRound = 'THREE_RD_QUALIFYING_ROUND',
   TwoNdQualifyingRound = 'TWO_ND_QUALIFYING_ROUND',
   TwoRdQualifyingRound = 'TWO_RD_QUALIFYING_ROUND',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export type HistoryCampaignsInput = {
@@ -3958,7 +3945,7 @@ export enum HockeyEventType {
   PenaltyShotMiss = 'PENALTY_SHOT_MISS',
   PeriodStart = 'PERIOD_START',
   Unknown = 'UNKNOWN',
-  UpdateCurrentTime = 'UPDATE_CURRENT_TIME',
+  UpdateCurrentTime = 'UPDATE_CURRENT_TIME'
 }
 
 /** Период */
@@ -3973,7 +3960,7 @@ export enum HockeyPeriod {
   Period_2 = 'PERIOD_2',
   Period_3 = 'PERIOD_3',
   PostMatch = 'POST_MATCH',
-  PreMatch = 'PRE_MATCH',
+  PreMatch = 'PRE_MATCH'
 }
 
 export type HockeySearchInput = {
@@ -3990,34 +3977,34 @@ export enum HockeySearchType {
   /** Команда */
   HockeyTeam = 'HOCKEY_TEAM',
   /** Турниры */
-  HockeyTournament = 'HOCKEY_TOURNAMENT',
+  HockeyTournament = 'HOCKEY_TOURNAMENT'
 }
 
 export enum HockeyTeamStrength {
   Even = 'EVEN',
   Powerplay = 'POWERPLAY',
-  Shorthanded = 'SHORTHANDED',
+  Shorthanded = 'SHORTHANDED'
 }
 
 /** Типы событий */
 export enum HockeyVersusWinPeriod {
   Overtime = 'OVERTIME',
   RegularTime = 'REGULAR_TIME',
-  Shootouts = 'SHOOTOUTS',
+  Shootouts = 'SHOOTOUTS'
 }
 
 export enum HruApiEntityKind {
   Match = 'MATCH',
   News = 'NEWS',
   Post = 'POST',
-  Status = 'STATUS',
+  Status = 'STATUS'
 }
 
 export enum HruApiEntitySport {
   Basketball = 'BASKETBALL',
   Football = 'FOOTBALL',
   Hockey = 'HOCKEY',
-  Tennis = 'TENNIS',
+  Tennis = 'TENNIS'
 }
 
 export type InitCampaignOrderInput = {
@@ -4047,7 +4034,7 @@ export enum LineupSort {
   GoalAsc = 'GOAL_ASC',
   GoalDesc = 'GOAL_DESC',
   PointsAsc = 'POINTS_ASC',
-  PointsDesc = 'POINTS_DESC',
+  PointsDesc = 'POINTS_DESC'
 }
 
 export type ListBannedCampaignInput = {
@@ -4122,14 +4109,14 @@ export enum MatchStatus {
   /** The start of the match has been temporarily delayed */
   StartDelayed = 'START_DELAYED',
   /** default */
-  Undefined = 'UNDEFINED',
+  Undefined = 'UNDEFINED'
 }
 
 export enum MatchTeamType {
   All = 'ALL',
   Away = 'AWAY',
   Home = 'HOME',
-  Tournament = 'TOURNAMENT',
+  Tournament = 'TOURNAMENT'
 }
 
 /** Параметры для запроса матчи за день */
@@ -4156,7 +4143,7 @@ export enum MatchesByDateSort {
   /** сортировка по убыванию по началу матча */
   DescScheduledAt = 'DESC_SCHEDULED_AT',
   /** сортировка по убыванию приоритета матчей */
-  Priority = 'PRIORITY',
+  Priority = 'PRIORITY'
 }
 
 export type McCustomSettingsFilter = {
@@ -4193,24 +4180,24 @@ export enum McKindOfSport {
   TeaserCs = 'TEASER_CS',
   TeaserDota = 'TEASER_DOTA',
   TeaserFootball = 'TEASER_FOOTBALL',
-  TeaserIcehockey = 'TEASER_ICEHOCKEY',
+  TeaserIcehockey = 'TEASER_ICEHOCKEY'
 }
 
 export enum MessageAction {
   Add = 'ADD',
-  Edit = 'EDIT',
+  Edit = 'EDIT'
 }
 
 /**  фильтры (ALL - все новости, MAIN - только главные)  */
 export enum NewsFilter {
   All = 'ALL',
-  Main = 'MAIN',
+  Main = 'MAIN'
 }
 
 /** Варианты подбора новости */
 export enum NextNewsVariant {
   ChronMain = 'CHRON_MAIN',
-  ChronSection = 'CHRON_SECTION',
+  ChronSection = 'CHRON_SECTION'
 }
 
 /** Варианты подбора поста */
@@ -4218,7 +4205,7 @@ export enum NextPostVariant {
   ChronMain = 'CHRON_MAIN',
   ChronSection = 'CHRON_SECTION',
   LikeRecsys = 'LIKE_RECSYS',
-  Trans4Rec = 'TRANS4REC',
+  Trans4Rec = 'TRANS4REC'
 }
 
 export enum NotificationKind {
@@ -4237,7 +4224,7 @@ export enum NotificationKind {
   UserCommentAnswerChunk = 'USER_COMMENT_ANSWER_CHUNK',
   UserCommentChunk = 'USER_COMMENT_CHUNK',
   UserStatusShare = 'USER_STATUS_SHARE',
-  UserSubscribed = 'USER_SUBSCRIBED',
+  UserSubscribed = 'USER_SUBSCRIBED'
 }
 
 export enum ObjectClass {
@@ -4253,17 +4240,17 @@ export enum ObjectClass {
   Post = 'POST',
   Status = 'STATUS',
   UserNews = 'USER_NEWS',
-  Video = 'VIDEO',
+  Video = 'VIDEO'
 }
 
 export enum ObjectEditEventAction {
   EditorAdd = 'EDITOR_ADD',
-  EditorDel = 'EDITOR_DEL',
+  EditorDel = 'EDITOR_DEL'
 }
 
 export enum OrderDirection {
   Asc = 'ASC',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 export enum PageSubtype {
@@ -4316,7 +4303,7 @@ export enum PageSubtype {
   Teams = 'TEAMS',
   Tickets = 'TICKETS',
   Tournament = 'TOURNAMENT',
-  Video = 'VIDEO',
+  Video = 'VIDEO'
 }
 
 export enum PageType {
@@ -4342,7 +4329,7 @@ export enum PageType {
   PredictorTournament = 'PREDICTOR_TOURNAMENT',
   Short = 'SHORT',
   TagOther = 'TAG_OTHER',
-  TagTournament = 'TAG_TOURNAMENT',
+  TagTournament = 'TAG_TOURNAMENT'
 }
 
 export type PickedTagInput = {
@@ -4357,20 +4344,20 @@ export enum PlatformType {
   Android = 'ANDROID',
   DesktopWeb = 'DESKTOP_WEB',
   Ios = 'IOS',
-  MobileWeb = 'MOBILE_WEB',
+  MobileWeb = 'MOBILE_WEB'
 }
 
 export enum PlayerFoot {
   Both = 'BOTH',
   Left = 'LEFT',
   None = 'NONE',
-  Right = 'RIGHT',
+  Right = 'RIGHT'
 }
 
 export enum PlayerGender {
   Female = 'FEMALE',
   Male = 'MALE',
-  None = 'NONE',
+  None = 'NONE'
 }
 
 /** Форматы картинок */
@@ -4378,36 +4365,36 @@ export enum PlayerImageFormat {
   /** Маленькая */
   Avatar = 'AVATAR',
   /** Большая */
-  Fullhd = 'FULLHD',
+  Fullhd = 'FULLHD'
 }
 
 export enum PlayerStatus {
   Active = 'ACTIVE',
   Died = 'DIED',
   None = 'NONE',
-  Retired = 'RETIRED',
+  Retired = 'RETIRED'
 }
 
 /** Доступные действия над опросом */
 export enum PollActions {
-  Edit = 'EDIT',
+  Edit = 'EDIT'
 }
 
 export enum PollCustomType {
   Bookmaker = 'BOOKMAKER',
   Branded = 'BRANDED',
-  Default = 'DEFAULT',
+  Default = 'DEFAULT'
 }
 
 export enum PollState {
   Active = 'ACTIVE',
   Ended = 'ENDED',
-  NotStarted = 'NOT_STARTED',
+  NotStarted = 'NOT_STARTED'
 }
 
 export enum PollStatus {
   Active = 'ACTIVE',
-  All = 'ALL',
+  All = 'ALL'
 }
 
 /** Доступные действия над постом */
@@ -4419,14 +4406,14 @@ export enum PostEnableAction {
   HideFromSection = 'HIDE_FROM_SECTION',
   Restore = 'RESTORE',
   Show = 'SHOW',
-  ShowInSection = 'SHOW_IN_SECTION',
+  ShowInSection = 'SHOW_IN_SECTION'
 }
 
 /** Вариант отображения (заглушки или фактоиды) */
 export enum PredictionFactoidsDisplay {
   Factoids = 'FACTOIDS',
   InsufficientData = 'INSUFFICIENT_DATA',
-  NoRounds = 'NO_ROUNDS',
+  NoRounds = 'NO_ROUNDS'
 }
 
 export type PredictionGetSeasonsInput = {
@@ -4445,14 +4432,14 @@ export type PredictionItemInput = {
 export enum PredictionLabelResult {
   Fail = 'FAIL',
   NotCounted = 'NOT_COUNTED',
-  Success = 'SUCCESS',
+  Success = 'SUCCESS'
 }
 
 export enum PredictionRoundStatus {
   Active = 'ACTIVE',
   Completed = 'COMPLETED',
   Live = 'LIVE',
-  NotPrepared = 'NOT_PREPARED',
+  NotPrepared = 'NOT_PREPARED'
 }
 
 export type PredictionRoundsInput = {
@@ -4466,13 +4453,13 @@ export type PredictionSyncInput = {
 
 export enum PredictorCompetitionType {
   Round = 'ROUND',
-  Season = 'SEASON',
+  Season = 'SEASON'
 }
 
 export enum PredictorSeasonSource {
   Hru = 'HRU',
   Id = 'ID',
-  TagId = 'TAG_ID',
+  TagId = 'TAG_ID'
 }
 
 /** Типы продуктов */
@@ -4482,17 +4469,17 @@ export enum ProductType {
   /** Sports.ru */
   Sportsru = 'SPORTSRU',
   /** Международные проекты */
-  Tribuna = 'TRIBUNA',
+  Tribuna = 'TRIBUNA'
 }
 
 export enum RankType {
   Atp = 'ATP',
-  Wta = 'WTA',
+  Wta = 'WTA'
 }
 
 export enum RateAction {
   Minus = 'MINUS',
-  Plus = 'PLUS',
+  Plus = 'PLUS'
 }
 
 export enum RateObjectClass {
@@ -4505,33 +4492,33 @@ export enum RateObjectClass {
   Poll = 'POLL',
   Post = 'POST',
   Status = 'STATUS',
-  Usernews = 'USERNEWS',
+  Usernews = 'USERNEWS'
 }
 
 export enum RateResultType {
   Change = 'CHANGE',
   Error = 'ERROR',
   New = 'NEW',
-  Revoke = 'REVOKE',
+  Revoke = 'REVOKE'
 }
 
 /** Фильтр по рейтингу */
 export enum RatingFilter {
   Any = 'ANY',
   Negative = 'NEGATIVE',
-  Positive = 'POSITIVE',
+  Positive = 'POSITIVE'
 }
 
 export enum RecommendationDocFilter {
   All = 'ALL',
   News = 'NEWS',
-  Post = 'POST',
+  Post = 'POST'
 }
 
 /** Типы судей */
 export enum RefereeTypeFilter {
   /** Главный */
-  Main = 'main',
+  Main = 'main'
 }
 
 /**  через что регистрировался пользователь  */
@@ -4542,7 +4529,7 @@ export enum RegistrationSources {
   Google = 'GOOGLE',
   Steam = 'STEAM',
   Vk = 'VK',
-  Yandex = 'YANDEX',
+  Yandex = 'YANDEX'
 }
 
 export type RelatedDoc = {
@@ -4555,7 +4542,7 @@ export enum ResourceName {
   ButtonImage = 'BUTTON_IMAGE',
   ButtonUrl = 'BUTTON_URL',
   PlayerImage = 'PLAYER_IMAGE',
-  PlayerUrl = 'PLAYER_URL',
+  PlayerUrl = 'PLAYER_URL'
 }
 
 export enum SearchDocumentType {
@@ -4564,7 +4551,7 @@ export enum SearchDocumentType {
   News = 'NEWS',
   Post = 'POST',
   Tag = 'TAG',
-  User = 'USER',
+  User = 'USER'
 }
 
 /** Запрос на поиск */
@@ -4584,7 +4571,7 @@ export enum SearchType {
   /** Турниры */
   Tournament = 'TOURNAMENT',
   /** Стадионы */
-  Venue = 'VENUE',
+  Venue = 'VENUE'
 }
 
 export enum SettingsField {
@@ -4592,7 +4579,7 @@ export enum SettingsField {
   FieldDonationsEnabled = 'FIELD_DONATIONS_ENABLED',
   FieldMobileCommentsOrder = 'FIELD_MOBILE_COMMENTS_ORDER',
   FieldShortSportsOnboardingDone = 'FIELD_SHORT_SPORTS_ONBOARDING_DONE',
-  FieldWysiwygVersion = 'FIELD_WYSIWYG_VERSION',
+  FieldWysiwygVersion = 'FIELD_WYSIWYG_VERSION'
 }
 
 export enum SportsType {
@@ -4603,7 +4590,7 @@ export enum SportsType {
   Football = 'FOOTBALL',
   Hockey = 'HOCKEY',
   Main = 'MAIN',
-  Tennis = 'TENNIS',
+  Tennis = 'TENNIS'
 }
 
 /** Типы этапов */
@@ -4615,7 +4602,7 @@ export enum StageType {
   /** Квалификация */
   QualificationStage = 'QUALIFICATION_STAGE',
   /** Стандартный */
-  RegularStage = 'REGULAR_STAGE',
+  RegularStage = 'REGULAR_STAGE'
 }
 
 /** Типы достижений */
@@ -4625,21 +4612,21 @@ export enum StatAchievementList {
   /** Лучший бомбардир */
   TopScorer = 'TOP_SCORER',
   /** Частый нарушитель */
-  ToughGuy = 'TOUGH_GUY',
+  ToughGuy = 'TOUGH_GUY'
 }
 
 export enum StatBettingFactoidSide {
   Away = 'AWAY',
   Both = 'BOTH',
   Home = 'HOME',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 /** Типы фактоидов ставок */
 export enum StatBettingFactoidType {
   IndividualTotal = 'INDIVIDUAL_TOTAL',
   Outcome = 'OUTCOME',
-  UnknownBettingFactoidType = 'UNKNOWN_BETTING_FACTOID_TYPE',
+  UnknownBettingFactoidType = 'UNKNOWN_BETTING_FACTOID_TYPE'
 }
 
 /**
@@ -4653,7 +4640,7 @@ export enum StatCountryIdList {
   /** ISO alpha-3 code (неполное соответствие ISO 3166) */
   Code = 'CODE',
   /** ISO alpha-2 code */
-  Iso2 = 'ISO2',
+  Iso2 = 'ISO2'
 }
 
 /** Причины получения карт */
@@ -4681,7 +4668,7 @@ export enum StatEnumCardReason {
   Simulation = 'SIMULATION',
   Spitting = 'SPITTING',
   TimeWasting = 'TIME_WASTING',
-  ViolentConduct = 'VIOLENT_CONDUCT',
+  ViolentConduct = 'VIOLENT_CONDUCT'
 }
 
 /** Типы статистики по команде */
@@ -4705,7 +4692,7 @@ export enum StatEnumTeamStatsType {
   Substitutions = 'SUBSTITUTIONS',
   ThrowIns = 'THROW_INS',
   YellowCards = 'YELLOW_CARDS',
-  YellowRedCards = 'YELLOW_RED_CARDS',
+  YellowRedCards = 'YELLOW_RED_CARDS'
 }
 
 /** Типы событий */
@@ -4766,7 +4753,7 @@ export enum StatEnumTypeTimeline {
   VideoAssistantRefereeOver = 'VIDEO_ASSISTANT_REFEREE_OVER',
   Xg = 'XG',
   YellowCard = 'YELLOW_CARD',
-  YellowRedCard = 'YELLOW_RED_CARD',
+  YellowRedCard = 'YELLOW_RED_CARD'
 }
 
 export type StatHead2HeadInput = {
@@ -4779,13 +4766,13 @@ export type StatHead2HeadInput = {
 export enum StatHockeyBettingFactoidType {
   IndividualTotal = 'INDIVIDUAL_TOTAL',
   Outcome = 'OUTCOME',
-  UnknownBettingFactoidType = 'UNKNOWN_BETTING_FACTOID_TYPE',
+  UnknownBettingFactoidType = 'UNKNOWN_BETTING_FACTOID_TYPE'
 }
 
 export enum StatHockeySeriesWinner {
   Draw = 'DRAW',
   Team1 = 'TEAM1',
-  Team2 = 'TEAM2',
+  Team2 = 'TEAM2'
 }
 
 /** Типы периодов */
@@ -4795,7 +4782,7 @@ export enum StatHockeyTypePeriodScore {
   Period2 = 'PERIOD2',
   Period3 = 'PERIOD3',
   Shootout = 'SHOOTOUT',
-  Total = 'TOTAL',
+  Total = 'TOTAL'
 }
 
 export enum StatInjuryType {
@@ -4807,7 +4794,7 @@ export enum StatInjuryType {
   Neck = 'NECK',
   Poisoning = 'POISONING',
   Undefined = 'UNDEFINED',
-  Virus = 'VIRUS',
+  Virus = 'VIRUS'
 }
 
 export type StatInputRankingPlayerStat = {
@@ -4836,7 +4823,7 @@ export enum StatListSort {
   /** Возрастание */
   Asc = 'ASC',
   /** Убывание */
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 /** Виды идентификаторов */
@@ -4846,7 +4833,7 @@ export enum StatMlMatchPredictionSort {
   /** Зрелищности */
   Spectacularity = 'SPECTACULARITY',
   /** По желтым карточкам */
-  YellowCards = 'YELLOW_CARDS',
+  YellowCards = 'YELLOW_CARDS'
 }
 
 /** Сортировки в пагинации */
@@ -4858,27 +4845,27 @@ export enum StatMatchListSort {
   /** Убывание */
   Desc = 'DESC',
   /** сортировка по убыванию по началу матча */
-  DescScheduledAt = 'DESC_SCHEDULED_AT',
+  DescScheduledAt = 'DESC_SCHEDULED_AT'
 }
 
 /** Состояние матча */
 export enum StatMatchStatus {
   Live = 'LIVE',
-  NotStarted = 'NOT_STARTED',
+  NotStarted = 'NOT_STARTED'
 }
 
 export enum StatMatchStatusSort {
   Live = 'LIVE',
   Next = 'NEXT',
   Prev = 'PREV',
-  PrevWithoutLive = 'PREV_WITHOUT_LIVE',
+  PrevWithoutLive = 'PREV_WITHOUT_LIVE'
 }
 
 /** Метод гола */
 export enum StatMethodScore {
   None = 'NONE',
   OwnGoal = 'OWN_GOAL',
-  Penalty = 'PENALTY',
+  Penalty = 'PENALTY'
 }
 
 /** Члены команды */
@@ -4886,14 +4873,14 @@ export enum StatOccupationList {
   /** Менеджер (тренер) */
   Manager = 'MANAGER',
   /** Игроки */
-  Player = 'PLAYER',
+  Player = 'PLAYER'
 }
 
 /** Типы результата для ставки Исход */
 export enum StatOddOneXTwoResultType {
   Away = 'AWAY',
   Draw = 'DRAW',
-  Home = 'HOME',
+  Home = 'HOME'
 }
 
 /** Виды промаха */
@@ -4903,7 +4890,7 @@ export enum StatOutcome {
   /** Мимо */
   Miss = 'MISS',
   /** Штанга */
-  Post = 'POST',
+  Post = 'POST'
 }
 
 /** Статус пенальти */
@@ -4913,7 +4900,7 @@ export enum StatPenaltyShootoutStatus {
   /** Ещё не пробит */
   NotTakenYet = 'NOT_TAKEN_YET',
   /** Реализован */
-  Scored = 'SCORED',
+  Scored = 'SCORED'
 }
 
 /** Период */
@@ -4939,7 +4926,7 @@ export enum StatPeriodId {
   /** До матча */
   PreMatch = 'PRE_MATCH',
   /** Второй тайм */
-  SecondHalf = 'SECOND_HALF',
+  SecondHalf = 'SECOND_HALF'
 }
 
 /** Сортировки в статистике */
@@ -4953,7 +4940,7 @@ export enum StatPlayerStatSort {
   /** Бомбардиры (по голам) */
   Score = 'SCORE',
   /** По желтым карточкам */
-  YellowCards = 'YELLOW_CARDS',
+  YellowCards = 'YELLOW_CARDS'
 }
 
 /** Виды продуктов */
@@ -4961,7 +4948,7 @@ export enum StatProduct {
   /** Международные проекты */
   International = 'INTERNATIONAL',
   /** Sports.ru */
-  Sports = 'SPORTS',
+  Sports = 'SPORTS'
 }
 
 /** Команда */
@@ -4969,7 +4956,7 @@ export enum StatQualifierTeam {
   /** Гостевая */
   Away = 'AWAY',
   /** Домашняя */
-  Home = 'HOME',
+  Home = 'HOME'
 }
 
 /** Позиции игроков */
@@ -4989,7 +4976,7 @@ export enum StatRadarPositionPlayer {
   /** Правый полузащитник */
   RightWinger = 'RIGHT_WINGER',
   /** Нападающий */
-  Striker = 'STRIKER',
+  Striker = 'STRIKER'
 }
 
 export enum StatRankingAttribute {
@@ -5030,7 +5017,7 @@ export enum StatRankingAttribute {
   /** Успешный дриблинг за игру */
   WonContestsPerGame = 'WON_CONTESTS_PER_GAME',
   /** Отборы за игру */
-  WonTacklesPerGame = 'WON_TACKLES_PER_GAME',
+  WonTacklesPerGame = 'WON_TACKLES_PER_GAME'
 }
 
 export enum StatRankingTeamAttribute {
@@ -5053,7 +5040,7 @@ export enum StatRankingTeamAttribute {
   /** Количество желтых карточек */
   TotalYellowCard = 'TOTAL_YELLOW_CARD',
   /** Количество желтых карточек + (Количество красных карточек x2) */
-  ToughTeam = 'TOUGH_TEAM',
+  ToughTeam = 'TOUGH_TEAM'
 }
 
 /** Тип судьи */
@@ -5069,7 +5056,7 @@ export enum StatRefereeRole {
   /** VAR */
   Var = 'VAR',
   /** VAR assistant official */
-  VarAssistant = 'VAR_ASSISTANT',
+  VarAssistant = 'VAR_ASSISTANT'
 }
 
 /** Результат */
@@ -5079,13 +5066,13 @@ export enum StatResult {
   /** Поражение */
   Lose = 'LOSE',
   /** Победа */
-  Win = 'WIN',
+  Win = 'WIN'
 }
 
 export enum StatSortPlayerStat {
   Asc = 'ASC',
   Default = 'DEFAULT',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 /** Виды идентификаторов */
@@ -5109,12 +5096,12 @@ export enum StatSourceList {
   /** Tag */
   Tag = 'TAG',
   /** Хабы [Tribuna.com](https://tribuna.com) */
-  TribunaHub = 'TRIBUNA_HUB',
+  TribunaHub = 'TRIBUNA_HUB'
 }
 
 export enum StatSuspensionType {
   Disqualification = 'DISQUALIFICATION',
-  PlayForTheNationalTeam = 'PLAY_FOR_THE_NATIONAL_TEAM',
+  PlayForTheNationalTeam = 'PLAY_FOR_THE_NATIONAL_TEAM'
 }
 
 /** Сортировки в статистике по командам */
@@ -5134,13 +5121,13 @@ export enum StatTeamStatSort {
   /** Процент удачных отборов */
   TotalTacklePct = 'TOTAL_TACKLE_PCT',
   /** Количество желтых карточек */
-  TotalYellowCard = 'TOTAL_YELLOW_CARD',
+  TotalYellowCard = 'TOTAL_YELLOW_CARD'
 }
 
 /** Типы фактоидов ставок */
 export enum StatTennisBettingFactoidType {
   Outcome = 'OUTCOME',
-  UnknownBettingFactoidType = 'UNKNOWN_BETTING_FACTOID_TYPE',
+  UnknownBettingFactoidType = 'UNKNOWN_BETTING_FACTOID_TYPE'
 }
 
 /** Фильтр для стат */
@@ -5176,7 +5163,7 @@ export enum StatTypePeriodScore {
   /** Серия пенальти */
   Penalties = 'PENALTIES',
   /** Основное время */
-  RegularPeriod = 'REGULAR_PERIOD',
+  RegularPeriod = 'REGULAR_PERIOD'
 }
 
 /** Типы позиций */
@@ -5188,13 +5175,13 @@ export enum StatTypePlayer {
   /** Вратарь */
   Goalkeeper = 'GOALKEEPER',
   /** Полузащитник */
-  Midfielder = 'MIDFIELDER',
+  Midfielder = 'MIDFIELDER'
 }
 
 /** Решение по VAR */
 export enum StatVarDecision {
   Cancelled = 'CANCELLED',
-  Confirmed = 'CONFIRMED',
+  Confirmed = 'CONFIRMED'
 }
 
 /** Победитель */
@@ -5204,7 +5191,7 @@ export enum StatWinner {
   /** Ничья */
   Draw = 'DRAW',
   /** Домашняя команда */
-  Home = 'HOME',
+  Home = 'HOME'
 }
 
 /** Форматы картинок */
@@ -5214,7 +5201,7 @@ export enum TeamImageFormat {
   /** PNG/JPG логотип */
   Logo = 'LOGO',
   /** SVG-логотип */
-  Svg = 'SVG',
+  Svg = 'SVG'
 }
 
 export enum TennisCourtType {
@@ -5222,7 +5209,7 @@ export enum TennisCourtType {
   Clay = 'CLAY',
   Grass = 'GRASS',
   Hard = 'HARD',
-  Unspecified = 'UNSPECIFIED',
+  Unspecified = 'UNSPECIFIED'
 }
 
 export type TennisEventFilter = {
@@ -5233,13 +5220,13 @@ export enum TennisGender {
   Men = 'MEN',
   Mixed = 'MIXED',
   Unspecified = 'UNSPECIFIED',
-  Women = 'WOMEN',
+  Women = 'WOMEN'
 }
 
 export enum TennisMatchFormat {
   Double = 'DOUBLE',
   Single = 'SINGLE',
-  Unspecified = 'UNSPECIFIED',
+  Unspecified = 'UNSPECIFIED'
 }
 
 export enum TennisMatchStatus {
@@ -5253,7 +5240,7 @@ export enum TennisMatchStatus {
   Retired = 'RETIRED',
   Suspended = 'SUSPENDED',
   Unspecified = 'UNSPECIFIED',
-  Walkover = 'WALKOVER',
+  Walkover = 'WALKOVER'
 }
 
 /** Параметры для запроса матчи за день */
@@ -5279,7 +5266,7 @@ export enum TennisPeriod {
   Set3 = 'SET3',
   Set4 = 'SET4',
   Set5 = 'SET5',
-  SetBreak = 'SET_BREAK',
+  SetBreak = 'SET_BREAK'
 }
 
 export type TennisRankingCountryListInput = {
@@ -5318,7 +5305,7 @@ export enum TennisRankingSortType {
   PositionAsc = 'POSITION_ASC',
   PositionDesc = 'POSITION_DESC',
   TournamentsAsc = 'TOURNAMENTS_ASC',
-  TournamentsDesc = 'TOURNAMENTS_DESC',
+  TournamentsDesc = 'TOURNAMENTS_DESC'
 }
 
 export enum TennisScoreType {
@@ -5328,7 +5315,7 @@ export enum TennisScoreType {
   Set4 = 'SET4',
   Set5 = 'SET5',
   Total = 'TOTAL',
-  Unspecified = 'UNSPECIFIED',
+  Unspecified = 'UNSPECIFIED'
 }
 
 export type TennisSearchInput = {
@@ -5343,26 +5330,26 @@ export enum TennisSearchType {
   /** COMPETITION */
   TennisCompetition = 'TENNIS_COMPETITION',
   /** Игрок */
-  TennisPerson = 'TENNIS_PERSON',
+  TennisPerson = 'TENNIS_PERSON'
 }
 
 export enum TennisSide {
   A = 'A',
-  B = 'B',
+  B = 'B'
 }
 
 export enum TennisSportType {
   /** сортировка по возрастанию по началу матча */
   AscScheduledAt = 'ASC_SCHEDULED_AT',
   /** сортировка по убыванию по началу матча */
-  DescScheduledAt = 'DESC_SCHEDULED_AT',
+  DescScheduledAt = 'DESC_SCHEDULED_AT'
 }
 
 export enum TennisStatType {
   Counter = 'COUNTER',
   Fraction = 'FRACTION',
   FractionP = 'FRACTION_P',
-  Percent = 'PERCENT',
+  Percent = 'PERCENT'
 }
 
 /** Запрос на тизер по теннисным матчам */
@@ -5379,7 +5366,7 @@ export enum TennisTournamentMatchFormat {
   Mix = 'MIX',
   NationalTeam = 'NATIONAL_TEAM',
   Single = 'SINGLE',
-  Unspecified = 'UNSPECIFIED',
+  Unspecified = 'UNSPECIFIED'
 }
 
 export enum TennisTournamentStatus {
@@ -5391,23 +5378,23 @@ export enum TennisTournamentStatus {
   Postponed = 'POSTPONED',
   Scheduled = 'SCHEDULED',
   Suspended = 'SUSPENDED',
-  Unspecified = 'UNSPECIFIED',
+  Unspecified = 'UNSPECIFIED'
 }
 
 export enum TennisTournamentType {
   Doubles = 'DOUBLES',
-  Singles = 'SINGLES',
+  Singles = 'SINGLES'
 }
 
 export enum TourMatchesSort {
-  Spectacularity = 'SPECTACULARITY',
+  Spectacularity = 'SPECTACULARITY'
 }
 
 /** Форматы изображений турнира */
 export enum TournamentImageFormat {
   Background = 'BACKGROUND',
   Logo = 'LOGO',
-  Svg = 'SVG',
+  Svg = 'SVG'
 }
 
 /** Типы периодов */
@@ -5419,7 +5406,7 @@ export enum TransferType {
   PlayerSwap = 'PLAYER_SWAP',
   Transfer = 'TRANSFER',
   Trial = 'TRIAL',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export type UpdateContentStatusInput = {
@@ -5448,13 +5435,13 @@ export enum UserBanCause {
   /**  Систематический оффтом  */
   SystematicOfftop = 'SYSTEMATIC_OFFTOP',
   /**  Угрозы  */
-  Threats = 'THREATS',
+  Threats = 'THREATS'
 }
 
 export enum UserSex {
   Female = 'FEMALE',
   Male = 'MALE',
-  NotSelected = 'NOT_SELECTED',
+  NotSelected = 'NOT_SELECTED'
 }
 
 export enum UserType {
@@ -5463,7 +5450,7 @@ export enum UserType {
   /**  Неизвестный  */
   Undefined = 'UNDEFINED',
   /**  Подтвержденный  */
-  Verified = 'VERIFIED',
+  Verified = 'VERIFIED'
 }
 
 export type UsersWithRulesFilter = {
@@ -5475,12 +5462,12 @@ export type UsersWithRulesFilter = {
 
 export enum VideoContentListSort {
   PublicAsc = 'PUBLIC_ASC',
-  PublicDesc = 'PUBLIC_DESC',
+  PublicDesc = 'PUBLIC_DESC'
 }
 
 export enum VideoContentSize {
   Original = 'ORIGINAL',
-  Size_640x480 = 'SIZE_640x480',
+  Size_640x480 = 'SIZE_640x480'
 }
 
 export enum VideoContentType {
@@ -5489,7 +5476,7 @@ export enum VideoContentType {
   Highlight = 'HIGHLIGHT',
   Interview = 'INTERVIEW',
   Other = 'OTHER',
-  VideoReview = 'VIDEO_REVIEW',
+  VideoReview = 'VIDEO_REVIEW'
 }
 
 export type VideoInputCollection = {
@@ -5531,7 +5518,7 @@ export type VideoInputTournament = {
 export enum VideoPreviewSize {
   Original = 'ORIGINAL',
   Size_166x94 = 'SIZE_166x94',
-  Size_332x198 = 'SIZE_332x198',
+  Size_332x198 = 'SIZE_332x198'
 }
 
 export enum VideoSource {
@@ -5543,7 +5530,7 @@ export enum VideoSource {
   Unknown = 'UNKNOWN',
   Webcaster = 'WEBCASTER',
   Winline = 'WINLINE',
-  Youtube = 'YOUTUBE',
+  Youtube = 'YOUTUBE'
 }
 
 export enum VideoSport {
@@ -5552,47 +5539,15 @@ export enum VideoSport {
   Hockey = 'HOCKEY',
   Mma = 'MMA',
   Tennis = 'TENNIS',
-  Unknown = 'UNKNOWN',
+  Unknown = 'UNKNOWN'
 }
 
 export type GetLeagueQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
-export type GetLeagueQuery = {
-  __typename?: 'Query';
-  fantasyQueries: {
-    __typename?: 'FantasyQueries';
-    league?: {
-      __typename?: 'FantasyLeague';
-      id: string;
-      name: string;
-      type: FantasyLeagueType;
-      season: {
-        __typename?: 'FantasySeason';
-        id: string;
-        isActive: boolean;
-        tournament: {
-          __typename?: 'FantasyTournament';
-          id: string;
-          webName: string;
-        };
-        tours: Array<{
-          __typename?: 'FantasyTour';
-          name: string;
-          id: string;
-          status: FantasyTourStatus;
-        }>;
-        currentTour?: {
-          __typename?: 'FantasyTour';
-          id: string;
-          name: string;
-          status: FantasyTourStatus;
-        } | null;
-      };
-    } | null;
-  };
-};
+
+export type GetLeagueQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', league?: { __typename?: 'FantasyLeague', id: string, name: string, type: FantasyLeagueType, season: { __typename?: 'FantasySeason', id: string } } | null } };
 
 export type GetLeagueSquadsQueryVariables = Exact<{
   leagueId: Scalars['ID']['input'];
@@ -5600,1844 +5555,51 @@ export type GetLeagueSquadsQueryVariables = Exact<{
   entityId: Scalars['ID']['input'];
 }>;
 
-export type GetLeagueSquadsQuery = {
-  __typename?: 'Query';
-  fantasyQueries: {
-    __typename?: 'FantasyQueries';
-    rating: {
-      __typename?: 'FantasyRatingQueries';
-      squads?: {
-        __typename?: 'FantasySquadRatingPage';
-        list: Array<{
-          __typename?: 'FantasySquadRating';
-          scoreInfo: {
-            __typename?: 'FantasyScoreInfo';
-            place: number;
-            score: number;
-            totalPlaces: number;
-            averageScore?: number | null;
-            placeDiff: number;
-            placeAfterTour: number;
-            pointsAfterTour: number;
-            placeAfterTourDiff: number;
-          };
-          squad: {
-            __typename?: 'FantasySquad';
-            name: string;
-            id: string;
-            user: { __typename?: 'user'; id: string; nick: string };
-            benefit: Array<{
-              __typename?: 'FantasyBenefit';
-              benefitType: FantasyBenefitType;
-              isApply: boolean;
-              isActive: boolean;
-            }>;
-            seasonScoreInfo?: {
-              __typename?: 'FantasyScoreInfo';
-              score: number;
-            } | null;
-          };
-        }>;
-      } | null;
-    };
-  };
-};
+
+export type GetLeagueSquadsQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', rating: { __typename?: 'FantasyRatingQueries', squads?: { __typename?: 'FantasySquadRatingPage', list: Array<{ __typename?: 'FantasySquadRating', scoreInfo: { __typename?: 'FantasyScoreInfo', place: number, score: number, totalPlaces: number, averageScore?: number | null, placeDiff: number, placeAfterTour: number, pointsAfterTour: number, placeAfterTourDiff: number }, squad: { __typename?: 'FantasySquad', name: string, id: string, user: { __typename?: 'user', id: string, nick: string }, benefit: Array<{ __typename?: 'FantasyBenefit', benefitType: FantasyBenefitType, isApply: boolean, isActive: boolean }>, seasonScoreInfo?: { __typename?: 'FantasyScoreInfo', score: number } | null } }> } | null } } };
 
 export type GetLeagueSquadsCurrentTourInfoQueryVariables = Exact<{
   leagueId: Scalars['ID']['input'];
   seasonId: Scalars['ID']['input'];
 }>;
 
-export type GetLeagueSquadsCurrentTourInfoQuery = {
-  __typename?: 'Query';
-  fantasyQueries: {
-    __typename?: 'FantasyQueries';
-    rating: {
-      __typename?: 'FantasyRatingQueries';
-      squads?: {
-        __typename?: 'FantasySquadRatingPage';
-        list: Array<{
-          __typename?: 'FantasySquadRating';
-          squad: {
-            __typename?: 'FantasySquad';
-            id: string;
-            currentTourInfo?: {
-              __typename?: 'FantasySquadTourInfo';
-              isNotLimit: boolean;
-              transfersDone: number;
-              transfersLeft?: number | null;
-              currentBalance: number;
-              totalPrice: number;
-              players: Array<{
-                __typename?: 'FantasySquadTourPlayer';
-                isCaptain: boolean;
-                isViceCaptain: boolean;
-                isStarting: boolean;
-                substitutePriority?: number | null;
-                points?: number | null;
-                score?: number | null;
-                isPointsCount: boolean;
-                playedMatchesTour: number;
-                seasonPlayer: {
-                  __typename?: 'FantasySeasonPlayer';
-                  id: string;
-                  name: string;
-                  role: FantasyPlayerRole;
-                  status?: {
-                    __typename?: 'FantasySeasonPlayerStatus';
-                    status: FantasyPlayerStatus;
-                  } | null;
-                  statObject: {
-                    __typename?: 'statPlayer';
-                    id: string;
-                    firstName: string;
-                    lastName: string;
-                  };
-                  team?: {
-                    __typename?: 'FantasyTeam';
-                    id: string;
-                    name: string;
-                    statObject: { __typename?: 'statTeam'; id: string };
-                    svgKit?: {
-                      __typename?: 'PictureStruct';
-                      url: string;
-                    } | null;
-                  } | null;
-                };
-                statPlayer: {
-                  __typename?: 'FantasyStatPlayer';
-                  points: number;
-                };
-              }>;
-            } | null;
-          };
-        }>;
-      } | null;
-    };
-  };
-};
+
+export type GetLeagueSquadsCurrentTourInfoQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', rating: { __typename?: 'FantasyRatingQueries', squads?: { __typename?: 'FantasySquadRatingPage', list: Array<{ __typename?: 'FantasySquadRating', squad: { __typename?: 'FantasySquad', id: string, currentTourInfo?: { __typename?: 'FantasySquadTourInfo', isNotLimit: boolean, transfersDone: number, transfersLeft?: number | null, currentBalance: number, totalPrice: number, players: Array<{ __typename?: 'FantasySquadTourPlayer', isCaptain: boolean, isViceCaptain: boolean, isStarting: boolean, substitutePriority?: number | null, points?: number | null, score?: number | null, isPointsCount: boolean, playedMatchesTour: number, seasonPlayer: { __typename?: 'FantasySeasonPlayer', id: string, name: string, role: FantasyPlayerRole, status?: { __typename?: 'FantasySeasonPlayerStatus', status: FantasyPlayerStatus } | null, statObject: { __typename?: 'statPlayer', id: string, firstName: string, lastName: string }, team?: { __typename?: 'FantasyTeam', id: string, name: string, statObject: { __typename?: 'statTeam', id: string }, svgKit?: { __typename?: 'PictureStruct', url: string } | null } | null }, statPlayer: { __typename?: 'FantasyStatPlayer', points: number } }> } | null } }> } | null } } };
 
 export type GetSquadTourInfoQueryVariables = Exact<{
   tourId: Scalars['ID']['input'];
   squadId: Scalars['ID']['input'];
 }>;
 
-export type GetSquadTourInfoQuery = {
-  __typename?: 'Query';
-  fantasyQueries: {
-    __typename?: 'FantasyQueries';
-    squadTourInfo?: {
-      __typename?: 'FantasySquadTourInfo';
-      isNotLimit: boolean;
-      transfersDone: number;
-      transfersLeft?: number | null;
-      currentBalance: number;
-      totalPrice: number;
-      players: Array<{
-        __typename?: 'FantasySquadTourPlayer';
-        isCaptain: boolean;
-        isViceCaptain: boolean;
-        isStarting: boolean;
-        substitutePriority?: number | null;
-        points?: number | null;
-        score?: number | null;
-        isPointsCount: boolean;
-        playedMatchesTour: number;
-        seasonPlayer: {
-          __typename?: 'FantasySeasonPlayer';
-          id: string;
-          name: string;
-          role: FantasyPlayerRole;
-          status?: {
-            __typename?: 'FantasySeasonPlayerStatus';
-            status: FantasyPlayerStatus;
-          } | null;
-          statObject: {
-            __typename?: 'statPlayer';
-            id: string;
-            firstName: string;
-            lastName: string;
-          };
-          team?: {
-            __typename?: 'FantasyTeam';
-            id: string;
-            name: string;
-            statObject: { __typename?: 'statTeam'; id: string };
-            svgKit?: { __typename?: 'PictureStruct'; url: string } | null;
-          } | null;
-        };
-        statPlayer: { __typename?: 'FantasyStatPlayer'; points: number };
-      }>;
-    } | null;
-  };
-};
+
+export type GetSquadTourInfoQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', squadTourInfo?: { __typename?: 'FantasySquadTourInfo', isNotLimit: boolean, transfersDone: number, transfersLeft?: number | null, currentBalance: number, totalPrice: number, players: Array<{ __typename?: 'FantasySquadTourPlayer', isCaptain: boolean, isViceCaptain: boolean, isStarting: boolean, substitutePriority?: number | null, points?: number | null, score?: number | null, isPointsCount: boolean, playedMatchesTour: number, seasonPlayer: { __typename?: 'FantasySeasonPlayer', id: string, name: string, role: FantasyPlayerRole, status?: { __typename?: 'FantasySeasonPlayerStatus', status: FantasyPlayerStatus } | null, statObject: { __typename?: 'statPlayer', id: string, firstName: string, lastName: string }, team?: { __typename?: 'FantasyTeam', id: string, name: string, statObject: { __typename?: 'statTeam', id: string }, svgKit?: { __typename?: 'PictureStruct', url: string } | null } | null }, statPlayer: { __typename?: 'FantasyStatPlayer', points: number } }> } | null } };
 
 export type GetTourQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
-export type GetTourQuery = {
-  __typename?: 'Query';
-  fantasyQueries: {
-    __typename?: 'FantasyQueries';
-    tour?: {
-      __typename?: 'FantasyTour';
-      id: string;
-      name: string;
-      status: FantasyTourStatus;
-      startedAt?: any | null;
-      finishedAt?: any | null;
-      transfersStartedAt?: any | null;
-      transfersFinishedAt?: any | null;
-    } | null;
-  };
-};
+
+export type GetTourQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', tour?: { __typename?: 'FantasyTour', id: string, name: string, status: FantasyTourStatus, startedAt?: any | null, finishedAt?: any | null, transfersStartedAt?: any | null, transfersFinishedAt?: any | null } | null } };
 
 export type GetTourMatchesQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
-export type GetTourMatchesQuery = {
-  __typename?: 'Query';
-  fantasyQueries: {
-    __typename?: 'FantasyQueries';
-    tour?: {
-      __typename?: 'FantasyTour';
-      id: string;
-      matches: Array<{
-        __typename?: 'statMatch';
-        id: string;
-        matchStatus: MatchStatus;
-        scheduledAt: string;
-        currentTime: string;
-        winner?: StatWinner | null;
-        periodId?: StatPeriodId | null;
-        hasLineups: boolean;
-        home?: {
-          __typename?: 'statTeamMatch';
-          score: number;
-          team?: {
-            __typename?: 'statTeam';
-            id: string;
-            name: string;
-            logo: { __typename?: 'statPic'; main: string };
-          } | null;
-          lineup?: Array<{
-            __typename?: 'statLineupLine';
-            lineupStarting: boolean;
-            player?: { __typename?: 'statPlayer'; id: string } | null;
-          } | null> | null;
-        } | null;
-        away?: {
-          __typename?: 'statTeamMatch';
-          score: number;
-          team?: {
-            __typename?: 'statTeam';
-            id: string;
-            name: string;
-            logo: { __typename?: 'statPic'; main: string };
-          } | null;
-          lineup?: Array<{
-            __typename?: 'statLineupLine';
-            lineupStarting: boolean;
-            player?: { __typename?: 'statPlayer'; id: string } | null;
-          } | null> | null;
-        } | null;
-        prediction?: {
-          __typename?: 'statMLMatchPrediction';
-          yellowCards: number;
-          goals: number;
-        } | null;
-        bettingOdds: Array<{
-          __typename?: 'BettingMainMatchOddsEntry';
-          line1x2?: {
-            __typename?: 'Odds1X2Line';
-            h?: number | null;
-            a?: number | null;
-          } | null;
-        }>;
-      }>;
-    } | null;
-  };
-};
 
-export const GetLeagueDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetLeague' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'fantasyQueries' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'league' },
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'source' },
-                      value: { kind: 'EnumValue', value: 'ID' },
-                    },
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'id' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'id' },
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'season' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'isActive' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tournament' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'webName' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tours' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'status' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'currentTour' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'status' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetLeagueQuery, GetLeagueQueryVariables>;
-export const GetLeagueSquadsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetLeagueSquads' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'leagueId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'entityType' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'FantasyRatingEntityType' },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'entityId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'fantasyQueries' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'rating' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'squads' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'input' },
-                            value: {
-                              kind: 'ObjectValue',
-                              fields: [
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'leagueID' },
-                                  value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'leagueId' },
-                                  },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'entityType' },
-                                  value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'entityType' },
-                                  },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'entityID' },
-                                  value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'entityId' },
-                                  },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'sortOrder' },
-                                  value: { kind: 'EnumValue', value: 'ASC' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'pageSize' },
-                                  value: { kind: 'IntValue', value: '90' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'pageNum' },
-                                  value: { kind: 'IntValue', value: '1' },
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'list' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'scoreInfo' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'place',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'score',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'totalPlaces',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'averageScore',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'placeDiff',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'placeAfterTour',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'pointsAfterTour',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'placeAfterTourDiff',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'squad' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'name' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'user' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'nick',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'benefit',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'benefitType',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'isApply',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'isActive',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'seasonScoreInfo',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'score',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetLeagueSquadsQuery,
-  GetLeagueSquadsQueryVariables
->;
-export const GetLeagueSquadsCurrentTourInfoDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetLeagueSquadsCurrentTourInfo' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'leagueId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'seasonId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'fantasyQueries' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'rating' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'squads' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'input' },
-                            value: {
-                              kind: 'ObjectValue',
-                              fields: [
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'leagueID' },
-                                  value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'leagueId' },
-                                  },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'entityType' },
-                                  value: { kind: 'EnumValue', value: 'SEASON' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'entityID' },
-                                  value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'seasonId' },
-                                  },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'sortOrder' },
-                                  value: { kind: 'EnumValue', value: 'ASC' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'pageSize' },
-                                  value: { kind: 'IntValue', value: '90' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'pageNum' },
-                                  value: { kind: 'IntValue', value: '1' },
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'list' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'squad' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'currentTourInfo',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'isNotLimit',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'transfersDone',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'transfersLeft',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'currentBalance',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'totalPrice',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'players',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'isCaptain',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'isViceCaptain',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'isStarting',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value:
-                                                          'substitutePriority',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'points',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'score',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'isPointsCount',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value:
-                                                          'playedMatchesTour',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'seasonPlayer',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'id',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'name',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'role',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'status',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'status',
-                                                                  },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'statObject',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value: 'id',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'firstName',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'lastName',
-                                                                  },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'team',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value: 'id',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'name',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'statObject',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'id',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'svgKit',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'url',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'statPlayer',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'points',
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetLeagueSquadsCurrentTourInfoQuery,
-  GetLeagueSquadsCurrentTourInfoQueryVariables
->;
-export const GetSquadTourInfoDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetSquadTourInfo' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'tourId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'squadId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'fantasyQueries' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'squadTourInfo' },
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'input' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'tourID' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'tourId' },
-                            },
-                          },
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'squadID' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'squadId' },
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'isNotLimit' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'transfersDone' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'transfersLeft' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'currentBalance' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'totalPrice' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'players' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'isCaptain' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'isViceCaptain' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'isStarting' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'substitutePriority',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'points' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'score' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'isPointsCount' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'playedMatchesTour',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'seasonPlayer' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'role' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'status' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'status',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'statObject' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'firstName',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'lastName',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'team' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'name' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'statObject',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'svgKit',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'url',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'statPlayer' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'points' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetSquadTourInfoQuery,
-  GetSquadTourInfoQueryVariables
->;
-export const GetTourDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetTour' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'fantasyQueries' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'tour' },
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'id' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'id' },
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'status' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'startedAt' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'finishedAt' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'transfersStartedAt' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'transfersFinishedAt' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetTourQuery, GetTourQueryVariables>;
-export const GetTourMatchesDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetTourMatches' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'fantasyQueries' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'tour' },
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'id' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'id' },
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'matches' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'matchStatus' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'scheduledAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'currentTime' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'winner' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'periodId' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'hasLineups' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'home' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'score' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'team' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'name' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'logo' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'main',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lineup' },
-                                    arguments: [
-                                      {
-                                        kind: 'Argument',
-                                        name: {
-                                          kind: 'Name',
-                                          value: 'skipPreview',
-                                        },
-                                        value: {
-                                          kind: 'BooleanValue',
-                                          value: true,
-                                        },
-                                      },
-                                    ],
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'player',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'lineupStarting',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'away' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'score' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'team' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'name' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'logo' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'main',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lineup' },
-                                    arguments: [
-                                      {
-                                        kind: 'Argument',
-                                        name: {
-                                          kind: 'Name',
-                                          value: 'skipPreview',
-                                        },
-                                        value: {
-                                          kind: 'BooleanValue',
-                                          value: true,
-                                        },
-                                      },
-                                    ],
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'player',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'lineupStarting',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prediction' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'yellowCards',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'goals' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'bettingOdds' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'iso2Country' },
-                                  value: {
-                                    kind: 'StringValue',
-                                    value: '',
-                                    block: false,
-                                  },
-                                },
-                                {
-                                  kind: 'Argument',
-                                  name: {
-                                    kind: 'Name',
-                                    value: 'placementType',
-                                  },
-                                  value: {
-                                    kind: 'EnumValue',
-                                    value: 'FANTASY_MATCH',
-                                  },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'line1x2' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'h' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'a' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetTourMatchesQuery, GetTourMatchesQueryVariables>;
+export type GetTourMatchesQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', tour?: { __typename?: 'FantasyTour', id: string, matches: Array<{ __typename?: 'statMatch', id: string, matchStatus: MatchStatus, scheduledAt: string, currentTime: string, winner?: StatWinner | null, periodId?: StatPeriodId | null, hasLineups: boolean, home?: { __typename?: 'statTeamMatch', score: number, team?: { __typename?: 'statTeam', id: string, name: string, logo: { __typename?: 'statPic', main: string } } | null, lineup?: Array<{ __typename?: 'statLineupLine', lineupStarting: boolean, player?: { __typename?: 'statPlayer', id: string } | null } | null> | null } | null, away?: { __typename?: 'statTeamMatch', score: number, team?: { __typename?: 'statTeam', id: string, name: string, logo: { __typename?: 'statPic', main: string } } | null, lineup?: Array<{ __typename?: 'statLineupLine', lineupStarting: boolean, player?: { __typename?: 'statPlayer', id: string } | null } | null> | null } | null, prediction?: { __typename?: 'statMLMatchPrediction', yellowCards: number, goals: number } | null, bettingOdds: Array<{ __typename?: 'BettingMainMatchOddsEntry', line1x2?: { __typename?: 'Odds1X2Line', h?: number | null, a?: number | null } | null }> }> } | null } };
+
+export type GetTournamentQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetTournamentQuery = { __typename?: 'Query', fantasyQueries: { __typename?: 'FantasyQueries', tournament?: { __typename?: 'FantasyTournament', id: string, currentSeason?: { __typename?: 'FantasySeason', id: string, isActive: boolean, tours: Array<{ __typename?: 'FantasyTour', name: string, id: string, status: FantasyTourStatus }>, currentTour?: { __typename?: 'FantasyTour', id: string, name: string, status: FantasyTourStatus } | null } | null } | null } };
+
+
+export const GetLeagueDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLeague"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"league"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"source"},"value":{"kind":"EnumValue","value":"ID"}},{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"season"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetLeagueQuery, GetLeagueQueryVariables>;
+export const GetLeagueSquadsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLeagueSquads"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"leagueId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"entityType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FantasyRatingEntityType"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"entityId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rating"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"squads"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"leagueID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"leagueId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"entityType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"entityType"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"entityID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"entityId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"sortOrder"},"value":{"kind":"EnumValue","value":"ASC"}},{"kind":"ObjectField","name":{"kind":"Name","value":"pageSize"},"value":{"kind":"IntValue","value":"90"}},{"kind":"ObjectField","name":{"kind":"Name","value":"pageNum"},"value":{"kind":"IntValue","value":"1"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"list"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scoreInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"place"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"totalPlaces"}},{"kind":"Field","name":{"kind":"Name","value":"averageScore"}},{"kind":"Field","name":{"kind":"Name","value":"placeDiff"}},{"kind":"Field","name":{"kind":"Name","value":"placeAfterTour"}},{"kind":"Field","name":{"kind":"Name","value":"pointsAfterTour"}},{"kind":"Field","name":{"kind":"Name","value":"placeAfterTourDiff"}}]}},{"kind":"Field","name":{"kind":"Name","value":"squad"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"nick"}}]}},{"kind":"Field","name":{"kind":"Name","value":"benefit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"benefitType"}},{"kind":"Field","name":{"kind":"Name","value":"isApply"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"seasonScoreInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"score"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetLeagueSquadsQuery, GetLeagueSquadsQueryVariables>;
+export const GetLeagueSquadsCurrentTourInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLeagueSquadsCurrentTourInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"leagueId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rating"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"squads"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"leagueID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"leagueId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"entityType"},"value":{"kind":"EnumValue","value":"SEASON"}},{"kind":"ObjectField","name":{"kind":"Name","value":"entityID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"sortOrder"},"value":{"kind":"EnumValue","value":"ASC"}},{"kind":"ObjectField","name":{"kind":"Name","value":"pageSize"},"value":{"kind":"IntValue","value":"90"}},{"kind":"ObjectField","name":{"kind":"Name","value":"pageNum"},"value":{"kind":"IntValue","value":"1"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"list"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"squad"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentTourInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isNotLimit"}},{"kind":"Field","name":{"kind":"Name","value":"transfersDone"}},{"kind":"Field","name":{"kind":"Name","value":"transfersLeft"}},{"kind":"Field","name":{"kind":"Name","value":"currentBalance"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"players"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isCaptain"}},{"kind":"Field","name":{"kind":"Name","value":"isViceCaptain"}},{"kind":"Field","name":{"kind":"Name","value":"isStarting"}},{"kind":"Field","name":{"kind":"Name","value":"substitutePriority"}},{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"isPointsCount"}},{"kind":"Field","name":{"kind":"Name","value":"playedMatchesTour"}},{"kind":"Field","name":{"kind":"Name","value":"seasonPlayer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"team"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"statObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"svgKit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"statPlayer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetLeagueSquadsCurrentTourInfoQuery, GetLeagueSquadsCurrentTourInfoQueryVariables>;
+export const GetSquadTourInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSquadTourInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tourId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"squadId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"squadTourInfo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"tourID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tourId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"squadID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"squadId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isNotLimit"}},{"kind":"Field","name":{"kind":"Name","value":"transfersDone"}},{"kind":"Field","name":{"kind":"Name","value":"transfersLeft"}},{"kind":"Field","name":{"kind":"Name","value":"currentBalance"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"players"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isCaptain"}},{"kind":"Field","name":{"kind":"Name","value":"isViceCaptain"}},{"kind":"Field","name":{"kind":"Name","value":"isStarting"}},{"kind":"Field","name":{"kind":"Name","value":"substitutePriority"}},{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"isPointsCount"}},{"kind":"Field","name":{"kind":"Name","value":"playedMatchesTour"}},{"kind":"Field","name":{"kind":"Name","value":"seasonPlayer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"team"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"statObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"svgKit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"statPlayer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSquadTourInfoQuery, GetSquadTourInfoQueryVariables>;
+export const GetTourDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTour"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tour"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"finishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"transfersStartedAt"}},{"kind":"Field","name":{"kind":"Name","value":"transfersFinishedAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetTourQuery, GetTourQueryVariables>;
+export const GetTourMatchesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTourMatches"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tour"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"matches"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"matchStatus"}},{"kind":"Field","name":{"kind":"Name","value":"scheduledAt"}},{"kind":"Field","name":{"kind":"Name","value":"currentTime"}},{"kind":"Field","name":{"kind":"Name","value":"winner"}},{"kind":"Field","name":{"kind":"Name","value":"periodId"}},{"kind":"Field","name":{"kind":"Name","value":"hasLineups"}},{"kind":"Field","name":{"kind":"Name","value":"home"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"team"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"skipPreview"},"value":{"kind":"BooleanValue","value":true}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"player"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineupStarting"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"away"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"team"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"skipPreview"},"value":{"kind":"BooleanValue","value":true}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"player"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineupStarting"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"prediction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"yellowCards"}},{"kind":"Field","name":{"kind":"Name","value":"goals"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bettingOdds"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"iso2Country"},"value":{"kind":"StringValue","value":"","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"placementType"},"value":{"kind":"EnumValue","value":"FANTASY_MATCH"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"line1x2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"h"}},{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTourMatchesQuery, GetTourMatchesQueryVariables>;
+export const GetTournamentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTournament"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fantasyQueries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tournament"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"source"},"value":{"kind":"EnumValue","value":"HRU"}},{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentSeason"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"tours"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentTour"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTournamentQuery, GetTournamentQueryVariables>;

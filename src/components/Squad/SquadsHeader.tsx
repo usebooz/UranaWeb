@@ -1,26 +1,16 @@
 import { type FC } from 'react';
 import { Cell, Info } from '@telegram-apps/telegram-ui';
 import { SquadService, TourService } from '@/services';
-import type { LeagueSquad, Tour } from '@/gql';
+import { useContextSquads, useContextTour } from '@/hooks';
 
 /**
- * Props for the SquadTableHeader component
+ *
+ *
  */
-interface SquadRatingHeaderProps {
-  /** Array of squads with rating information */
-  squads?: LeagueSquad[];
-  /** */
-  tour?: Tour;
-}
+export const SquadsHeader: FC = () => {
+  const tour = useContextTour();
+  const squads = useContextSquads();
 
-/**
- * SquadTableHeader component for displaying table header with column titles
- * Renders column headers for place, squad name, and score
- */
-export const SquadRatingHeader: FC<SquadRatingHeaderProps> = ({
-  squads,
-  tour,
-}) => {
   const squadsCount = SquadService.getSquadsCount(squads);
   const columnPlaceWidth = squadsCount?.length;
   const columnPlace = '🔝';
@@ -49,9 +39,11 @@ export const SquadRatingHeader: FC<SquadRatingHeaderProps> = ({
 
   return (
     <>
-      <Cell className="squad-table-headers" readOnly>
-        {squadsHeader}
-      </Cell>
+      {squadsHeader ? (
+        <Cell className="squad-table-headers" readOnly>
+          {squadsHeader}
+        </Cell>
+      ) : undefined}
       <Cell
         readOnly
         className="squad-table-headers"

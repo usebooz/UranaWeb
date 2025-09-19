@@ -12,21 +12,6 @@ graphql(`
         type
         season {
           id
-          isActive
-          tournament {
-            id
-            webName
-          }
-          tours {
-            name
-            id
-            status
-          }
-          currentTour {
-            id
-            name
-            status
-          }
         }
       }
     }

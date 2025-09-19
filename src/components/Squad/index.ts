@@ -1,7 +1,6 @@
-export { SquadList } from './SquadList';
+export { SquadsHeader } from './SquadsHeader';
+export { SquadsList } from './SquadsList';
 export { SquadItem } from './SquadItem';
-export { PlayerFormation } from '../Player/PlayerFormation';
-export { SquadRating } from './SquadRating';
-export { SquadRatingHeader } from './SquadRatingHeader';
+export { SquadTourInfo } from './SquadTourInfo';
 
 import './Squad.css';

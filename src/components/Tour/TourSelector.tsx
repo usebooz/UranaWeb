@@ -1,60 +1,56 @@
-import { type FC } from 'react';
-import { TourPagination } from './TourPagination';
-import { TourItem } from './TourItem';
+import { useEffect, useMemo, useState, type FC } from 'react';
 import { TourService } from '@/services';
-import type { Tour, TourMatch } from '@/gql';
+import { Pagination } from '@telegram-apps/telegram-ui';
+import { useContextTournament } from '@/hooks';
 
 /**
- * Props for the component
+ * Props for the SquadItem component
  */
 interface TourSelectorProps {
-  /**  */
-  tours?: Tour[];
-  /** Current tour data */
-  tour?: Tour;
-  /** Loading states */
-  tourLoading: boolean;
-  /** Whether tour is current */
-  isTourCurrent: boolean;
-  /** Tour matches */
-  currentMatches?: TourMatch[];
-  /** Callback when tour page changes */
-  onTourChange: (tourId: string) => void;
+  /** */
+  tourId?: string;
+  /** */
+  onChange?: (tourId: string) => void;
 }
 
 /**
- * component for displaying tour navigation and details
- * Renders tour pagination, tour item with matches
+ *
+ *
  */
-export const TourSelector: FC<TourSelectorProps> = ({
-  tours,
-  tour,
-  tourLoading,
-  isTourCurrent,
-  currentMatches,
-  onTourChange,
-}) => {
-  // Handle tour page change
+export const TourSelector: FC<TourSelectorProps> = ({ tourId, onChange }) => {
+  const tournament = useContextTournament();
+  const tours = useMemo(
+    () => TourService.filterAvailableTours(tournament?.currentSeason?.tours),
+    [tournament]
+  );
+
+  const [tourNumber, setTourNumber] = useState<number | undefined>(
+    TourService.getTourNumberById(tourId, tours)
+  );
+
+  useEffect(() => {
+    setTourNumber(TourService.getTourNumberById(tourId, tours));
+  }, [tourId, tours, setTourNumber]);
+
+  //Set Tour Number
   const handleTourChange = (_event: unknown, page: number): void => {
-    const selectedTour = TourService.findTourByPage(page, tours);
-    if (selectedTour) {
-      onTourChange(selectedTour.id);
+    const newTourId = TourService.getTourIdByNumber(page, tours);
+    if (!newTourId || !onChange) {
+      return;
     }
+    onChange(newTourId);
   };
 
   return (
-    <>
-      <TourPagination
-        tour={tour}
-        tours={tours}
-        onTourChange={handleTourChange}
-      />
-      <TourItem
-        tourLoading={tourLoading}
-        tour={tour}
-        isTourCurrent={isTourCurrent}
-        currentMatches={currentMatches}
-      />
-    </>
+    //TODO switch to tabs (horiontal scroll) or fit to all devices
+    <Pagination
+      hideNextButton
+      hidePrevButton
+      boundaryCount={1}
+      count={tours?.length || 0}
+      siblingCount={1}
+      page={tourNumber}
+      onChange={handleTourChange}
+    />
   );
 };

@@ -6,13 +6,13 @@ import { FantasyTourStatus } from '@/gql/generated/graphql';
  */
 export class TourService {
   /**
-   * Checks if tour belongs to league
+   *
    * @param tour - tour data
-   * @param leagueTours - array of league tours
-   * @returns true if tour belongs to league
+   * @param tours - array of tours
+   * @returns
    */
-  static isFromLeague(tour: Tour, leagueTours?: Tour[]): boolean {
-    return leagueTours?.some(t => t?.id === tour?.id) || false;
+  static isFromCurrentSeason(tour: Tour, tours?: Tour[]): boolean {
+    return tours?.some(t => t.id === tour.id) || false;
   }
 
   /**
@@ -25,13 +25,33 @@ export class TourService {
   }
 
   /**
-   * Gets selected tour by page number
-   * @param page - page number (1-based)
+   * Gets selected tour
+   * @param tourNumber
    * @param tours
-   * @returns selected tour or undefined
+   * @returns
    */
-  static findTourByPage(page: number, tours?: Tour[]): Tour | undefined {
-    return tours?.[page - 1];
+  static getTourIdByNumber(
+    tourNumber: number,
+    tours?: Tour[]
+  ): string | undefined {
+    return tours?.[tourNumber - 1].id;
+  }
+
+  /**
+   *
+   * @param tourId
+   * @param tours
+   * @returns
+   */
+  static getTourNumberById(
+    tourId?: string,
+    tours?: Tour[]
+  ): number | undefined {
+    const tourIndex = tours?.findIndex(tour => tour.id === tourId);
+    if (!tourIndex || tourIndex < 0) {
+      return undefined;
+    }
+    return tourIndex + 1;
   }
 
   /**
@@ -39,7 +59,7 @@ export class TourService {
    * @param tours
    * @returns selected tour or undefined
    */
-  static findTouInProgress(tours?: Tour[]): Tour | undefined {
+  static findTourInProgress(tours?: Tour[]): Tour | undefined {
     return tours?.find(tour => TourService.isInProgress(tour));
   }
 
@@ -50,26 +70,10 @@ export class TourService {
    */
   static isAvailable(tour: Tour): boolean {
     return (
-      tour?.status === FantasyTourStatus.Finished ||
-      tour?.status === FantasyTourStatus.InProgress ||
-      tour?.status === FantasyTourStatus.Opened
+      tour.status === FantasyTourStatus.Finished ||
+      tour.status === FantasyTourStatus.InProgress ||
+      tour.status === FantasyTourStatus.Opened
     );
-  }
-
-  /**
-   * Finds tour by page number from tours array
-   * @param page - page number (1-based index)
-   * @param tours - array of tours
-   * @returns selected tour or undefined
-   */
-  static extractNumber(tour: Tour): number {
-    if (!tour) {
-      return 0;
-    }
-    // Extract numbers from tour name
-    const regex = /\d+/;
-    const match = regex.exec(tour.name);
-    return match ? parseInt(match[0], 10) : 0;
   }
 
   /**
@@ -78,7 +82,7 @@ export class TourService {
    * @returns tour in progress or undefined
    */
   static isInProgress(tour: Tour): boolean {
-    return tour?.status === FantasyTourStatus.InProgress;
+    return tour.status === FantasyTourStatus.InProgress;
   }
 
   /**
@@ -87,7 +91,7 @@ export class TourService {
    * @returns true if tour status is Opened
    */
   static isOpened(tour: Tour): boolean {
-    return tour?.status === FantasyTourStatus.Opened;
+    return tour.status === FantasyTourStatus.Opened;
   }
 
   /**
@@ -96,7 +100,7 @@ export class TourService {
    * @returns true if tour status is Finished
    */
   static isFinished(tour: Tour): boolean {
-    return tour?.status === FantasyTourStatus.Finished;
+    return tour.status === FantasyTourStatus.Finished;
   }
 
   /**
@@ -114,7 +118,7 @@ export class TourService {
    * @returns formatted date string or undefined
    */
   static formatStartDate(tour: Tour): string | undefined {
-    if (!tour?.startedAt || typeof tour.startedAt !== 'string') {
+    if (!tour.startedAt || typeof tour.startedAt !== 'string') {
       return undefined;
     }
 
@@ -134,7 +138,7 @@ export class TourService {
    * @returns localized status text or undefined
    */
   static formatStatus(tour: Tour): string | undefined {
-    switch (tour?.status) {
+    switch (tour.status) {
       case FantasyTourStatus.Finished:
         return 'закончен';
       case FantasyTourStatus.InProgress:

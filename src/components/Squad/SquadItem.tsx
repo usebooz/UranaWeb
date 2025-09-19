@@ -1,69 +1,66 @@
-import { useEffect, useState, type FC } from 'react';
-import { Accordion, Badge, Info } from '@telegram-apps/telegram-ui';
+import { Suspense, useEffect, useMemo, useState, type FC } from 'react';
+import { Accordion, Info } from '@telegram-apps/telegram-ui';
 
-import { PlayerService, SquadService, TourService } from '@/services';
+import { SquadService, TourService } from '@/services';
+import { PlayersStatus, PlayersFormation } from '../Player';
 import {
-  Tour,
-  type LeagueSquad,
-  type SquadTourInfo,
-  type TourMatch,
-} from '@/gql';
-import { PlayerFormation } from '../Player';
-import { useLeagueSquadTourInfo } from '@/hooks';
+  useContextTour,
+  useIsTourCurrent,
+  useLoadableSquadTourInfo,
+} from '@/hooks';
+import { LeagueSquad } from '@/gql';
+import { PlaceSpinner } from '../Loading';
+import { SquadTourInfo } from './SquadTourInfo';
+import { BadgeLoading } from '../Loading/BadgeLoading';
 
-/**
- * Props for the SquadItem component
- */
 interface SquadItemProps {
-  /** Squad data with rating information */
+  /**
+   *
+   */
   squad: LeagueSquad;
-  /** Squad tour info with players data */
-  squadCurrentTourInfo?: SquadTourInfo;
-  /** Current tour data */
-  tour?: Tour;
-  /** Array of matches for the tour */
-  currentMatches?: TourMatch[];
-  /** Whether tour is current */
-  isTourCurrent: boolean;
 }
 
 /**
- * SquadItem component for displaying individual squad information
- * Renders squad summary in accordion with expandable tour info
+ *
+ *
  */
-export const SquadItem: FC<SquadItemProps> = ({
-  squad,
-  squadCurrentTourInfo,
-  tour,
-  currentMatches,
-  isTourCurrent,
-}) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [shouldLoadInfo, setShouldLoadInfo] = useState<boolean>(false);
+export const SquadItem: FC<SquadItemProps> = ({ squad }) => {
+  const [loadTourInfo, tourInfoQueryRef] = useLoadableSquadTourInfo();
 
-  // Handle tour expansion
-  const handleExpand = (isExpanded: boolean): void => {
-    setIsExpanded(isExpanded);
-  };
-
-  useEffect(() => {
-    if (!isTourCurrent && isExpanded) {
-      setShouldLoadInfo(true);
-    }
-  }, [isTourCurrent, isExpanded]);
-
-  const { data: squadTourInfo, loading: infoLoading } = useLeagueSquadTourInfo(
-    tour!.id,
-    squad.squad.id,
-    { skip: !tour?.id || !shouldLoadInfo }
+  const tour = useContextTour();
+  const isTourInProgress = useMemo(
+    () => TourService.isInProgress(tour),
+    [tour]
+  );
+  const isScoreAvailable = useMemo(
+    () => TourService.isScoreAvailable(tour),
+    [tour]
   );
 
+  //Load tourInfo if current tour
+  const isTourCurrent = useIsTourCurrent();
+  useEffect(() => {
+    if (isTourCurrent) {
+      loadTourInfo({ tourId: tour.id, squadId: squad.squad.id });
+    }
+  }, [tour, isTourCurrent]);
+
+  //Load tourInfo during expanding
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const handleExpand = (isExpanded: boolean): void => {
+    setIsExpanded(isExpanded);
+    if (isExpanded) {
+      loadTourInfo({ tourId: tour.id, squadId: squad.squad.id });
+    }
+  };
+
+  //TODO refactor
   let seasonPlace,
     tourScore,
     seasonScore,
     seasonPlaceDiff,
     seasonPlaceDiffClass;
-  if (TourService.isScoreAvailable(tour)) {
+  if (isScoreAvailable) {
     seasonPlace = squad.scoreInfo.placeAfterTour.toString();
     tourScore = squad.scoreInfo.score.toString();
     seasonScore = squad.scoreInfo.pointsAfterTour.toString();
@@ -78,31 +75,24 @@ export const SquadItem: FC<SquadItemProps> = ({
   }
   const columnPlaceWidth = squad.scoreInfo.totalPlaces.toString().length;
 
-  const playersPointsCount =
-    TourService.isInProgress(tour) &&
-    PlayerService.filterPlayersWithPointsCount(
-      squadCurrentTourInfo?.tourInfo?.players || []
-    )?.length.toString();
-
-  const squadTransfersDone =
-    squadCurrentTourInfo?.tourInfo?.transfersDone.toString();
-  const squadTransfersTotal =
-    SquadService.formatSquadTransfersTotal(squadCurrentTourInfo);
-  const squadTransfers =
-    squadTransfersDone &&
-    squadTransfersTotal &&
-    `🔄 ${squadTransfersDone}/${squadTransfersTotal}`;
-
   return (
     <Accordion expanded={isExpanded} onChange={handleExpand}>
       <Accordion.Summary
         titleBadge={
-          playersPointsCount ? (
-            <Badge type="number">{playersPointsCount}</Badge>
-          ) : undefined
+          <Suspense fallback={<BadgeLoading />}>
+            {isTourInProgress && tourInfoQueryRef ? (
+              <PlayersStatus queryRef={tourInfoQueryRef} />
+            ) : undefined}
+          </Suspense>
         }
         subhead={squad.squad.user.nick}
-        subtitle={squadTransfers}
+        subtitle={
+          <Suspense fallback="⏳">
+            {isTourCurrent && tourInfoQueryRef ? (
+              <SquadTourInfo queryRef={tourInfoQueryRef} />
+            ) : undefined}
+          </Suspense>
+        }
         before={
           <Info
             type="text"
@@ -123,20 +113,13 @@ export const SquadItem: FC<SquadItemProps> = ({
       >
         {squad.squad.name}
       </Accordion.Summary>
-      {isExpanded && (
-        <PlayerFormation
-          players={
-            isTourCurrent
-              ? squadCurrentTourInfo?.tourInfo?.players
-              : squadTourInfo?.tourInfo?.players
-          }
-          currentMatches={currentMatches}
-          tour={tour}
-          isTourCurrent={isTourCurrent}
-          playersLoading={infoLoading}
-          Component={Accordion.Content}
-        />
-      )}
+      <Suspense fallback={<PlaceSpinner size="m" />}>
+        {isExpanded && tourInfoQueryRef && (
+          <Accordion.Content className="secondary-bg-color">
+            <PlayersFormation queryRef={tourInfoQueryRef} />
+          </Accordion.Content>
+        )}
+      </Suspense>
     </Accordion>
   );
 };

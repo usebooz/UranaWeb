@@ -78,11 +78,11 @@ export class SquadService {
   static formatSquadTransfersTotal(
     squadTourInfo?: SquadTourInfo
   ): string | undefined {
-    return squadTourInfo?.tourInfo?.isNotLimit
+    return squadTourInfo?.isNotLimit
       ? '∞'
       : (
-          Number(squadTourInfo?.tourInfo?.transfersDone) +
-          Number(squadTourInfo?.tourInfo?.transfersLeft)
+          Number(squadTourInfo?.transfersDone) +
+          Number(squadTourInfo?.transfersLeft)
         ).toString();
   }
 
@@ -93,88 +93,89 @@ export class SquadService {
   static recalculateSquadPlayersLiveScore(
     squadCurrentTourInfo?: SquadTourInfo
   ): void {
-    if (!squadCurrentTourInfo?.tourInfo) {
+    if (!squadCurrentTourInfo) {
       return;
     }
-    const players = squadCurrentTourInfo.tourInfo.players;
+    const players = squadCurrentTourInfo.players;
 
     PlayerService.recalculateGoalkeeperLiveScore(players);
     PlayerService.recalculateFieldPlayersLiveScore(players);
     PlayerService.recalculateViceCaptain(players);
   }
 
-  /**
-   * Recalculates all squads live scores during tour
-   * @param squads - array of league squads
-   * @param squadsCurrentTourInfo - array of squads current tour info
-   */
-  static recalculateSquadsLiveScore(
-    squads: LeagueSquad[],
-    squadsCurrentTourInfo?: SquadTourInfo[]
-  ): void {
-    if (!squads?.length || !squadsCurrentTourInfo?.length) {
-      return;
-    }
+  // /**
+  //  * Recalculates all squads live scores during tour
+  //  * @param squads - array of league squads
+  //  * @param squadsCurrentTourInfo - array of squads current tour info
+  //  */
+  // static recalculateSquadsLiveScore(
+  //   squads: LeagueSquad[],
+  //   squadsCurrentTourInfo?: SquadTourInfo[]
+  // ): void {
+  //   if (!squads?.length || !squadsCurrentTourInfo?.length) {
+  //     return;
+  //   }
 
-    //1. Player scores without subs
-    for (const tourInfo of squadsCurrentTourInfo) {
-      this.recalculateSquadPlayersLiveScore(tourInfo);
-    }
+  //   //1. Player scores without subs
+  //   for (const tourInfo of squadsCurrentTourInfo) {
+  //     this.recalculateSquadPlayersLiveScore(tourInfo);
+  //   }
 
-    let scoreSum = 0;
-    for (const squad of squads) {
-      //2. Restore total score
-      squad.scoreInfo.pointsAfterTour = squad.squad.seasonScoreInfo?.score
-        ? squad.squad.seasonScoreInfo?.score - squad.scoreInfo.score
-        : 0;
+  //   let scoreSum = 0;
+  //   for (const squad of squads) {
+  //     //2. Restore total score
+  //     squad.scoreInfo.pointsAfterTour = squad.squad.seasonScoreInfo?.score
+  //       ? squad.squad.seasonScoreInfo?.score - squad.scoreInfo.score
+  //       : 0;
 
-      //3. Calculate new squad tour score as a sum of player scores
-      const tourInfo = squadsCurrentTourInfo.find(s => s.id === squad.squad.id);
-      squad.scoreInfo.score = tourInfo?.tourInfo
-        ? PlayerService.filterPlayersWithPointsCount(
-            tourInfo.tourInfo.players
-          ).reduce((sum, p) => sum + (p.points || 0), 0)
-        : 0;
+  //     //3. Calculate new squad tour score as a sum of player scores
+  //     const tourInfo = squadsCurrentTourInfo.find(s => s.id === squad.squad.id);
+  //     squad.scoreInfo.score = tourInfo
+  //       ? PlayerService.filterPlayersWithPointsCount(tourInfo.players).reduce(
+  //           (sum, p) => sum + (p.points || 0),
+  //           0
+  //         )
+  //       : 0;
 
-      //4. Sum for average
-      scoreSum += squad.scoreInfo.score;
-    }
+  //     //4. Sum for average
+  //     scoreSum += squad.scoreInfo.score;
+  //   }
 
-    const averageScore = scoreSum / squads.length;
-    squads = squads.sort(
-      (a, b) => b.scoreInfo.pointsAfterTour - a.scoreInfo.pointsAfterTour
-    );
-    let place = 0,
-      pointsPrev = 0;
-    for (const squad of squads) {
-      //5. Restore place
-      if (squad.scoreInfo.pointsAfterTour !== pointsPrev) {
-        place++;
-      }
-      squad.scoreInfo.placeAfterTour = place;
-      pointsPrev = squad.scoreInfo.pointsAfterTour;
+  //   const averageScore = scoreSum / squads.length;
+  //   squads = squads.sort(
+  //     (a, b) => b.scoreInfo.pointsAfterTour - a.scoreInfo.pointsAfterTour
+  //   );
+  //   let place = 0,
+  //     pointsPrev = 0;
+  //   for (const squad of squads) {
+  //     //5. Restore place
+  //     if (squad.scoreInfo.pointsAfterTour !== pointsPrev) {
+  //       place++;
+  //     }
+  //     squad.scoreInfo.placeAfterTour = place;
+  //     pointsPrev = squad.scoreInfo.pointsAfterTour;
 
-      //6. Add new squad tour score to total score
-      squad.scoreInfo.pointsAfterTour += squad.scoreInfo.score;
+  //     //6. Add new squad tour score to total score
+  //     squad.scoreInfo.pointsAfterTour += squad.scoreInfo.score;
 
-      //7. Average score
-      squad.scoreInfo.averageScore = averageScore;
-    }
+  //     //7. Average score
+  //     squad.scoreInfo.averageScore = averageScore;
+  //   }
 
-    squads = squads.sort(
-      (a, b) => b.scoreInfo.pointsAfterTour - a.scoreInfo.pointsAfterTour
-    );
-    place = 0;
-    pointsPrev = 0;
-    for (const squad of squads) {
-      //6. Calculate new place with diff
-      if (squad.scoreInfo.pointsAfterTour !== pointsPrev) {
-        place++;
-      }
-      squad.scoreInfo.placeAfterTourDiff =
-        squad.scoreInfo.placeAfterTour - place;
-      squad.scoreInfo.placeAfterTour = place;
-      pointsPrev = squad.scoreInfo.pointsAfterTour;
-    }
-  }
+  //   squads = squads.sort(
+  //     (a, b) => b.scoreInfo.pointsAfterTour - a.scoreInfo.pointsAfterTour
+  //   );
+  //   place = 0;
+  //   pointsPrev = 0;
+  //   for (const squad of squads) {
+  //     //6. Calculate new place with diff
+  //     if (squad.scoreInfo.pointsAfterTour !== pointsPrev) {
+  //       place++;
+  //     }
+  //     squad.scoreInfo.placeAfterTourDiff =
+  //       squad.scoreInfo.placeAfterTour - place;
+  //     squad.scoreInfo.placeAfterTour = place;
+  //     pointsPrev = squad.scoreInfo.pointsAfterTour;
+  //   }
+  // }
 }
