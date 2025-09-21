@@ -6,9 +6,9 @@ import {
   useSuspenseQuery,
 } from '@apollo/client';
 import {
-  GetLeagueSquadsDocument,
   FantasyRatingEntityType,
-  GetLeagueSquadsCurrentTourInfoDocument,
+  GetLeagueSquadsDocument,
+  GetLeagueSquadsWithCurrentTourInfoDocument,
   GetSquadTourInfoDocument,
   GetSquadTourInfoQuery,
   GetSquadTourInfoQueryVariables,
@@ -23,16 +23,12 @@ import { TourService } from '@/services';
  */
 export const useSuspenseLeagueSquads = (
   leagueId?: string,
-  tourId?: string,
-  seasonId?: string
+  entityType?: FantasyRatingEntityType,
+  entityId?: string
 ) => {
-  const entityType = tourId
-    ? FantasyRatingEntityType.Tour
-    : FantasyRatingEntityType.Season;
-  const entityId = tourId || seasonId;
   const { data } = useSuspenseQuery(
     GetLeagueSquadsDocument,
-    leagueId && entityId
+    leagueId && entityType && entityId
       ? { variables: { leagueId, entityType, entityId } }
       : skipToken
   );
@@ -42,20 +38,25 @@ export const useSuspenseLeagueSquads = (
 /**
  *
  */
-export const useSuspenseLeagueSquadsCurrentTourInfo = (
+export const useSuspenseLeagueSquadsWithCurrentTourInfo = (
   leagueId?: string,
-  seasonId?: string
+  entityType?: FantasyRatingEntityType,
+  entityId?: string
 ) => {
   const { data } = useSuspenseQuery(
-    GetLeagueSquadsCurrentTourInfoDocument,
-    leagueId && seasonId ? { variables: { leagueId, seasonId } } : skipToken
+    GetLeagueSquadsWithCurrentTourInfoDocument,
+    leagueId && entityType && entityId
+      ? { variables: { leagueId, entityType, entityId } }
+      : skipToken
   );
 
   return (
-    data?.fantasyQueries.rating.squads?.list.map(s => ({
-      id: s.squad.id,
-      tourInfo: s.squad.currentTourInfo,
-    })) || []
+    data?.fantasyQueries.rating.squads?.list.map(squadWithInfo => {
+      const { scoreInfo, squad } = squadWithInfo;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { currentTourInfo, ...squadWithoutInfo } = squad;
+      return { scoreInfo, squad: squadWithoutInfo };
+    }) || []
   );
 };
 
@@ -65,29 +66,27 @@ export const useSuspenseLeagueSquadsCurrentTourInfo = (
 export const useContextSquads = () => {
   const league = useContextLeague();
   const tour = useContextTour();
+  const isTourCurrent = useIsTourCurrent();
   const isTourScoreAvailable = useMemo(
     () => TourService.isScoreAvailable(tour),
     [tour?.status]
   );
-  return useSuspenseLeagueSquads(
-    league.id,
-    //Tour Rating
-    isTourScoreAvailable ? tour.id : undefined,
-    //Season Rating
-    !isTourScoreAvailable ? league.season.id : undefined
+
+  const entityType = isTourScoreAvailable
+    ? FantasyRatingEntityType.Tour
+    : FantasyRatingEntityType.Season;
+  const entityId = isTourScoreAvailable ? tour.id : league.season.id;
+  const squads = useSuspenseLeagueSquads(
+    !isTourCurrent ? league.id : undefined,
+    !isTourCurrent ? entityType : undefined,
+    !isTourCurrent ? entityId : undefined
   );
-};
-/**
- *
- */
-export const useContextSquadsCurrentTourInfo = () => {
-  //Only for Current Tour
-  const league = useContextLeague();
-  const isTourCurrent = useIsTourCurrent();
-  useSuspenseLeagueSquadsCurrentTourInfo(
+  const squadsWithCurrentTourInfo = useSuspenseLeagueSquadsWithCurrentTourInfo(
     isTourCurrent ? league.id : undefined,
-    isTourCurrent ? league.season.id : undefined
+    isTourCurrent ? entityType : undefined,
+    isTourCurrent ? entityId : undefined
   );
+  return squadsWithCurrentTourInfo.length ? squadsWithCurrentTourInfo : squads;
 };
 
 /**

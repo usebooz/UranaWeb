@@ -1,4 +1,11 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  createHttpLink,
+  FieldPolicy,
+  InMemoryCache,
+} from '@apollo/client';
+import { SquadTourInfo } from '.';
+import { GetSquadTourInfoQueryVariables } from './generated/graphql';
 
 // Apollo Client for Sports.ru API (encapsulated in hook)
 const httpLink = createHttpLink({
@@ -21,6 +28,37 @@ export const sportsClient = new ApolloClient({
               };
             },
           },
+        },
+      },
+      FantasyQueries: {
+        fields: {
+          squadTourInfo: {
+            read(existing, options) {
+              if (existing) {
+                return existing;
+              }
+
+              const { tourId, squadId } =
+                options.variables as GetSquadTourInfoQueryVariables;
+              const squadRef = options.toReference({
+                __typename: 'FantasySquad',
+                id: squadId,
+              });
+              const squadCurrentTourInfo = options.readField<SquadTourInfo>(
+                'currentTourInfo',
+                squadRef
+              );
+              const currentTourId = options.readField<string>(
+                'id',
+                squadCurrentTourInfo?.tour
+              );
+              if (currentTourId === tourId) {
+                return squadCurrentTourInfo;
+              }
+
+              return undefined;
+            },
+          } satisfies FieldPolicy<SquadTourInfo>,
         },
       },
     },

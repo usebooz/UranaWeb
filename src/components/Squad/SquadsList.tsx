@@ -2,7 +2,7 @@ import { type FC } from 'react';
 import { Placeholder } from '@telegram-apps/telegram-ui';
 
 import { SquadItem } from './SquadItem';
-import { useContextSquads, useContextSquadsCurrentTourInfo } from '@/hooks';
+import { useContextSquads } from '@/hooks';
 
 /**
  *
@@ -10,7 +10,6 @@ import { useContextSquads, useContextSquadsCurrentTourInfo } from '@/hooks';
  */
 export const SquadsList: FC = () => {
   const squads = useContextSquads();
-  useContextSquadsCurrentTourInfo();
   if (!squads || squads.length === 0) {
     return <Placeholder header="Команды не найдены" />;
   }

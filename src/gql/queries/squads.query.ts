@@ -33,8 +33,8 @@ graphql(`
               placeAfterTourDiff
             }
             squad {
-              name
               id
+              name
               user {
                 id
                 nick
@@ -46,6 +46,8 @@ graphql(`
               }
               seasonScoreInfo {
                 score
+                place
+                totalPlaces
               }
             }
           }
@@ -59,23 +61,55 @@ graphql(`
  *
  */
 graphql(`
-  query GetLeagueSquadsCurrentTourInfo($leagueId: ID!, $seasonId: ID!) {
+  query GetLeagueSquadsWithCurrentTourInfo(
+    $leagueId: ID!
+    $entityType: FantasyRatingEntityType!
+    $entityId: ID!
+  ) {
     fantasyQueries {
       rating {
         squads(
           input: {
             leagueID: $leagueId
-            entityType: SEASON
-            entityID: $seasonId
+            entityType: $entityType
+            entityID: $entityId
             sortOrder: ASC
             pageSize: 90
             pageNum: 1
           }
         ) {
           list {
+            scoreInfo {
+              place
+              score
+              totalPlaces
+              averageScore
+              placeDiff
+              placeAfterTour
+              pointsAfterTour
+              placeAfterTourDiff
+            }
             squad {
               id
+              name
+              user {
+                id
+                nick
+              }
+              benefit {
+                benefitType
+                isApply
+                isActive
+              }
+              seasonScoreInfo {
+                score
+                place
+                totalPlaces
+              }
               currentTourInfo {
+                tour {
+                  id
+                }
                 isNotLimit
                 transfersDone
                 transfersLeft
@@ -133,6 +167,9 @@ graphql(`
   query GetSquadTourInfo($tourId: ID!, $squadId: ID!) {
     fantasyQueries {
       squadTourInfo(input: { tourID: $tourId, squadID: $squadId }) {
+        tour {
+          id
+        }
         isNotLimit
         transfersDone
         transfersLeft

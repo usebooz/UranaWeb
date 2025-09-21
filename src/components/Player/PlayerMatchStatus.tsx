@@ -24,9 +24,11 @@ export const PlayerMatchStatus: FC<PlayerMatchStatusProps> = ({
 }) => {
   const matches = useReadTourMatches(queryRef);
   const playerId = player.seasonPlayer.statObject.id;
+  const teamId = player.seasonPlayer.team?.statObject.id;
+
   const match = useMemo(
-    () => MatchService.findMatchByTeamId(matches, playerId),
-    [matches, playerId]
+    () => MatchService.findMatchByTeamId(matches, teamId),
+    [matches, teamId]
   );
   const isInProgress = useMemo(() => MatchService.isInProgress(match), [match]);
   const isPlayerInLineup = useMemo(
