@@ -6,6 +6,7 @@
 import {
   GetLeagueQuery,
   GetLeagueSquadsQuery,
+  GetLeagueSquadsWithCurrentTourInfoQuery,
   GetSquadTourInfoQuery,
   GetTourMatchesQuery,
   GetTournamentQuery,
@@ -23,6 +24,9 @@ export type League = NonNullable<GetLeagueQuery['fantasyQueries']['league']>;
 
 export type LeagueSquad = NonNullable<
   GetLeagueSquadsQuery['fantasyQueries']['rating']['squads']
+>['list'][0];
+export type LeagueSquadWithCurrentTourInfo = NonNullable<
+  GetLeagueSquadsWithCurrentTourInfoQuery['fantasyQueries']['rating']['squads']
 >['list'][0];
 
 export type SquadTourInfo =

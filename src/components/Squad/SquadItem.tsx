@@ -12,6 +12,7 @@ import { LeagueSquad } from '@/gql';
 import { PlaceSpinner } from '../Loading';
 import { SquadTourInfo } from './SquadTourInfo';
 import { BadgeLoading } from '../Loading/BadgeLoading';
+import { SquadTop } from './SquadTop';
 
 interface SquadItemProps {
   /**
@@ -36,6 +37,7 @@ export const SquadItem: FC<SquadItemProps> = ({ squad }) => {
     () => TourService.isScoreAvailable(tour),
     [tour]
   );
+  const isOpened = useMemo(() => TourService.isOpened(tour), [tour]);
 
   //Load tourInfo if current tour
   const isTourCurrent = useIsTourCurrent();
@@ -82,7 +84,9 @@ export const SquadItem: FC<SquadItemProps> = ({ squad }) => {
           <Suspense fallback={<BadgeLoading />}>
             {isTourInProgress && tourInfoQueryRef ? (
               <PlayersStatus queryRef={tourInfoQueryRef} />
-            ) : undefined}
+            ) : (
+              isOpened && <SquadTop squad={squad} />
+            )}
           </Suspense>
         }
         subhead={squad.squad.user.nick}

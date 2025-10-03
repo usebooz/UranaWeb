@@ -26,18 +26,17 @@ export const PlayerScore: FC<PlayerScoreProps> = ({
     [player]
   );
 
-  let badgeMode: BadgeProps['mode'], badgeClassName, badgeContent;
-  if (inProgress) {
-    badgeMode = isPointsMayCount ? 'secondary' : 'primary';
-    badgeContent = player.score?.toString() || (inLineup && '0');
-  } else {
+  const badgeContent = player.score?.toString() || (inLineup && '0') || '-';
+  const badgeClassName =
+    isPointsNotCount && badgeContent !== '-' ? 'text-crossed' : undefined;
+
+  let badgeMode: BadgeProps['mode'];
+  if (isPointsNotCount) {
     badgeMode = 'gray';
-    badgeContent = player.score?.toString();
-  }
-  if (badgeContent) {
-    badgeClassName = isPointsNotCount ? 'text-crossed' : '';
+  } else if (isPointsMayCount) {
+    badgeMode = 'secondary';
   } else {
-    badgeContent = '-';
+    badgeMode = inProgress ? 'primary' : 'white';
   }
 
   return (
