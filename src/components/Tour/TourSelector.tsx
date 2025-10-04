@@ -4,18 +4,22 @@ import { Pagination } from '@telegram-apps/telegram-ui';
 import { useContextTournament } from '@/hooks';
 
 /**
- * Props for the SquadItem component
+ * Props for TourSelector component.
  */
 interface TourSelectorProps {
-  /** */
+  /** Currently selected tour ID */
   tourId?: string;
-  /** */
+  /** Callback function called when tour selection changes */
   onChange?: (tourId: string) => void;
 }
 
 /**
+ * Component for selecting tours using pagination controls.
+ * Displays available tours from the current tournament season as numbered pages.
+ * Allows navigation between tours and notifies parent component of changes.
  *
- *
+ * @param props - The component props
+ * @returns Pagination component for tour selection
  */
 export const TourSelector: FC<TourSelectorProps> = ({ tourId, onChange }) => {
   const tournament = useContextTournament();
@@ -32,7 +36,7 @@ export const TourSelector: FC<TourSelectorProps> = ({ tourId, onChange }) => {
     setTourNumber(TourService.getTourNumberById(tourId, tours));
   }, [tourId, tours, setTourNumber]);
 
-  //Set Tour Number
+  // Handle tour number selection and notify parent
   const handleTourChange = (_event: unknown, page: number): void => {
     const newTourId = TourService.getTourIdByNumber(page, tours);
     if (!newTourId || !onChange) {
@@ -42,7 +46,7 @@ export const TourSelector: FC<TourSelectorProps> = ({ tourId, onChange }) => {
   };
 
   return (
-    //TODO switch to tabs (horiontal scroll) or fit to all devices
+    // TODO: switch to tabs (horizontal scroll) or fit to all devices
     <Pagination
       hideNextButton
       hidePrevButton

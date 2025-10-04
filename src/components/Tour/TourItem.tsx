@@ -11,14 +11,17 @@ import { PlaceSpinner } from '../Loading';
 import { BadgeLoading } from '../Loading/BadgeLoading';
 
 /**
+ * Component that displays tour information in an expandable accordion.
+ * Shows tour name, status, and matches count. Lazy loads matches data when expanded.
+ * Automatically loads matches for current tours to show live updates.
  *
- *
+ * @returns Accordion component with tour information and expandable matches list
  */
 export const TourItem: FC = () => {
   const tour = useContextTour();
   const [loadMatches, matchesQueryRef] = useLoadableTourMatches();
 
-  //Load matches if current tour
+  // Load matches if current tour (for live updates)
   const isTourCurrent = useIsTourCurrent();
   useEffect(() => {
     if (isTourCurrent) {
@@ -26,7 +29,7 @@ export const TourItem: FC = () => {
     }
   }, [tour, isTourCurrent]);
 
-  //Load matches during expanding
+  // Load matches during expanding
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const handleExpand = (isExpanded: boolean): void => {
     setIsExpanded(isExpanded);

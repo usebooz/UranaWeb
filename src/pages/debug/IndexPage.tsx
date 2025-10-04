@@ -4,6 +4,13 @@ import type { FC } from 'react';
 import { Link } from '@/components/Link';
 import { Page } from '@/components/Page';
 
+/**
+ * Debug index page component that provides navigation to various debug tools.
+ * Serves as a landing page for developers to access Telegram Mini App debugging features.
+ * Includes links to init data, launch parameters, and theme parameters inspection.
+ *
+ * @returns Debug navigation page with links to debugging tools
+ */
 export const IndexPage: FC = () => {
   return (
     <Page back={false}>

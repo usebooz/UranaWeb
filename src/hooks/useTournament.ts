@@ -5,8 +5,11 @@ import { TournamentContext } from '@/components/Tournament';
 import { TournamentService } from '@/services';
 
 /**
+ * Hook for fetching tournament data with suspense.
+ * Throws error if the query fails, enabling error boundaries to catch it.
  *
- * @param webname
+ * @param webname - The tournament webname identifier
+ * @returns Tournament data or null if not found
  */
 export const useSuspenseTournament = (webname?: string) => {
   const { data, error } = useSuspenseQuery(
@@ -20,7 +23,11 @@ export const useSuspenseTournament = (webname?: string) => {
 };
 
 /**
+ * Hook for getting tournament data from context.
+ * Requires tournament webname to be provided via TournamentContext.
  *
+ * @throws {Error} When tournament is not found
+ * @returns Tournament data from context
  */
 export const useContextTournament = () => {
   const webname = useContext(TournamentContext);
@@ -30,8 +37,12 @@ export const useContextTournament = () => {
   }
   return tournament;
 };
+
 /**
+ * Hook for getting the current tour ID from tournament context.
+ * Uses TournamentService to determine the current tour based on tournament state.
  *
+ * @returns The current tour ID or undefined if not available
  */
 export const useCurrentTourId = () => {
   const tournament = useContextTournament();

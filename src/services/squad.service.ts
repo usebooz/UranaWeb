@@ -7,23 +7,27 @@ import { FieldFunctionOptions, Reference } from '@apollo/client';
 import { PlayerService } from './player.service';
 
 /**
- * Service for team/squad scoring and statistics operations
+ * Service for team/squad scoring and statistics operations.
+ * Handles squad data extraction, scoring calculations, and formatting for league management.
  */
 export class SquadService {
   /**
+   * Gets the season score information from a squad.
    *
-   * @param
-   * @returns
+   * @param squad - The squad data
+   * @returns Season score information
    */
   static getSeasonScoreInfo(
     squad: LeagueSquad['squad']
   ): LeagueSquad['squad']['seasonScoreInfo'] {
     return squad.seasonScoreInfo;
   }
+
   /**
+   * Gets the current tour information from a squad with tour info.
    *
-   * @param
-   * @returns
+   * @param squad - The squad data with current tour info
+   * @returns Current tour information
    */
   static getCurrentTourInfo(
     squad: LeagueSquadWithCurrentTourInfo['squad']
@@ -32,18 +36,21 @@ export class SquadService {
   }
 
   /**
+   * Finds the winner (1st place) squad from league squads.
    *
-   * @param leagueSquads
-   * @returns
+   * @param leagueSquads - Array of league squads
+   * @returns The squad in 1st place or undefined if none found
    */
   static findTourWinner(leagueSquads?: LeagueSquad[]): LeagueSquad | undefined {
     return leagueSquads?.find(leagueSquad => leagueSquad.scoreInfo.place === 1);
   }
 
   /**
+   * Formats the tour average score from the first squad in the league.
+   * All squads in a league should have the same average score.
    *
-   * @param leagueSquads
-   * @returns
+   * @param leagueSquads - Array of league squads
+   * @returns Formatted average score string or undefined if no squads
    */
   static formatSquadsTourAverageScore(
     leagueSquads?: LeagueSquad[]
@@ -56,18 +63,20 @@ export class SquadService {
   }
 
   /**
+   * Formats the average score for a single squad with ∅ symbol.
    *
-   * @param leagueSquad
-   * @returns
+   * @param leagueSquad - The league squad data
+   * @returns Formatted average score string (e.g., "∅42")
    */
   static formatAverageScore(leagueSquad: LeagueSquad): string {
     return `∅${leagueSquad.scoreInfo.averageScore?.toString() ?? '0'}`;
   }
 
   /**
+   * Gets the total count of squads in the league.
    *
-   * @param leagueSquads
-   * @returns
+   * @param leagueSquads - Array of league squads
+   * @returns Total squads count as string or undefined if no squads
    */
   static getSquadsCount(leagueSquads?: LeagueSquad[]): string | undefined {
     const firstSquad = leagueSquads?.[0];
@@ -76,18 +85,20 @@ export class SquadService {
   }
 
   /**
+   * Checks if a squad's place difference after tour is negative (dropped in ranking).
    *
-   * @param leagueSquad
-   * @returns
+   * @param leagueSquad - The league squad data
+   * @returns True if the squad dropped in ranking
    */
   static isPlaceDiffNegative(leagueSquad: LeagueSquad): boolean {
     return leagueSquad.scoreInfo.placeAfterTourDiff < 0;
   }
 
   /**
+   * Formats the place difference with directional arrows.
    *
-   * @param leagueSquad
-   * @returns
+   * @param leagueSquad - The league squad data
+   * @returns Formatted place difference (e.g., "3↑" or "2↓") or undefined if no change
    */
   static formatPlaceDiff(leagueSquad: LeagueSquad): string | undefined {
     if (!leagueSquad.scoreInfo.placeAfterTourDiff) return undefined;
@@ -97,9 +108,11 @@ export class SquadService {
   }
 
   /**
+   * Formats squad's top ranking position with appropriate emoji or percentage.
+   * Returns medals for top 3, special emoji for top 18/100, or percentage for top performers.
    *
-   * @param
-   * @returns
+   * @param squad - The league squad data
+   * @returns Formatted top position string or undefined if not in top rankings
    */
   static formatSquadTop(squad: LeagueSquad): string | undefined {
     const place = squad.squad.seasonScoreInfo?.place;
@@ -133,9 +146,11 @@ export class SquadService {
   }
 
   /**
+   * Formats the total number of transfers available for a squad.
+   * Shows infinity symbol for unlimited transfers or total count.
    *
-   * @param squadTourInfo
-   * @returns
+   * @param squadTourInfo - Squad tour information containing transfer data
+   * @returns Formatted transfer count string or undefined
    */
   static formatSquadTransfersTotal(
     squadTourInfo?: SquadTourInfo
@@ -150,18 +165,24 @@ export class SquadService {
 }
 
 /**
- *
+ * Extended squad service that works with Apollo Client cache.
+ * Provides cache-aware methods for reading squad data and live score calculations.
  */
 export class SquadCacheService extends SquadService {
   private static _options?: FieldFunctionOptions;
   /**
+   * Initializes the cache service with Apollo Client field function options.
    *
+   * @param options - Apollo Client field function options for cache operations
    */
   static initialize(options?: FieldFunctionOptions) {
     this._options = options;
   }
   /**
+   * Gets the initialized Apollo Client field function options.
    *
+   * @returns Field function options for cache operations
+   * @throws Error if service not initialized
    */
   static get options(): FieldFunctionOptions {
     if (!this._options) throw new Error('PlayerCacheService not initialized');
@@ -169,9 +190,10 @@ export class SquadCacheService extends SquadService {
   }
 
   /**
+   * Gets season score info with cache awareness for Apollo Client references.
    *
-   * @param
-   * @returns
+   * @param squad - The squad data (may be a cache reference)
+   * @returns Season score information
    */
   static getSeasonScoreInfo(
     squad: LeagueSquad['squad']
@@ -185,9 +207,10 @@ export class SquadCacheService extends SquadService {
     return super.getSeasonScoreInfo(squad);
   }
   /**
+   * Gets current tour info with cache awareness for Apollo Client references.
    *
-   * @param
-   * @returns
+   * @param squad - The squad data (may be a cache reference)
+   * @returns Current tour information
    */
   static getCurrentTourInfo(
     squad: LeagueSquadWithCurrentTourInfo['squad'] | Reference
@@ -201,8 +224,10 @@ export class SquadCacheService extends SquadService {
   }
 
   /**
+   * Recalculates live scores for all squads in a league during active tour.
+   * Handles tour scores, rankings, and after-tour projections.
    *
-   * @param leagueSquads
+   * @param leagueSquads - Array of league squads to recalculate
    */
   static recalculateSquadsLiveScore(
     leagueSquads: LeagueSquadWithCurrentTourInfo[]
@@ -217,8 +242,10 @@ export class SquadCacheService extends SquadService {
   }
 
   /**
+   * Restores squad scores to their state after the previous tour.
+   * Calculates points after tour and rankings before current tour scoring.
    *
-   * @param leagueSquads
+   * @param leagueSquads - Array of league squads to restore
    */
   static restoreSquadsAfterTourScore(
     leagueSquads: LeagueSquadWithCurrentTourInfo[]
@@ -245,8 +272,10 @@ export class SquadCacheService extends SquadService {
   }
 
   /**
+   * Recalculates current tour live scores and rankings for all squads.
+   * Updates tour scores, average scores, and current tour rankings.
    *
-   * @param leagueSquads
+   * @param leagueSquads - Array of league squads to recalculate
    */
   static recalculateSquadsTourLiveScore(
     leagueSquads: LeagueSquadWithCurrentTourInfo[]
@@ -281,8 +310,10 @@ export class SquadCacheService extends SquadService {
   }
 
   /**
+   * Recalculates final after-tour scores and rankings including current tour points.
+   * Updates place differences and final standings after tour completion.
    *
-   * @param leagueSquads
+   * @param leagueSquads - Array of league squads to recalculate
    */
   static recalculateSquadsAfterTourScore(
     leagueSquads: LeagueSquadWithCurrentTourInfo[]

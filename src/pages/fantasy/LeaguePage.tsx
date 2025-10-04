@@ -6,6 +6,14 @@ import { TourSelector, TourContext, TourItem } from '@/components/Tour';
 import { useGetTourParam, useLeagueParam, useUpdateTourParam } from '@/hooks';
 import { SquadsHeader, SquadsList } from '@/components/Squad';
 
+/**
+ * Main league page component for fantasy football league management.
+ * Displays league selector, tour selector, tour information, and squads list.
+ * Manages tour parameter updates and provides context for league and tour data.
+ * Uses nested Suspense boundaries for progressive loading of different sections.
+ *
+ * @returns League page with selectors, tour info, and squads management
+ */
 export const LeaguePage: FC = () => {
   const updateTourParam = useUpdateTourParam();
 

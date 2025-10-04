@@ -7,6 +7,13 @@ import {
   LaunchParamsPage,
 } from '@/pages/debug';
 
+/**
+ * Debug route component that provides routing for debugging and development tools.
+ * Includes pages for inspecting Telegram Mini App data, theme parameters, and launch parameters.
+ * Used for development and troubleshooting Telegram Web App integration.
+ *
+ * @returns Debug routes for development tools
+ */
 export function DebugRoute() {
   return (
     <Routes>

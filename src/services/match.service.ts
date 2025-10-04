@@ -3,24 +3,28 @@ import { MatchLineupPlayerStatus } from '@/gql';
 import { MatchStatus, StatPeriodId, StatWinner } from '@/gql/generated/graphql';
 
 /**
- * Service for individual match operations and status management
+ * Service for individual match operations and status management.
+ * Handles match status checking, lineup operations, and player match statistics.
  */
 export class MatchService {
+  /** Emoji used to represent substitute players */
   static readonly subEmoji = '🪑';
 
   /**
-   * Checks if match is currently in progress
-   * @param match - match data
-   * @returns true if match status is Live
+   * Checks if match is currently in progress.
+   *
+   * @param match - The match data
+   * @returns True if match status is Live
    */
   static isInProgress(match?: TourMatch): boolean {
     return match?.matchStatus === MatchStatus.Live;
   }
 
   /**
+   * Checks if match score is available (match is live or finished).
    *
-   * @param match
-   * @returns
+   * @param match - The match data
+   * @returns True if score data is available
    */
   static isScoreAvailable(match?: TourMatch): boolean {
     return this.isInProgress(match) || this.isFinished(match);
@@ -89,10 +93,11 @@ export class MatchService {
   }
 
   /**
+   * Finds a match where specified team is playing (home or away).
    *
-   * @param matches - array of tour matches
-   * @param teamId
-   * @returns
+   * @param matches - Array of tour matches to search in
+   * @param teamId - ID of the team to find
+   * @returns Match with the specified team or undefined if not found
    */
   static findMatchByTeamId(
     matches?: TourMatch[],
@@ -105,10 +110,13 @@ export class MatchService {
   }
 
   /**
+   * Gets the lineup status of a player in a specific match.
+   * Returns status as enum value or emoji representation.
    *
-   * @param match
-   * @param playerId
-   * @returns
+   * @param match - The match data containing lineup information
+   * @param playerId - ID of the player to check
+   * @param emoji - If true, returns emoji representation instead of enum
+   * @returns Player's lineup status or undefined if player not found
    */
   static getLineupPlayerStatus(
     match?: TourMatch,
@@ -135,10 +143,11 @@ export class MatchService {
   }
 
   /**
+   * Checks if a player is included in the match lineup (starting or substitute).
    *
-   * @param match
-   * @param playerId
-   * @returns
+   * @param match - The match data containing lineup information
+   * @param playerId - ID of the player to check
+   * @returns True if player is in the lineup (starting or substitute)
    */
   static isPlayerInLineup(match?: TourMatch, playerId?: string): boolean {
     const status = this.getLineupPlayerStatus(match, playerId) as

@@ -13,17 +13,28 @@ import {
 } from './generated/graphql';
 import { PlayerCacheService, SquadCacheService } from '@/services';
 
-// Apollo Client for Sports.ru API (encapsulated in hook)
+/**
+ * Apollo Client for Sports.ru API communication.
+ * Configured with custom cache policies for fantasy football data management.
+ */
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_SPORTS_API_URL as string,
 });
 
+/**
+ * Apollo Client instance with custom caching policies.
+ * Includes specialized merge functions for squad tour info and league squads data.
+ */
 export const sportsClient = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache({
     typePolicies: {
       FantasySquad: {
         fields: {
+          /**
+           * Custom merge function for currentTourInfo field.
+           * Handles live score recalculation during in-progress tours.
+           */
           currentTourInfo: {
             merge(existing, incoming, options) {
               if (existing || !incoming) {

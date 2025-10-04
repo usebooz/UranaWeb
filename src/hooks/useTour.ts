@@ -19,8 +19,10 @@ import { TourService } from '@/services';
 import { TourContext } from '@/components/Tour';
 
 /**
+ * Hook for updating the tour parameter in the URL search params.
+ * Provides a callback function to update the tourId parameter while preserving other params.
  *
- *
+ * @returns Function to update the tour parameter
  */
 export const useUpdateTourParam = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,9 +38,12 @@ export const useUpdateTourParam = () => {
 
   return updateTourParam;
 };
+
 /**
+ * Hook for getting and managing the tour parameter from URL.
+ * Automatically redirects to current tour if no tour is specified in URL.
  *
- *
+ * @returns The tour ID from URL parameters or current tour ID
  */
 export const useGetTourParam = () => {
   const [searchParams] = useSearchParams();
@@ -57,8 +62,12 @@ export const useGetTourParam = () => {
 };
 
 /**
+ * Hook for fetching tour data with suspense behavior.
+ * Throws errors to error boundaries if tour data cannot be loaded.
  *
- * @param id
+ * @param id - Tour identifier
+ * @returns Tour data or null if not found
+ * @throws Error if tour data cannot be loaded
  */
 const useSuspenseTour = (id?: string) => {
   const { data, error } = useSuspenseQuery(
@@ -71,13 +80,20 @@ const useSuspenseTour = (id?: string) => {
   return data?.fantasyQueries?.tour || null;
 };
 /**
+ * Hook for creating a loadable query for tour matches.
+ * Returns a loadable query that can be triggered manually to fetch tour matches.
  *
+ * @returns Loadable query reference for tour matches
  */
 export const useLoadableTourMatches = () => {
   return useLoadableQuery(GetTourMatchesDocument);
 };
 /**
+ * Hook for fetching tour matches in the background.
+ * Starts a background query for tour matches without blocking the UI.
  *
+ * @param id - Tour identifier
+ * @returns Background query reference for tour matches
  */
 export const useBackgroundTourMatches = (id?: string) => {
   return useBackgroundQuery(
@@ -86,8 +102,11 @@ export const useBackgroundTourMatches = (id?: string) => {
   );
 };
 /**
+ * Hook for reading tour matches from a query reference.
+ * Extracts tour matches data from an already-executed query.
  *
- * @param
+ * @param queryRef - Query reference containing tour matches data
+ * @returns Array of tour matches or empty array
  */
 export const useReadTourMatches = (
   queryRef: QueryRef<GetTourMatchesQuery, GetTourMatchesQueryVariables>
@@ -97,7 +116,11 @@ export const useReadTourMatches = (
 };
 
 /**
+ * Hook for getting tour data from current context.
+ * Validates that the tour is available and from the current season.
  *
+ * @returns Tour data from context
+ * @throws Error if tour is not found or not from current season
  */
 export const useContextTour = () => {
   const tourId = useContext(TourContext);
@@ -113,7 +136,10 @@ export const useContextTour = () => {
   return tour;
 };
 /**
+ * Hook for checking if the current context tour is the active/current tour.
+ * Compares the context tour ID with the current tour ID from tournament.
  *
+ * @returns True if the context tour is the current active tour
  */
 export const useIsTourCurrent = () => {
   const tourId = useContext(TourContext);
@@ -121,7 +147,11 @@ export const useIsTourCurrent = () => {
   return useMemo(() => tourId === currentTourId, [tourId, currentTourId]);
 };
 /**
+ * Hook for getting matches of the current tour in background.
+ * Only fetches matches if the context tour is the current active tour.
+ * Used for live match updates without blocking the UI.
  *
+ * @returns Background query reference for current tour matches
  */
 export const useContextCurrentTourMatches = () => {
   //Only for Current Tour

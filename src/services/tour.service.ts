@@ -6,29 +6,32 @@ import { FantasyTourStatus } from '@/gql/generated/graphql';
  */
 export class TourService {
   /**
+   * Checks if a tour belongs to the current season.
    *
-   * @param tour - tour data
-   * @param tours - array of tours
-   * @returns
+   * @param tour - The tour to check
+   * @param tours - Array of tours from the current season
+   * @returns True if the tour is from the current season
    */
   static isFromCurrentSeason(tour: Tour, tours?: Tour[]): boolean {
     return tours?.some(t => t.id === tour.id) || false;
   }
 
   /**
+   * Filters tours to return only available ones.
    *
-   * @param tours
-   * @returns
+   * @param tours - Array of tours to filter
+   * @returns Array of available tours or undefined if input is undefined
    */
   static filterAvailableTours(tours?: Tour[]): Tour[] | undefined {
     return tours?.filter(tour => TourService.isAvailable(tour));
   }
 
   /**
-   * Gets selected tour
-   * @param tourNumber
-   * @param tours
-   * @returns
+   * Gets selected tour by number (1-indexed).
+   *
+   * @param tourNumber - The tour number (1-based)
+   * @param tours - Array of tours
+   * @returns The tour ID or undefined if not found
    */
   static getTourIdByNumber(
     tourNumber: number,
@@ -38,10 +41,11 @@ export class TourService {
   }
 
   /**
+   * Gets the tour number (1-indexed) by tour ID.
    *
-   * @param tourId
-   * @param tours
-   * @returns
+   * @param tourId - The tour ID to search for
+   * @param tours - Array of tours
+   * @returns The tour number (1-based) or undefined if not found
    */
   static getTourNumberById(
     tourId?: string,

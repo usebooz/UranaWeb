@@ -14,16 +14,21 @@ import { SquadTourInfo } from './SquadTourInfo';
 import { BadgeLoading } from '../Loading/BadgeLoading';
 import { SquadTop } from './SquadTop';
 
+/**
+ * Props for SquadItem component.
+ */
 interface SquadItemProps {
-  /**
-   *
-   */
+  /** The league squad data to display */
   squad: LeagueSquad;
 }
 
 /**
+ * Component that displays a single squad item in the league.
+ * Shows squad position, name, score, and expandable tour details.
+ * Lazy loads tour info when accordion is expanded for current tours.
  *
- *
+ * @param props - The component props
+ * @returns Accordion item with squad information and expandable details
  */
 export const SquadItem: FC<SquadItemProps> = ({ squad }) => {
   const [loadTourInfo, tourInfoQueryRef] = useLoadableSquadTourInfo();

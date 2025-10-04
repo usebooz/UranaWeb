@@ -5,6 +5,14 @@ import { List } from '@telegram-apps/telegram-ui';
 import { DisplayData } from '@/components/DisplayData';
 import { Page } from '@/components/Page';
 
+/**
+ * Debug page component for displaying Telegram Web App theme parameters.
+ * Shows current theme colors and styling parameters from Telegram.
+ * Converts camelCase parameter names to snake_case for better readability.
+ * Used for debugging theme integration and styling.
+ *
+ * @returns {JSX.Element} The rendered theme parameters debug page
+ */
 export const ThemeParamsPage: FC = () => {
   const tp = useSignal(themeParams.state);
 

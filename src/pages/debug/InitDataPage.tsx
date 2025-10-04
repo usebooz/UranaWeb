@@ -10,6 +10,12 @@ import { List, Placeholder } from '@telegram-apps/telegram-ui';
 import { DisplayData, type DisplayDataRow } from '@/components/DisplayData';
 import { Page } from '@/components/Page';
 
+/**
+ * Helper function to convert user object properties to display data rows.
+ *
+ * @param user - Telegram user object
+ * @returns Array of display data rows for user properties
+ */
 function getUserRows(user: User): DisplayDataRow[] {
   return (Object.entries(user) as Array<[string, unknown]>).map(
     ([title, value]) => ({
@@ -19,6 +25,13 @@ function getUserRows(user: User): DisplayDataRow[] {
   );
 }
 
+/**
+ * Debug page component for inspecting Telegram Mini App initialization data.
+ * Displays raw init data, parsed init data state, and user information in a structured format.
+ * Useful for developers to debug authentication and user data issues.
+ *
+ * @returns Debug page with init data inspection tools
+ */
 export const InitDataPage: FC = () => {
   const initDataRaw = useSignal(_initDataRaw);
   const initDataState = useSignal(_initDataState);

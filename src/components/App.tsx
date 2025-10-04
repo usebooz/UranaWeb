@@ -9,6 +9,13 @@ import { AppRoot } from '@telegram-apps/telegram-ui';
 
 import { DebugRoute, FantasyRoute } from './Route';
 
+/**
+ * Main application component that sets up routing and theming.
+ * Handles dark/light theme switching based on Telegram app settings
+ * and configures appropriate platform styling for iOS/macOS vs other platforms.
+ *
+ * @returns The main application with routing and theme configuration
+ */
 export function App() {
   const lp = useMemo(() => retrieveLaunchParams(), []);
   const isDark = useSignal(isMiniAppDark);

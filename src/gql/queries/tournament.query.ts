@@ -1,7 +1,8 @@
 import { graphql } from '@/gql/generated';
 
 /**
- * Query to get tournament
+ * GraphQL query to fetch tournament data including current season and tours information.
+ * Used for getting tournament structure, current tour, and available tours list.
  */
 graphql(`
   query GetTournament($id: ID!) {

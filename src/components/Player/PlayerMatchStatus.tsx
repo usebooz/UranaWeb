@@ -10,13 +10,23 @@ import {
 } from '@/gql/generated/graphql';
 import { PlayerScore } from './PlayerScore';
 
+/**
+ * Props for PlayerMatchStatus component.
+ */
 interface PlayerMatchStatusProps {
+  /** The squad tour player data */
   player: SquadTourPlayer;
+  /** Apollo Client query reference for tour matches */
   queryRef: QueryRef<GetTourMatchesQuery, GetTourMatchesQueryVariables>;
 }
 
 /**
+ * Component that displays a player's match status during live matches.
+ * Shows different indicators based on match state: lineup status, live score, or status emoji.
+ * Used for real-time match tracking and player performance display.
  *
+ * @param props - The component props
+ * @returns Badge showing player's current match status
  */
 export const PlayerMatchStatus: FC<PlayerMatchStatusProps> = ({
   player,

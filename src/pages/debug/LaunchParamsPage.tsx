@@ -5,6 +5,13 @@ import { type FC, useMemo } from 'react';
 import { DisplayData } from '@/components/DisplayData';
 import { Page } from '@/components/Page';
 
+/**
+ * Debug page component for displaying Telegram Web App launch parameters.
+ * Shows various launch parameters like platform, version, bot inline status, etc.
+ * Used for debugging and development purposes.
+ *
+ * @returns {JSX.Element} The rendered launch parameters debug page
+ */
 export const LaunchParamsPage: FC = () => {
   const lp = useMemo(() => retrieveLaunchParams(), []);
 

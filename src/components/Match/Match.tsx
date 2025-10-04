@@ -3,19 +3,24 @@ import { Cell, Info, Badge, Avatar } from '@telegram-apps/telegram-ui';
 import { MatchService } from '@/services';
 import type { TourMatch } from '@/gql';
 
+/**
+ * Props for MatchItem component.
+ */
 interface MatchItemProps {
-  /**
-   *
-   */
+  /** The tour match data to display */
   match: TourMatch;
 }
 
 /**
+ * Component that displays a single match with teams, scores, and match status.
+ * Shows different information based on match state: betting odds for upcoming matches,
+ * live scores for in-progress matches, and final scores for completed matches.
  *
- * @param
- * @returns
+ * @param props - The component props
+ * @returns Cell component with match information
  */
 export const MatchItem: FC<MatchItemProps> = ({ match }) => {
+  // Determine team display order based on match winner
   let teamWinner, teamBefore, teamAfter;
   if (MatchService.isHomeWinner(match)) {
     teamWinner = match.home?.team?.name;
@@ -28,6 +33,7 @@ export const MatchItem: FC<MatchItemProps> = ({ match }) => {
     teamAfter = match.away?.team?.name;
   }
 
+  // Show betting odds for upcoming matches, scores for started matches
   let homeBet, awayBet, homeScore, awayScore;
   if (MatchService.isNotStarted(match)) {
     homeBet = match.bettingOdds[0]?.line1x2?.h?.toString();
@@ -37,6 +43,7 @@ export const MatchItem: FC<MatchItemProps> = ({ match }) => {
     awayScore = match.away?.score.toString();
   }
 
+  // Apply different styling for live vs finished matches
   let scoreClass;
   if (MatchService.isInProgress(match)) {
     scoreClass = 'info-accent-text-color';

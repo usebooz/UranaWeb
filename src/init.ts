@@ -16,6 +16,12 @@ import {
 
 /**
  * Initializes the application and configures its dependencies.
+ * Sets up Telegram SDK, validates environment variables, and configures debugging tools.
+ *
+ * @param options - Configuration options for initialization
+ * @param options.debug - Enable debug mode for Telegram SDK
+ * @param options.eruda - Enable Eruda debugging tool
+ * @param options.mockForMacOS - Enable mocking for macOS Telegram client
  * @throws {Error} If required environment variables are missing
  */
 export function init(options: {
@@ -23,7 +29,7 @@ export function init(options: {
   eruda: boolean;
   mockForMacOS: boolean;
 }): void {
-  // Проверяем наличие обязательных переменных окружения
+  // Check for required environment variables
   if (!import.meta.env.VITE_SPORTS_API_URL) {
     throw new Error('VITE_SPORTS_API_URL environment variable is required');
   }

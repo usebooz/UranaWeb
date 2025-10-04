@@ -7,13 +7,18 @@ import {
 import { useMemo } from 'react';
 import type { FC } from 'react';
 
+/**
+ * Props for ErrorPage component.
+ */
 interface ErrorPageProps {
+  /** The error to display */
   error: unknown;
 }
 
 /**
- * Универсальная страница ошибки на основе Telegram UI Placeholder
- * Используется для всех ошибок: проверка платформы, переменные окружения, загрузка данных, "не найдено"
+ * Universal error page component based on Telegram UI Placeholder.
+ * Used for all types of errors: platform checks, environment variables, data loading, "not found" etc.
+ * Automatically detects platform and theme settings to provide consistent UI experience.
  */
 export const ErrorPage: FC<ErrorPageProps> = ({ error }) => {
   const [platform, isDark] = useMemo(() => {
@@ -25,10 +30,12 @@ export const ErrorPage: FC<ErrorPageProps> = ({ error }) => {
         bgColor && isRGB(bgColor) ? isColorDark(bgColor) : false,
       ];
     } catch {
+      // Fallback to default values if launch params are not available
       return ['android', false];
     }
   }, []);
 
+  // Convert error to displayable string message
   let errorMessage: string;
   if (error instanceof Error) {
     errorMessage = error.message;

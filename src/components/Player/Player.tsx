@@ -11,12 +11,21 @@ import { PlayerScore } from './PlayerScore';
 import { PlayerMatchStatus } from './PlayerMatchStatus';
 import { BadgeLoading } from '../Loading/BadgeLoading';
 
+/**
+ * Props for Player component.
+ */
 interface PlayerProps {
+  /** The squad tour player data to display */
   player: SquadTourPlayer;
 }
 
 /**
+ * Component that displays a player with their team kit, score/status badge, and basic information.
+ * Shows different badges based on tour status: PlayerScore for finished tours, PlayerMatchStatus for current tours.
+ * Displays appropriate subcaption based on whether player is starting or substitute.
  *
+ * @param props - The component props
+ * @returns A player card with image, name, and status information
  */
 export const Player: FC<PlayerProps> = ({ player }) => {
   const [matchesQueryRef] = useContextCurrentTourMatches();
@@ -24,6 +33,7 @@ export const Player: FC<PlayerProps> = ({ player }) => {
   const isTourCurrent = useIsTourCurrent();
   const matchesFinished = useMemo(() => TourService.isFinished(tour), [tour]);
 
+  // Determine which badge to show based on tour status
   let badge;
   if (matchesFinished) {
     badge = <PlayerScore player={player} />;
@@ -31,6 +41,7 @@ export const Player: FC<PlayerProps> = ({ player }) => {
     badge = <PlayerMatchStatus player={player} queryRef={matchesQueryRef} />;
   }
 
+  // Build subcaption based on player status (starting vs substitute)
   let subCaption;
   if (player.isStarting) {
     subCaption = PlayerService.getCaptainEmoji(player);
