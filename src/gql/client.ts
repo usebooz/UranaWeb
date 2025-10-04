@@ -1,7 +1,7 @@
 import {
   ApolloClient,
-  createHttpLink,
   FieldPolicy,
+  HttpLink,
   InMemoryCache,
 } from '@apollo/client';
 import { LeagueSquadWithCurrentTourInfo, SquadTourInfo } from '.';
@@ -17,7 +17,8 @@ import { PlayerCacheService, SquadCacheService } from '@/services';
  * Apollo Client for Sports.ru API communication.
  * Configured with custom cache policies for fantasy football data management.
  */
-const httpLink = createHttpLink({
+
+const httpLink = new HttpLink({
   uri: import.meta.env.VITE_SPORTS_API_URL as string,
 });
 
