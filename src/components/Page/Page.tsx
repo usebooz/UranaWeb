@@ -28,13 +28,12 @@ export function Page({
   useEffect(() => {
     if (back) {
       showBackButton();
-      const cleanup = onBackButtonClick(() => {
-        void navigate(-1);
+      const cleanup = onBackButtonClick(async () => {
+        await navigate(-1);
       });
       return cleanup;
-    } else {
-      hideBackButton();
     }
+    hideBackButton();
   }, [back]);
 
   return <>{children}</>;
