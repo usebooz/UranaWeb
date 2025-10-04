@@ -229,6 +229,19 @@ export class SquadCacheService extends SquadService {
         ? seasonScoreInfo?.score - leagueSquad.scoreInfo.score
         : 0;
     }
+
+    leagueSquads = leagueSquads.sort(
+      (a, b) => b.scoreInfo.pointsAfterTour - a.scoreInfo.pointsAfterTour
+    );
+    let place = 0,
+      pointsPrev = 0;
+    for (const leagueSquad of leagueSquads) {
+      if (leagueSquad.scoreInfo.pointsAfterTour !== pointsPrev || !place) {
+        place++;
+      }
+      leagueSquad.scoreInfo.placeAfterTour = place;
+      pointsPrev = leagueSquad.scoreInfo.pointsAfterTour;
+    }
   }
 
   /**
@@ -256,7 +269,7 @@ export class SquadCacheService extends SquadService {
       scorePrev = 0;
     for (const leagueSquad of leagueSquads) {
       // average
-      leagueSquad.scoreInfo.averageScore = averageScore;
+      leagueSquad.scoreInfo.averageScore = Number(averageScore.toFixed(1));
 
       // place
       if (leagueSquad.scoreInfo.score !== scorePrev || !place) {

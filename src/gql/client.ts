@@ -56,21 +56,27 @@ export const sportsClient = new ApolloClient({
               if (existing?.length || !incoming.length) {
                 return existing || [];
               }
-              const { entityType } =
+              const { entityType, entityId } =
                 options.variables as GetLeagueSquadsQueryVariables;
-              const leagueSquads = structuredClone(
+              let leagueSquads = structuredClone(
                 incoming
               ) as LeagueSquadWithCurrentTourInfo[];
 
               // If the tour is in progress, recalculate squads' live scores
-              const tourStatus = options.readField<FantasyTourStatus>(
-                'status',
-                leagueSquads[0]?.squad.currentTourInfo?.tour
-              );
-              if (tourStatus === FantasyTourStatus.InProgress) {
-                SquadCacheService.initialize(options);
-                SquadCacheService.recalculateSquadsLiveScore(leagueSquads);
-                SquadCacheService.initialize();
+              if (entityType === FantasyRatingEntityType.Tour) {
+                const tourRef = options.toReference({
+                  __typename: 'FantasyTour',
+                  id: entityId,
+                });
+                const tourStatus = options.readField<FantasyTourStatus>(
+                  'status',
+                  tourRef
+                );
+                if (tourStatus === FantasyTourStatus.InProgress) {
+                  SquadCacheService.initialize(options);
+                  SquadCacheService.recalculateSquadsLiveScore(leagueSquads);
+                  SquadCacheService.initialize();
+                }
               }
 
               // Always sort th squads by season score
