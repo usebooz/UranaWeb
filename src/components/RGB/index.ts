@@ -1,1 +1,1 @@
-export { RGB } from './RGB';
+export { Rgb } from './RGB';

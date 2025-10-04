@@ -6,7 +6,7 @@ import { StrictMode } from 'react';
 import { retrieveLaunchParams } from '@telegram-apps/sdk-react';
 
 import { Root } from '@/components/Root';
-import { ErrorPage } from '@/components/Page/ErrorPage.tsx';
+import { ErrorPage } from '@/components/Error/ErrorPage.tsx';
 import { init } from '@/init';
 
 import './index.css';

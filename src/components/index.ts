@@ -1,6 +1,5 @@
 // App components
 export { App } from './App';
-export { ErrorBoundary } from './ErrorBoundary';
 export { Root } from './Root';
 
 // UI components
@@ -12,9 +11,12 @@ export * from './Loading';
 // Page components
 export * from './Page';
 
-// // Business components
-// export * from './League';
-// export * from './Tour';
-// export * from './Squad';
-// export * from './Match';
-// export * from './Player';
+// Error components
+export * from './Error';
+
+// Business components
+export * from './League';
+export * from './Tour';
+export * from './Squad';
+export * from './Match';
+export * from './Player';

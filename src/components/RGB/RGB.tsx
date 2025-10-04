@@ -8,11 +8,11 @@ import './RGB.css';
 
 const b = block('rgb');
 
-export type RGBProps = HTMLAttributes<HTMLDivElement> & {
+export type RgbProps = HTMLAttributes<HTMLDivElement> & {
   color: RGBType;
 };
 
-export const RGB: FC<RGBProps> = ({ color, className, ...rest }) => (
+export const Rgb: FC<RgbProps> = ({ color, className, ...rest }) => (
   <span {...rest} className={classNames(b(), className)}>
     <i className={b('icon')} style={{ backgroundColor: color }} />
     {color}
