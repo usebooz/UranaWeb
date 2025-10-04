@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 import { Placeholder } from '@telegram-apps/telegram-ui';
-import { QueryRef } from '@apollo/client';
+import { QueryRef } from '@apollo/client/react';
 import {
   GetTourMatchesQuery,
   GetTourMatchesQueryVariables,

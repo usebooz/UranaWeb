@@ -3,7 +3,7 @@ import { useMemo, type FC } from 'react';
 import { type SquadTourPlayer } from '@/gql';
 import { MatchService, PlayerService } from '@/services';
 import { useReadTourMatches } from '@/hooks';
-import { QueryRef } from '@apollo/client';
+import { QueryRef } from '@apollo/client/react';
 import {
   GetTourMatchesQuery,
   GetTourMatchesQueryVariables,

@@ -4,7 +4,7 @@ import {
   useLoadableQuery,
   useReadQuery,
   useSuspenseQuery,
-} from '@apollo/client';
+} from '@apollo/client/react';
 import {
   FantasyRatingEntityType,
   GetLeagueSquadsDocument,

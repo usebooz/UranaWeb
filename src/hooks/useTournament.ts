@@ -1,4 +1,4 @@
-import { skipToken, useSuspenseQuery } from '@apollo/client';
+import { skipToken, useSuspenseQuery } from '@apollo/client/react';
 import { GetTournamentDocument } from '@/gql/generated/graphql';
 import { useContext, useMemo } from 'react';
 import { TournamentContext } from '@/components/Tournament';

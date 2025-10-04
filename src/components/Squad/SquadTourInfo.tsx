@@ -1,5 +1,5 @@
 import { useMemo, type FC } from 'react';
-import { QueryRef } from '@apollo/client';
+import { QueryRef } from '@apollo/client/react';
 import {
   GetSquadTourInfoQuery,
   GetSquadTourInfoQueryVariables,

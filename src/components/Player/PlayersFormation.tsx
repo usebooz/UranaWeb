@@ -8,7 +8,7 @@ import {
   GetSquadTourInfoQuery,
   GetSquadTourInfoQueryVariables,
 } from '@/gql/generated/graphql';
-import { QueryRef } from '@apollo/client';
+import { QueryRef } from '@apollo/client/react';
 import { useReadSquadTourInfo } from '@/hooks';
 import { SquadTourPlayer } from '@/gql';
 

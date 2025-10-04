@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { LeaguePage } from '@/pages/fantasy';
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { Suspense } from 'react';
 import { PlaceSpinner } from '../Loading';
 import { TournamentContext } from '../Tournament';
