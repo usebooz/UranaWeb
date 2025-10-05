@@ -34,9 +34,7 @@ const createMockLeague = (overrides: Partial<League> = {}): League => ({
 describe('LeagueService', () => {
   describe('rplWebname', () => {
     it('should return RPL webname from environment variables', () => {
-      // Note: In test environment, this returns the actual value from .env
-      // In real environment, it would be set via environment variables
-      expect(LeagueService.rplWebname).toBeDefined();
+      expect(LeagueService.rplWebname).toBe('rpl-2024-2025');
       expect(typeof LeagueService.rplWebname).toBe('string');
     });
   });

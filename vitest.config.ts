@@ -14,6 +14,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    env: {
+      VITE_SPORTS_API_URL: 'https://test-api.sports.ru/gql/graphql/',
+      VITE_SPORTS_TOURNAMENT_RPL: 'rpl-2024-2025',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

@@ -2,17 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Tournament } from '@/gql';
 import { FantasyTourStatus } from '@/gql/generated/graphql';
 
-// Mock environment variables before imports
-vi.hoisted(() => {
-  vi.stubGlobal('import', {
-    meta: {
-      env: {
-        VITE_SPORTS_TOURNAMENT_RPL: 'rpl-2024-2025',
-      },
-    },
-  });
-});
-
 // Mock TourService dependency
 vi.mock('../tour.service', () => ({
   TourService: {
@@ -65,7 +54,7 @@ const createMockTournament = (
 describe('TournamentService', () => {
   describe('rplWebname', () => {
     it('should return RPL webname from environment variables', () => {
-      // Update test to use actual value or skip if environment dependent
+      expect(TournamentService.rplWebname).toBe('rpl-2024-2025');
       expect(typeof TournamentService.rplWebname).toBe('string');
     });
   });
