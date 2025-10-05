@@ -1,5 +1,5 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Workflow for deploying UranaWeb to GitHub Pages with full CI checks
+name: Deploy to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -21,37 +21,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
+  # Deploy job with full CI pipeline
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install deps
+      - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Build
+      - name: Run ESLint (Zero warnings policy)
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        run: npx prettier --check "src/**/*.{ts,tsx,css}"
+
+      - name: Run all tests
+        run: npm run test:run
+
+      - name: Build production bundle
         env:
           VITE_SPORTS_API_URL: ${{ vars.SPORTS_API_URL }}
           VITE_SPORTS_TOURNAMENT_RPL: ${{ vars.SPORTS_TOURNAMENT_RPL }}
         run: npm run build
 
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload artifact
+      - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload dist repository
+          # Upload built dist directory
           path: './dist'
 
       - name: Deploy to GitHub Pages

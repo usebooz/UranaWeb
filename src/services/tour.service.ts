@@ -37,7 +37,10 @@ export class TourService {
     tourNumber: number,
     tours?: Tour[]
   ): string | undefined {
-    return tours?.[tourNumber - 1].id;
+    if (!tours || tourNumber < 1 || tourNumber > tours.length) {
+      return undefined;
+    }
+    return tours[tourNumber - 1].id;
   }
 
   /**
@@ -127,6 +130,10 @@ export class TourService {
     }
 
     const startDate = new Date(tour.startedAt);
+    if (isNaN(startDate.getTime())) {
+      return undefined;
+    }
+
     const formatter = new Intl.DateTimeFormat('ru-RU', {
       day: '2-digit',
       month: 'long',
