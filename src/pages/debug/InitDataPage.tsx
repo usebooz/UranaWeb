@@ -79,8 +79,8 @@ export const InitDataPage: FC = () => {
     return (
       <Page>
         <Placeholder
-          header="Oops"
-          description="Application was launched with missing init data"
+          header="Упс"
+          description="Приложение было запущено с отсутствующими данными инициализации"
         >
           <img
             alt="Telegram sticker"
