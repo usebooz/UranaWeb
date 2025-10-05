@@ -22,6 +22,10 @@ body {
   text-decoration: line-through;
 }
 
+.primary-text-color {
+  color: var(--tgui--link_color);
+}
+
 .secondary-bg-color {
   background-color: var(--tg-theme-secondary-bg-color);
 }

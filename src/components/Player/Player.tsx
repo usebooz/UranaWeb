@@ -42,9 +42,12 @@ export const Player: FC<PlayerProps> = ({ player }) => {
   }
 
   // Build subcaption based on player status (starting vs substitute)
-  let subCaption;
+  let subCaption, className;
   if (player.isStarting) {
     subCaption = PlayerService.getCaptainEmoji(player);
+    className = PlayerService.isCaptainChipApplied(player)
+      ? 'primary-text-color'
+      : undefined;
   } else {
     const roleEmoji = PlayerService.getRoleEmoji(player);
     subCaption = PlayerService.isGoalkeeper(player)
@@ -65,7 +68,11 @@ export const Player: FC<PlayerProps> = ({ player }) => {
       <Caption level="2" className="player-name">
         {player.seasonPlayer.statObject.lastName}
       </Caption>
-      {subCaption && <Caption level="2">{subCaption}</Caption>}
+      {subCaption && (
+        <Caption level="2" className={className}>
+          {subCaption}
+        </Caption>
+      )}
     </div>
   );
 };

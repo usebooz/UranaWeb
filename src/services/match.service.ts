@@ -134,9 +134,9 @@ export class MatchService {
     );
 
     if (!lineupPlayer) {
-      return emoji ? '🔴' : MatchLineupPlayerStatus.NotInLineup;
+      return emoji ? '❌' : MatchLineupPlayerStatus.NotInLineup;
     } else if (lineupPlayer.lineupStarting) {
-      return emoji ? '🔵' : MatchLineupPlayerStatus.Starting;
+      return emoji ? '✅' : MatchLineupPlayerStatus.Starting;
     } else {
       return emoji ? this.subEmoji : MatchLineupPlayerStatus.Substituted;
     }

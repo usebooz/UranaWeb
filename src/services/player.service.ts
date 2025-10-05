@@ -89,9 +89,9 @@ export class PlayerService {
    */
   static getCaptainEmoji(player: SquadTourPlayer): string | undefined {
     if (player.isCaptain) {
-      return '🥇';
+      return 'ⓒ';
     } else if (player.isViceCaptain) {
-      return '🥈';
+      return 'ⓥ';
     } else {
       return undefined;
     }
@@ -108,13 +108,32 @@ export class PlayerService {
   }
 
   /**
-   * Checks if a player's points are definitely counting towards the score.
+   * Checks if player's points are definitely counting towards the score.
    *
    * @param player - The squad tour player to check
    * @returns True if player's points are confirmed to count
    */
   static isPointsCount(player: SquadTourPlayer): boolean {
     return player.isPointsCount;
+  }
+
+  /**
+   * Check if captain chip is applied
+   *
+   * @param player - The squad tour player to check
+   * @returns True if captain chip is applied
+   */
+  static isCaptainChipApplied(player: SquadTourPlayer): boolean {
+    if (!this.isPointsCount(player)) {
+      return false;
+    }
+    if (player.isCaptain) {
+      return true;
+    }
+    if (!player.isViceCaptain) {
+      return false;
+    }
+    return Number(player.points) > Number(player.statPlayer.points);
   }
 
   /**
