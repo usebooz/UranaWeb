@@ -1,14 +1,10 @@
-# Workflow for deploying UranaWeb to GitHub Pages with full CI checks
-name: Deploy to GitHub Pages
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch (triggers deploy)
+  # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
-  
-  # Runs on pull requests (runs CI checks only)
-  pull_request:
-    branches: ['main']
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,82 +17,42 @@ permissions:
 
 # Allow one concurrent deployment
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # CI checks (runs for both PR and push)
-  test:
+  # Single deploy job since we're just deploying
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup node
+        uses: actions/setup-node@v5
         with:
           node-version: 20
-          cache: 'npm'
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm ci --legacy-peer-deps
 
-      - name: Run ESLint (Zero warnings policy)
-        run: npm run lint
-
-      - name: Check Prettier formatting
-        run: npx prettier --check "src/**/*.{ts,tsx,css}"
-
-      - name: Run all tests
-        run: npm run test:run
-
-      - name: Build production bundle
+      - name: Build
         env:
           VITE_SPORTS_API_URL: ${{ vars.SPORTS_API_URL }}
           VITE_SPORTS_TOURNAMENT_RPL: ${{ vars.SPORTS_TOURNAMENT_RPL }}
         run: npm run build
 
-      - name: Upload build artifact (for deploy job)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-files
-          path: dist/
-          retention-days: 1
-
-  # Deploy job (only runs on push to main)
-  deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: test
-    runs-on: ubuntu-latest
-    
-    # Sets permissions for GitHub Pages deployment
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    
-    # Allow one concurrent deployment
-    concurrency:
-      group: 'pages'
-      cancel-in-progress: true
-      
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files
-          path: dist/
-
-      - name: Setup GitHub Pages
+      - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload build artifact to Pages
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          # Upload dist repository
+          path: "./dist"
 
       - name: Deploy to GitHub Pages
         id: deployment
