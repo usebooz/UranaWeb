@@ -40,7 +40,7 @@ jobs:
         run: npm run lint
 
       - name: Check Prettier formatting
-        run: npx prettier --check "src/**/*.{ts,tsx,css}"
+        run: npx prettier --check "src/**/*.{ts,tsx,css}" --ignore-path .prettierignore
 
       - name: Run all tests
         run: npm run test:run

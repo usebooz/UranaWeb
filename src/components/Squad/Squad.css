@@ -7,7 +7,8 @@
   --squad-table-column-before--number: 1;
   --squad-table-column-before--min--width: 9px;
   width: calc(
-    var(--squad-table-column-before--min--width) * var(--squad-table-column-before--number)
+    var(--squad-table-column-before--min--width) *
+      var(--squad-table-column-before--number)
   );
   direction: rtl;
 }

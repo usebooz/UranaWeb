@@ -5,3 +5,7 @@ build
 *.log
 package-lock.json
 *.md
+
+# Generated files
+src/gql/generated/
+**/generated/
