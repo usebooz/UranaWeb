@@ -46,14 +46,12 @@ export const TourSelector: FC<TourSelectorProps> = ({ tourId, onChange }) => {
   };
 
   return (
-    // TODO: switch to tabs (horizontal scroll) or fit to all devices
     <Pagination
       className="tour-selector"
       hideNextButton
       hidePrevButton
       boundaryCount={(tours?.length || 0) / 2}
       count={tours?.length || 0}
-      // siblingCount={1}
       page={tourNumber}
       onChange={handleTourChange}
     />

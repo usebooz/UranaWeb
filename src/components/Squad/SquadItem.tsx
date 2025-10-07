@@ -61,7 +61,6 @@ export const SquadItem: FC<SquadItemProps> = ({ squad }) => {
     }
   };
 
-  //TODO refactor
   let seasonPlace,
     tourScore,
     seasonScore,

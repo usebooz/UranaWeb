@@ -1,9 +1,10 @@
 .tour-selector {
+  padding-top: 0;
+  padding-bottom: 0;
   overflow-x: auto; /* скролл работает */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge Legacy */
 }
-
 .tour-selector::-webkit-scrollbar {
   display: none; /* Chrome/Safari */
 }
