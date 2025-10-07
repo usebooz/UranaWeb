@@ -58,7 +58,13 @@ export const TourItem: FC = () => {
       >
         {tour?.name}
       </Accordion.Summary>
-      <Suspense fallback={<PlaceSpinner size="m" />}>
+      <Suspense
+        fallback={
+          <Accordion.Content>
+            <PlaceSpinner size="m" />
+          </Accordion.Content>
+        }
+      >
         {isExpanded && matchesQueryRef && (
           <Accordion.Content>
             <MatchesList queryRef={matchesQueryRef} />

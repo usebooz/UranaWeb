@@ -1,18 +1,27 @@
 import { type FC } from 'react';
-import { Cell, Info } from '@telegram-apps/telegram-ui';
+import { Cell, Info, Placeholder, Section } from '@telegram-apps/telegram-ui';
 import { SquadService, TourService } from '@/services';
 import { useContextSquads, useContextTour } from '@/hooks';
+import { SquadItem } from './SquadItem';
 
 /**
- * Component that displays the header section for squads list.
+ * Component that displays squads table.
  * Shows tour winner information, total squads count, and table headers.
- * Displays different headers based on tour state (finished vs in progress).
+ * Shows each squad as an expandable SquadItem or a placeholder if no squads are found.
+ * Used to render the main squads listing in league views.
  *
- * @returns Header section with winner info and column headers for squads table
+ * @returns Section with squads table
  */
-export const SquadsHeader: FC = () => {
+export const SquadsTable: FC = () => {
   const tour = useContextTour();
   const squads = useContextSquads();
+  if (!squads || squads.length === 0) {
+    return (
+      <Section>
+        <Placeholder header="Команды не найдены" />
+      </Section>
+    );
+  }
 
   const squadsCount = SquadService.getSquadsCount(squads);
   const columnPlaceWidth = squadsCount?.length;
@@ -41,12 +50,7 @@ export const SquadsHeader: FC = () => {
   }
 
   return (
-    <>
-      {squadsHeader ? (
-        <Cell className="squad-table-headers" readOnly>
-          {squadsHeader}
-        </Cell>
-      ) : undefined}
+    <Section header={squadsHeader}>
       <Cell
         readOnly
         className="squad-table-headers"
@@ -63,6 +67,9 @@ export const SquadsHeader: FC = () => {
         subtitle={columnSquad}
         after={<Info type="text" subtitle={columnScore} />}
       />
-    </>
+      {squads.map(squad => {
+        return <SquadItem key={squad.squad.id} squad={squad} />;
+      })}
+    </Section>
   );
 };

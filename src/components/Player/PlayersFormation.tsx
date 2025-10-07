@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Cell, Info, Placeholder } from '@telegram-apps/telegram-ui';
+import { Cell, Divider, Info, Placeholder } from '@telegram-apps/telegram-ui';
 
 import { Player } from '@/components/Player';
 import { MatchService, PlayerService } from '@/services';
@@ -65,11 +65,10 @@ export const PlayersFormation: FC<PlayersFormationProps> = ({ queryRef }) => {
   const subPlayers = PlayerService.filterPlayersOnBench(players);
   const substitutes = (
     <Cell
-      key={'SUBSTITUTE'}
+      key={'SUBSTITUTES'}
       className="cell-display-block cell-overflow-visible"
       readOnly
       before={<Info type="text" subtitle={MatchService.subEmoji} />}
-      hovered
     >
       {subPlayers.map(player => (
         <Player key={player.seasonPlayer.id} player={player} />
@@ -77,5 +76,5 @@ export const PlayersFormation: FC<PlayersFormationProps> = ({ queryRef }) => {
     </Cell>
   );
 
-  return <>{[...playersStarted, substitutes]}</>;
+  return <>{[...playersStarted, <Divider key={'FIELDSIDE'} />, substitutes]}</>;
 };

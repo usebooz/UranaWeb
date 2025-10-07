@@ -34,6 +34,10 @@ export const PlayersStatus: FC<PlayersStatusProps> = ({ queryRef }) => {
   );
 
   return (
-    playersPointsCount && <Badge type="number">{playersPointsCount}</Badge>
+    playersPointsCount && (
+      <Badge type="number" className="cell-badge-flex-0">
+        {playersPointsCount}
+      </Badge>
+    )
   );
 };

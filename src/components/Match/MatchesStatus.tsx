@@ -30,6 +30,10 @@ export const MatchesStatus: FC<MatchesStatusProps> = ({ queryRef }) => {
     [matches]
   );
   return (
-    matchesStartedCount && <Badge type="number">{matchesStartedCount}</Badge>
+    matchesStartedCount && (
+      <Badge type="number" className="cell-badge-flex-0">
+        {matchesStartedCount}
+      </Badge>
+    )
   );
 };

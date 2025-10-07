@@ -4,7 +4,7 @@ import { PlaceSpinner } from '@/components/Loading';
 import { LeagueContext, LeagueSelector } from '@/components/League';
 import { TourSelector, TourContext, TourItem } from '@/components/Tour';
 import { useGetTourParam, useLeagueParam, useUpdateTourParam } from '@/hooks';
-import { SquadsHeader, SquadsList } from '@/components/Squad';
+import { SquadsTable } from '@/components/Squad';
 
 /**
  * Main league page component for fantasy football league management.
@@ -24,21 +24,23 @@ export const LeaguePage: FC = () => {
     <Suspense fallback={<PlaceSpinner />}>
       <LeagueContext value={leagueId}>
         <List>
-          <Section>
-            <LeagueSelector />
-            <TourSelector tourId={tourId} onChange={updateTourParam} />
-          </Section>
+          <LeagueSelector />
+          <TourSelector tourId={tourId} onChange={updateTourParam} />
           <Suspense fallback={<PlaceSpinner />} key={tourId}>
             <TourContext value={tourId}>
               <Section>
                 <TourItem />
               </Section>
-              <Section>
-                <Suspense fallback={<PlaceSpinner />} key={tourId}>
-                  <SquadsHeader />
-                  <SquadsList />
-                </Suspense>
-              </Section>
+              <Suspense
+                fallback={
+                  <Section>
+                    <PlaceSpinner />
+                  </Section>
+                }
+                key={tourId}
+              >
+                <SquadsTable />
+              </Suspense>
             </TourContext>
           </Suspense>
         </List>

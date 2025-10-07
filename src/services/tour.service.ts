@@ -54,8 +54,11 @@ export class TourService {
     tourId?: string,
     tours?: Tour[]
   ): number | undefined {
+    if (!tours?.length) {
+      return undefined;
+    }
     const tourIndex = tours?.findIndex(tour => tour.id === tourId);
-    if (!tourIndex || tourIndex < 0) {
+    if (tourIndex < 0) {
       return undefined;
     }
     return tourIndex + 1;

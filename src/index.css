@@ -5,17 +5,28 @@ body {
 }
 
 .cell-overflow-visible > div > h6,
-.cell-overflow-visible > div > h6 > span {
+.cell-overflow-visible > div > h6 > span,
+/* in mobile phone it renders subtitle as a span */
+.cell-overflow-visible > div > span,
+.cell-overflow-visible > div > span > span {
   overflow: visible;
 }
 
-.cell-align-items-center > div > h6 {
+.cell-align-items-center > div > h6,
+/* in mobile phone it renders subtitle as a span */
+.cell-align-items-center > div > span {
   align-self: center;
 }
 
-.cell-display-block > div > h6 > span {
+.cell-display-block > div > h6 > span,
+/* in mobile phone it renders subtitle as a span */
+.cell-display-block > div > span > span {
   display: flex;
   gap: 16px;
+}
+
+.cell-badge-flex-0 {
+  flex: 0 0 auto;
 }
 
 .text-crossed {
@@ -24,6 +35,10 @@ body {
 
 .primary-text-color {
   color: var(--tgui--link_color);
+}
+
+.bg-color {
+  background-color: var(--tgui--bg_color);
 }
 
 .secondary-bg-color {

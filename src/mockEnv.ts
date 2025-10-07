@@ -7,7 +7,7 @@ if (import.meta.env.DEV) {
   if (!(await isTMA('complete'))) {
     const themeParams = {
       accent_text_color: '#6ab2f2',
-      bg_color: '#17212b',
+      bg_color: '#000000',
       button_color: '#5288c1',
       button_text_color: '#ffffff',
       destructive_text_color: '#ec3942',

@@ -57,8 +57,9 @@ export const MatchItem: FC<MatchItemProps> = ({ match }) => {
   if (MatchService.isInProgress(match)) {
     matchInfo = <Badge type="number">{matchCurrentTime}</Badge>;
   }
-  if (MatchService.isNotStarted(match))
+  if (MatchService.isNotStarted(match)) {
     matchInfo = <Info type="text" subtitle={matchScheduledAt}></Info>;
+  }
 
   return (
     <Cell

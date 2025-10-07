@@ -25,7 +25,7 @@ export const SquadTop: FC<SquadTopProps> = ({ squad }) => {
 
   return (
     squadTop && (
-      <Badge type="number" className="squad-top" mode="secondary">
+      <Badge type="number" className="cell-badge-flex-0" mode="secondary">
         {squadTop}
       </Badge>
     )

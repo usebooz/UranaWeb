@@ -122,9 +122,15 @@ export const SquadItem: FC<SquadItemProps> = ({ squad }) => {
       >
         {squad.squad.name}
       </Accordion.Summary>
-      <Suspense fallback={<PlaceSpinner size="m" />}>
+      <Suspense
+        fallback={
+          <Accordion.Content>
+            <PlaceSpinner size="m" />
+          </Accordion.Content>
+        }
+      >
         {isExpanded && tourInfoQueryRef && (
-          <Accordion.Content className="secondary-bg-color">
+          <Accordion.Content>
             <PlayersFormation queryRef={tourInfoQueryRef} />
           </Accordion.Content>
         )}
