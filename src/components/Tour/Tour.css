@@ -1,9 +1,9 @@
 .tour-selector {
-  overflow-x: auto;         /* скролл работает */
-  scrollbar-width: none;    /* Firefox */
+  overflow-x: auto; /* скролл работает */
+  scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge Legacy */
 }
 
 .tour-selector::-webkit-scrollbar {
-  display: none;            /* Chrome/Safari */
+  display: none; /* Chrome/Safari */
 }
