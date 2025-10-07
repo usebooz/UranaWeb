@@ -19,7 +19,7 @@ import { PlayerCacheService, SquadCacheService } from '@/services';
  */
 
 const httpLink = new HttpLink({
-  uri: import.meta.env.VITE_SPORTS_API_URL as string,
+  uri: import.meta.env.VITE_URANA_API_URL as string,
 });
 
 /**

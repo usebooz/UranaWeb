@@ -86,7 +86,7 @@ Configure environment variables:
 
 ```env
 # Required - GraphQL API endpoint
-VITE_SPORTS_API_URL=sports_api_url
+VITE_URANA_API_URL=urana_api_url
 
 # Optional - tournament parameters
 VITE_SPORTS_TOURNAMENT_RPL=sports_tournament_rpl

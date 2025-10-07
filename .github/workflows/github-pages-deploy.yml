@@ -47,7 +47,7 @@ jobs:
 
       - name: Build production bundle
         env:
-          VITE_SPORTS_API_URL: ${{ vars.SPORTS_API_URL }}
+          VITE_URANA_API_URL: ${{ vars.URANA_API_URL }}
           VITE_SPORTS_TOURNAMENT_RPL: ${{ vars.SPORTS_TOURNAMENT_RPL }}
         run: npm run build
 

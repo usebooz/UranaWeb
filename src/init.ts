@@ -30,8 +30,8 @@ export function init(options: {
   mockForMacOS: boolean;
 }): void {
   // Check for required environment variables
-  if (!import.meta.env.VITE_SPORTS_API_URL) {
-    throw new Error('VITE_SPORTS_API_URL environment variable is required');
+  if (!import.meta.env.VITE_URANA_API_URL) {
+    throw new Error('VITE_URANA_API_URL environment variable is required');
   }
   if (!import.meta.env.VITE_SPORTS_TOURNAMENT_RPL) {
     throw new Error(
