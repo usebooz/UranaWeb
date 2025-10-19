@@ -1,10 +1,11 @@
 import { skipToken, useSuspenseQuery } from '@apollo/client/react';
 import { GetLeagueDocument } from '@/gql/generated/graphql';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useContextTournament } from './useTournament';
 import { LeagueService } from '@/services';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { LeagueContext } from '@/components/League';
+import { useLaunchParams } from '@telegram-apps/sdk-react';
 
 /**
  * Hook for extracting league ID from URL parameters.
@@ -12,8 +13,22 @@ import { LeagueContext } from '@/components/League';
  * @returns League ID from route parameters
  */
 export const useLeagueParam = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const launchParams = useLaunchParams();
   const { leagueId } = useParams<{ leagueId: string }>();
-  return leagueId;
+
+  useEffect(() => {
+    if (!leagueId && launchParams.tgWebAppStartParam) {
+      const newPath = location.pathname.endsWith('/')
+        ? location.pathname + launchParams.tgWebAppStartParam
+        : location.pathname + '/' + launchParams.tgWebAppStartParam;
+      navigate(newPath, { replace: true }) as void;
+    }
+  }, [leagueId, launchParams.tgWebAppStartParam, location.pathname, navigate]);
+
+  return leagueId || launchParams.tgWebAppStartParam;
 };
 
 /**

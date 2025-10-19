@@ -20,6 +20,7 @@ export function FantasyRoute() {
       <Suspense fallback={<PlaceSpinner />}>
         <TournamentContext value={TournamentService.rplWebname}>
           <Routes>
+            <Route path="/league/" Component={LeaguePage} />
             <Route path="/league/:leagueId" Component={LeaguePage} />
           </Routes>
         </TournamentContext>

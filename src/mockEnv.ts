@@ -71,6 +71,7 @@ if (import.meta.env.DEV) {
         ],
         ['tgWebAppVersion', '8.4'],
         ['tgWebAppPlatform', 'tdesktop'],
+        ['tgWebAppStartParam', '30436'],
       ]),
     });
 

@@ -34,8 +34,8 @@ export const Link: FC<LinkProps> = ({
         path = `${pathname}?${search}#${hash}`;
       }
 
-      const targetUrl = new URL(path, window.location.toString());
-      const currentUrl = new URL(window.location.toString());
+      const targetUrl = new URL(path, globalThis.location.toString());
+      const currentUrl = new URL(globalThis.location.toString());
       const isExternal =
         targetUrl.protocol !== currentUrl.protocol ||
         targetUrl.host !== currentUrl.host;
