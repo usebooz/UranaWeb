@@ -21,10 +21,9 @@ export const useLeagueParam = () => {
 
   useEffect(() => {
     if (!leagueId && launchParams.tgWebAppStartParam) {
-      const newPath = location.pathname.endsWith('/')
-        ? location.pathname + launchParams.tgWebAppStartParam
-        : location.pathname + '/' + launchParams.tgWebAppStartParam;
-      navigate(newPath, { replace: true }) as void;
+      navigate(location.pathname + launchParams.tgWebAppStartParam, {
+        replace: true,
+      }) as void;
     }
   }, [leagueId, launchParams.tgWebAppStartParam, location.pathname, navigate]);
 
