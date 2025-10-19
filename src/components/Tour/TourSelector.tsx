@@ -50,7 +50,7 @@ export const TourSelector: FC<TourSelectorProps> = ({ tourId, onChange }) => {
       className="tour-selector"
       hideNextButton
       hidePrevButton
-      boundaryCount={(tours?.length || 0) / 2}
+      boundaryCount={tours?.length || 0}
       count={tours?.length || 0}
       page={tourNumber}
       onChange={handleTourChange}
